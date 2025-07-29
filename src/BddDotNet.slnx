@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/.global/">
+    <File Path=".editorconfig" />
+    <File Path="Directory.Build.props" />
+    <File Path="Package.props" />
+  </Folder>
+  <Folder Name="/Packages/">
+    <Project Path="BddDotNet/BddDotNet.csproj" />
+  </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="BddDotNet.Tests/BddDotNet.Tests.csproj" />
+  </Folder>
+</Solution>
