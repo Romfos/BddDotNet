@@ -5,7 +5,7 @@ using Microsoft.Testing.Platform.Builder;
 namespace BddDotNet.Tests;
 
 [TestClass]
-public sealed class BddDotNetTests
+public sealed class CoreTests
 {
     private async Task<int> RunTestAsync(Action<IServiceCollection> configure)
     {
@@ -22,7 +22,7 @@ public sealed class BddDotNetTests
 
         await RunTestAsync(services =>
         {
-            services.TestCase<BddDotNetTests>("testCase1", services =>
+            services.TestCase<CoreTests>("testCase1", services =>
             {
                 traces.Add(1);
                 return Task.CompletedTask;
@@ -51,7 +51,7 @@ public sealed class BddDotNetTests
                 return Task.CompletedTask;
             });
 
-            services.TestCase<BddDotNetTests>("testCase1", services =>
+            services.TestCase<CoreTests>("testCase1", services =>
             {
                 traces.Add(3);
                 return Task.CompletedTask;
