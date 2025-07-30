@@ -7,10 +7,8 @@ using Microsoft.Testing.Platform.Requests;
 
 namespace BddDotNet.Services;
 
-internal sealed class BddDotNetTestFramework(IServiceProvider services) : ITestFramework, IDataProducer
+internal sealed class BddDotNetTestFramework(IServiceProvider services, IEnumerable<TestCase> testCases) : ITestFramework, IDataProducer
 {
-    private readonly TestCase[] testCases = services.GetServices<TestCase>().ToArray();
-
     public string Uid { get; } = nameof(BddDotNetTestFramework);
     public string Version { get; } = "1.0.0";
     public string DisplayName { get; } = nameof(BddDotNetTestFramework);

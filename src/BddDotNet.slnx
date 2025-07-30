@@ -5,6 +5,7 @@
     <File Path="Package.props" />
   </Folder>
   <Folder Name="/Packages/">
+    <Project Path="BddDotNet.Gherkin/BddDotNet.Gherkin.csproj" />
     <Project Path="BddDotNet/BddDotNet.csproj" />
   </Folder>
   <Folder Name="/Tests/">
