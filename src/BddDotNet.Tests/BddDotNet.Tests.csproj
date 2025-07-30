@@ -1,16 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../BddDotNet.Gherkin.SourceGenerator.props" />
 
   <PropertyGroup>
     <TargetFrameworks>net9.0;net8.0;net472</TargetFrameworks>
   </PropertyGroup>
 
-  <ItemGroup>
+   <ItemGroup>
     <PackageReference Include="MSTest" Version="3.10.0" />
     <PackageReference Include="Microsoft.Bcl.Memory" Version="9.0.7" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\BddDotNet.Gherkin\BddDotNet.Gherkin.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\BddDotNet.Gherkin.SourceGenerator\BddDotNet.Gherkin.SourceGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
 
 </Project>

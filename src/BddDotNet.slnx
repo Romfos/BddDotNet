@@ -1,10 +1,12 @@
 <Solution>
   <Folder Name="/.global/">
     <File Path=".editorconfig" />
+    <File Path="BddDotNet.Gherkin.SourceGenerator.props" />
     <File Path="Directory.Build.props" />
     <File Path="Package.props" />
   </Folder>
   <Folder Name="/Packages/">
+    <Project Path="BddDotNet.Gherkin.SourceGenerator/BddDotNet.Gherkin.SourceGenerator.csproj" Id="aebb5a08-7c70-46e6-b7d6-4cb1b475495c" />
     <Project Path="BddDotNet.Gherkin/BddDotNet.Gherkin.csproj" />
     <Project Path="BddDotNet/BddDotNet.csproj" />
   </Folder>

@@ -1,29 +1,18 @@
-using BddDotNet.Extensions;
 using BddDotNet.Gherkin.Extensions;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Testing.Platform.Builder;
 
 namespace BddDotNet.Tests;
 
 [TestClass]
-public sealed class BddDotNetGherkinTests
+public sealed class GherkinFrameworkTests
 {
-    private async Task<int> RunTestAsync(Action<IServiceCollection> configure)
-    {
-        var builder = await TestApplication.CreateBuilderAsync(["--results-directory ./TestResults"]);
-        configure(builder.AddBddDotNet());
-        using var testApp = await builder.BuildAsync();
-        return await testApp.RunAsync();
-    }
-
     [TestMethod]
     public async Task ScenarioTest()
     {
         var traces = new List<int>();
 
-        await RunTestAsync(services =>
+        await Platform.RunTestAsync(services =>
         {
-            services.Scenario<BddDotNetGherkinTests>("feature1", "scenario1", async context =>
+            services.Scenario<GherkinFrameworkTests>("feature1", "scenario1", async context =>
             {
                 traces.Add(1);
 

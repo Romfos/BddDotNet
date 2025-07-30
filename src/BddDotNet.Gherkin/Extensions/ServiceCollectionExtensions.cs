@@ -51,16 +51,30 @@ public static class ServiceCollectionExtensions
         var type = typeof(TFeatureType);
         var assemblyName = type.Assembly.GetName().Name!;
 
+        Scenario(services, assemblyName, feature, scenario, filePath, lineNumber.Value, method);
+
+        return services;
+    }
+
+    public static IServiceCollection Scenario(
+        this IServiceCollection services,
+        string assemblyName,
+        string feature,
+        string scenario,
+        string filePath,
+        int lineNumber,
+        Func<IScenarioContext, Task> method)
+    {
         UseGherkin(services);
 
         services.TestCase(
             assemblyName,
-            type.Namespace ?? assemblyName,
+            assemblyName,
             feature,
             scenario,
             services => method(services.GetRequiredService<IScenarioContext>()),
             filePath,
-            lineNumber.Value);
+            lineNumber);
 
         return services;
     }
