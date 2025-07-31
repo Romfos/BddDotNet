@@ -21,7 +21,7 @@ Comparing with Reqnroll (or Specflow, other popular framework in .NET Ecosystem)
 - Modular. Small and fast library. All extra features are provided as separate nuget packages
 -	No reflection usage (or quite limited)
 -	Support .NET 8+ (Recommended option) and .NET Framework 4.7.2+ 
--	AOT & Trimming friendly. More info: https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot/
+-	AOT & Trimming friendly. More info: [Native AOT deployment](https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot/)
 -	Nullable reference types and other modern dotnet features
 -	Microsoft testing platform as a backend. No hell with different unit tests providers.
 -	Microsoft.Extensions.* based
