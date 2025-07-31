@@ -3,7 +3,9 @@
     <File Path=".editorconfig" />
     <File Path="BddDotNet.Gherkin.SourceGenerator.props" />
     <File Path="Directory.Build.props" />
+    <File Path="icon.jpg" />
     <File Path="Package.props" />
+    <File Path="README.md" />
   </Folder>
   <Folder Name="/Packages/">
     <Project Path="BddDotNet.Gherkin.SourceGenerator/BddDotNet.Gherkin.SourceGenerator.csproj" />

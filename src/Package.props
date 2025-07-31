@@ -6,7 +6,17 @@
 
   <PropertyGroup>
     <Authors>Romfos</Authors>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Description>Modern BDD framework for c# and .NET with gherkin support</Description>
+    <PackageTags>BddDotNet BDD.NET BDD .NET Gherkin AutoTests Tests UnitTests Cucumber</PackageTags>
+    <RepositoryUrl>https://github.com/Romfos/BddDotNet</RepositoryUrl>
+    <PackageIcon>icon.jpg</PackageIcon>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
+  
+  <ItemGroup>
+    <None Include="..\README.md" Pack="true" PackagePath="\" Visible="false" />
+    <None Include="..\icon.jpg" Pack="true" PackagePath="icon.jpg" Visible="false" />
+  </ItemGroup>
 
 </Project>
