@@ -1,0 +1,32 @@
+on: push
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest, macOS-latest]
+        framework: [net9.0, net8.0]
+        include:
+          - os: windows-latest
+            framework: net472
+
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            9.0.x
+            8.0.x
+
+      - name: Build
+        run: dotnet build ./src/BddDotNet.slnx
+
+      - name: Test
+        run: dotnet test -f ${{ matrix.framework }} --no-build --no-restore ./src/BddDotNet.slnx
+
+      - name: Format
+        run: dotnet format --verify-no-changes --no-restore ./src/BddDotNet.slnx
