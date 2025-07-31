@@ -7,7 +7,6 @@
   </Folder>
   <Folder Name="/Packages/">
     <Project Path="BddDotNet.Gherkin.SourceGenerator/BddDotNet.Gherkin.SourceGenerator.csproj" />
-    <Project Path="BddDotNet.Gherkin/BddDotNet.Gherkin.csproj" />
     <Project Path="BddDotNet/BddDotNet.csproj" />
   </Folder>
   <Folder Name="/Tests/">

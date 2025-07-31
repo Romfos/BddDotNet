@@ -8,7 +8,7 @@ using System.Text;
 namespace BddDotNet.Gherkin.SourceGenerator;
 
 [Generator]
-internal sealed class GeneratedFeaturesExtensionsGenerator : IIncrementalGenerator
+internal sealed class ScenariosExtensionsGenerator : IIncrementalGenerator
 {
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
@@ -31,7 +31,7 @@ internal sealed class GeneratedFeaturesExtensionsGenerator : IIncrementalGenerat
 
         var featureClassContent = GetTestClassContent(args.assemblyName, args.features);
         var formattedFeatureClassContent = FormatCode(featureClassContent);
-        context.AddSource($"GherkinGeneratedFeaturesExtensions.g.cs", formattedFeatureClassContent);
+        context.AddSource($"SourceGeneratedGherkinScenarios.g.cs", formattedFeatureClassContent);
     }
 
     private static string GetTestClassContent(string assemblyName, ImmutableArray<AdditionalText> features)
@@ -45,15 +45,14 @@ internal sealed class GeneratedFeaturesExtensionsGenerator : IIncrementalGenerat
 
         var featureClassContent =
            $$"""
+            using BddDotNet;
             using Microsoft.Extensions.DependencyInjection;
-            using BddDotNet.Gherkin.Extensions;
-            using BddDotNet.Gherkin.Services;
 
             namespace {{assemblyName}};
 
-            public static partial class GherkinGeneratedFeaturesExtensions
+            public static partial class GherkinSourceGeneratorExtensions
             {
-                public static partial void AddGeneratedFeatures(this IServiceCollection services)
+                public static partial void SourceGeneratedGherkinScenarios(this IServiceCollection services)
                 {
                     {{declarations}}
                 }
@@ -95,7 +94,7 @@ internal sealed class GeneratedFeaturesExtensionsGenerator : IIncrementalGenerat
 
         output.AppendLine(
             $$""""
-            services.Scenario("{{assemblyName}}", "{{featureName}}", "{{scenario.Name}}", """{{featurePath}}""", {{scenario.Location.Line}}, async context =>
+            services.Scenario("{{assemblyName}}", "{{assemblyName}}", "{{featureName}}", "{{scenario.Name}}", """{{featurePath}}""", {{scenario.Location.Line}}, async context =>
             {
                 {{declarations}}
             });

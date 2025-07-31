@@ -3,6 +3,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net9.0;net8.0;net472</TargetFrameworks>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
    <ItemGroup>
@@ -11,9 +12,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BddDotNet.Gherkin\BddDotNet.Gherkin.csproj" />
+    <ProjectReference Include="..\BddDotNet\BddDotNet.csproj" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <ProjectReference Include="..\BddDotNet.Gherkin.SourceGenerator\BddDotNet.Gherkin.SourceGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>

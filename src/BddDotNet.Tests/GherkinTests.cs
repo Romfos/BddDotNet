@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace BddDotNet.Tests;
 
 [TestClass]
-public sealed class GherkinGeneratorTests
+public sealed class GherkinTests
 {
     [TestMethod]
     public async Task FeatureGeneratorAndStepDiscoveryTest()
@@ -14,8 +14,8 @@ public sealed class GherkinGeneratorTests
         {
             services.AddSingleton(traces);
 
-            services.AddGeneratedFeatures();
-            services.AddDiscoveredSteps();
+            services.SourceGeneratedGherkinScenarios();
+            services.SourceGeneratedGherkinSteps();
         });
 
         Assert.IsTrue(traces is [1, 2, 3]);

@@ -1,8 +1,8 @@
 using System.Text.RegularExpressions;
 
-namespace BddDotNet.Gherkin.Models;
+namespace BddDotNet.Models;
 
-internal sealed class GherkinStep(
+internal sealed class Step(
     StepType stepType,
     Regex pattern,
     Delegate body)

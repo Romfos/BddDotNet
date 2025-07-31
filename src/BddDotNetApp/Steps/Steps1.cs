@@ -1,4 +1,4 @@
-using BddDotNet.Gherkin.SourceGenerator;
+using BddDotNet.Gherkin;
 
 namespace BddDotNetApp.Steps;
 
@@ -19,6 +19,6 @@ internal sealed class Steps1
     [Then("this is then step")]
     public Task Step3()
     {
-        throw new Exception("123");
+        return Task.CompletedTask;
     }
 }

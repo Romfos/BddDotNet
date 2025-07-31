@@ -7,7 +7,7 @@ using Microsoft.Testing.Platform.Requests;
 
 namespace BddDotNet.Services;
 
-internal sealed class BddDotNetTestFramework(IServiceProvider services, IEnumerable<TestCase> testCases) : ITestFramework, IDataProducer
+internal sealed class BddDotNetTestFramework(IServiceProvider services, IEnumerable<Scenario> scenarios) : ITestFramework, IDataProducer
 {
     public string Uid { get; } = nameof(BddDotNetTestFramework);
     public string Version { get; } = "1.0.0";
@@ -40,11 +40,11 @@ internal sealed class BddDotNetTestFramework(IServiceProvider services, IEnumera
     {
         if (context.Request is RunTestExecutionRequest runTestExecutionRequest)
         {
-            await RunTestCasesAsync(context.MessageBus, runTestExecutionRequest);
+            await RunAsync(context.MessageBus, runTestExecutionRequest);
         }
         else if (context.Request is DiscoverTestExecutionRequest discoverTestExecutionRequest)
         {
-            await DiscoverTestCasesAsync(context.MessageBus, discoverTestExecutionRequest);
+            await DiscoverTestNodesAsync(context.MessageBus, discoverTestExecutionRequest);
         }
         else
         {
@@ -54,29 +54,29 @@ internal sealed class BddDotNetTestFramework(IServiceProvider services, IEnumera
         context.Complete();
     }
 
-    private async Task RunTestCasesAsync(IMessageBus messageBus, RunTestExecutionRequest runTestExecutionRequest)
+    private async Task RunAsync(IMessageBus messageBus, RunTestExecutionRequest request)
     {
-        foreach (var testCase in testCases)
+        foreach (var scenario in scenarios)
         {
-            var testNode = CreateTestNode(testCase);
+            var testNode = CreateTestNode(scenario);
 
-            if (runTestExecutionRequest.Filter is not TestNodeUidListFilter testNodeUidListFilter
+            if (request.Filter is not TestNodeUidListFilter testNodeUidListFilter
                 || testNodeUidListFilter.TestNodeUids.Contains(testNode.Uid))
             {
-                var testResultProperty = await RunTestCaseAsync(testCase);
+                var testResultProperty = await RunScenarioAsync(scenario);
                 testNode.Properties.Add(testResultProperty);
-                await messageBus.PublishAsync(this, new TestNodeUpdateMessage(runTestExecutionRequest.Session.SessionUid, testNode));
+                await messageBus.PublishAsync(this, new TestNodeUpdateMessage(request.Session.SessionUid, testNode));
             }
         }
     }
 
-    private async Task<IProperty> RunTestCaseAsync(TestCase testCase)
+    private async Task<IProperty> RunScenarioAsync(Scenario scenario)
     {
         try
         {
             await using var scope = services.CreateAsyncScope();
-            var testCaseExecutionService = scope.ServiceProvider.GetRequiredService<TestCaseExecutionService>();
-            await testCaseExecutionService.ExecuteAsync(testCase);
+            var scenarioExecutionService = scope.ServiceProvider.GetRequiredService<ScenarioExecutionService>();
+            await scenarioExecutionService.ExecuteAsync(scenario);
             return PassedTestNodeStateProperty.CachedInstance;
         }
         catch (Exception ex)
@@ -85,35 +85,35 @@ internal sealed class BddDotNetTestFramework(IServiceProvider services, IEnumera
         }
     }
 
-    private async Task DiscoverTestCasesAsync(IMessageBus messageBus, DiscoverTestExecutionRequest discoverTestExecutionRequest)
+    private async Task DiscoverTestNodesAsync(IMessageBus messageBus, DiscoverTestExecutionRequest request)
     {
-        foreach (var testCase in testCases)
+        foreach (var scenario in scenarios)
         {
-            var testNode = CreateTestNode(testCase);
+            var testNode = CreateTestNode(scenario);
             testNode.Properties.Add(DiscoveredTestNodeStateProperty.CachedInstance);
-            await messageBus.PublishAsync(this, new TestNodeUpdateMessage(discoverTestExecutionRequest.Session.SessionUid, testNode));
+            await messageBus.PublishAsync(this, new TestNodeUpdateMessage(request.Session.SessionUid, testNode));
         }
     }
 
-    private TestNode CreateTestNode(TestCase testCase)
+    private TestNode CreateTestNode(Scenario scenario)
     {
         var testMethodIdentifierProperty = new TestMethodIdentifierProperty(
-            testCase.AssemblyName,
-            testCase.Namespace,
-            testCase.TestCaseTypeName,
-            testCase.TestCaseName,
+            scenario.AssemblyName,
+            scenario.Namespace,
+            scenario.Feature,
+            scenario.Name,
             0,
             [],
             typeof(void).FullName!);
 
         var testFileLocationProperty = new TestFileLocationProperty(
-            testCase.FilePath,
-            new LinePositionSpan(new LinePosition(testCase.LineNumber, 0), new LinePosition(testCase.LineNumber, 0)));
+            scenario.FilePath,
+            new LinePositionSpan(new LinePosition(scenario.LineNumber, 0), new LinePosition(scenario.LineNumber, 0)));
 
         var testNode = new TestNode()
         {
-            Uid = $"{testCase.TestCaseTypeName} -> {testCase.TestCaseName}",
-            DisplayName = testCase.TestCaseName,
+            Uid = $"{scenario.Feature} -> {scenario.Name}",
+            DisplayName = scenario.Name,
             Properties = new PropertyBag(testMethodIdentifierProperty, testFileLocationProperty)
         };
 

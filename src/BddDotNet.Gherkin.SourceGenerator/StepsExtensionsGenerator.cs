@@ -1,12 +1,13 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Collections.Immutable;
 using System.Text;
 
 namespace BddDotNet.Gherkin.SourceGenerator;
 
 [Generator]
-internal sealed class DiscoveredStepsExtensionsGenerator : IIncrementalGenerator
+internal sealed class StepsExtensionsGenerator : IIncrementalGenerator
 {
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
@@ -15,21 +16,21 @@ internal sealed class DiscoveredStepsExtensionsGenerator : IIncrementalGenerator
 
         var givenStepDeclarationNodes = context.SyntaxProvider
             .ForAttributeWithMetadataName(
-                "BddDotNet.Gherkin.SourceGenerator.GivenAttribute",
+                "BddDotNet.Gherkin.GivenAttribute",
                 static (node, _) => node is MethodDeclarationSyntax && node.Parent is ClassDeclarationSyntax,
                 GetMetadataForStep)
             .Collect();
 
         var whenStepDeclarationNodes = context.SyntaxProvider
             .ForAttributeWithMetadataName(
-                "BddDotNet.Gherkin.SourceGenerator.WhenAttribute",
+                "BddDotNet.Gherkin.WhenAttribute",
                 static (node, _) => node is MethodDeclarationSyntax && node.Parent is ClassDeclarationSyntax,
                 GetMetadataForStep)
             .Collect();
 
         var thenStepDeclarationNodes = context.SyntaxProvider
             .ForAttributeWithMetadataName(
-                "BddDotNet.Gherkin.SourceGenerator.ThenAttribute",
+                "BddDotNet.Gherkin.ThenAttribute",
                 static (node, _) => node is MethodDeclarationSyntax && node.Parent is ClassDeclarationSyntax,
                 GetMetadataForStep)
             .Collect();
@@ -43,67 +44,81 @@ internal sealed class DiscoveredStepsExtensionsGenerator : IIncrementalGenerator
         {
             var (((givenNodes, whenNodes), thenNodes), assemblyName) = args;
 
-            var stepDeclarations = new StringBuilder();
-
-            AppendStepClassRegistrations(stepDeclarations, givenNodes.Concat(whenNodes).Concat(thenNodes));
-            AppendStepDeclarations(stepDeclarations, "Given", givenNodes);
-            AppendStepDeclarations(stepDeclarations, "When", whenNodes);
-            AppendStepDeclarations(stepDeclarations, "Then", thenNodes);
-
-            var content = GenerateClass(assemblyName, stepDeclarations);
+            var methodBodyContent = GetMethodBodyContent(givenNodes, whenNodes, thenNodes);
+            var content = GenerateClassContent(assemblyName, methodBodyContent);
             var formattedContent = FormatCode(content);
 
-            context.AddSource("GherkinGeneratorDiscoveredSteps.cs", formattedContent);
+            context.AddSource("SourceGeneratedGherkinSteps.cs", formattedContent);
         });
     }
 
-    private static void AppendStepClassRegistrations(StringBuilder output, IEnumerable<(string, string className, string)> definitions)
+    private static string GetMethodBodyContent(
+        ImmutableArray<(string, string, string)> givenSteps,
+        ImmutableArray<(string, string, string)> whenSteps,
+        ImmutableArray<(string, string, string)> thenSteps)
     {
-        var types = definitions.Select(def => def.className).Distinct();
+        var methodBodyContent = new StringBuilder();
 
-        foreach (var type in types)
+        AppendTypeRegistrations(methodBodyContent, givenSteps, whenSteps, thenSteps);
+
+        AppendStepDeclarations(methodBodyContent, "Given", givenSteps);
+        AppendStepDeclarations(methodBodyContent, "When", whenSteps);
+        AppendStepDeclarations(methodBodyContent, "Then", thenSteps);
+
+        return methodBodyContent.ToString();
+    }
+
+    private static void AppendTypeRegistrations(
+        StringBuilder methodBodyContent,
+        ImmutableArray<(string, string, string)> givenSteps,
+        ImmutableArray<(string, string, string)> whenSteps,
+        ImmutableArray<(string, string, string)> thenSteps)
+    {
+        var typeNames = givenSteps.Concat(whenSteps).Concat(thenSteps);
+
+        foreach (var (_, typeName, _) in typeNames)
         {
-            output.AppendLine(
+            methodBodyContent.AppendLine(
                 $$"""
-                services.TryAddScoped<{{type}}>();
+                services.TryAddScoped<{{typeName}}>();
                 """);
         }
     }
 
-    private static void AppendStepDeclarations(StringBuilder output, string extensionMethodName, IEnumerable<(string, string, string)> definitions)
+    private static void AppendStepDeclarations(StringBuilder output, string extensionMethodName, ImmutableArray<(string, string, string)> steps)
     {
-        foreach (var (pattern, className, methodName) in definitions)
+        foreach (var (pattern, typeName, methodName) in steps)
         {
             output.AppendLine(
                 $$"""
-                services.{{extensionMethodName}}(new("{{pattern}}"), async (IServiceProvider services) =>
+                services.{{extensionMethodName}}(new("{{pattern}}"), async services =>
                 {
-                    await services.GetRequiredService<{{className}}>().{{methodName}}();
+                    await services.GetRequiredService<{{typeName}}>().{{methodName}}();
                 });
                 """);
         }
     }
 
-    private static string GenerateClass(string assemblyName, StringBuilder stepDeclarations)
+    private static string GenerateClassContent(string assemblyName, string methodBodyContent)
     {
-        var content =
+        var classContent =
             $$"""
-            using BddDotNet.Gherkin.Extensions;
+            using BddDotNet;
             using Microsoft.Extensions.DependencyInjection;
             using Microsoft.Extensions.DependencyInjection.Extensions;
 
             namespace {{assemblyName}};
                 
-            public static partial class GherkinGeneratorDiscoveredSteps
+            public static partial class GherkinSourceGeneratorExtensions
             {
-                public static partial void AddDiscoveredSteps(this IServiceCollection services)
+                public static partial void SourceGeneratedGherkinSteps(this IServiceCollection services)
                 {
-                    {{stepDeclarations}}
+                    {{methodBodyContent}}
                 }
             }
             """;
 
-        return content;
+        return classContent;
     }
 
     public static string FormatCode(string code)

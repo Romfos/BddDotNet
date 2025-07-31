@@ -1,9 +1,10 @@
+using BddDotNet.Extensibility;
 using BddDotNet.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Testing.Platform.Builder;
 using Microsoft.Testing.Platform.Capabilities.TestFramework;
 
-namespace BddDotNet.Extensions;
+namespace BddDotNet;
 
 public static class TestApplicationBuilderExtensions
 {
@@ -13,7 +14,9 @@ public static class TestApplicationBuilderExtensions
 
         services.AddSingleton<BddDotNetTestFramework>();
 
-        services.AddScoped<TestCaseExecutionService>();
+        services.AddScoped<ScenarioExecutionService>();
+        services.AddScoped<StepExecutionService>();
+        services.AddScoped<IScenarioContext, ScenarioContext>();
 
         builder.RegisterTestFramework(
             _ => new TestFrameworkCapabilities(),

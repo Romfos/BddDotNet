@@ -1,0 +1,36 @@
+using Microsoft.CodeAnalysis;
+
+namespace BddDotNet.Gherkin.SourceGenerator;
+
+[Generator]
+internal sealed class StepAttributesGenerator : IIncrementalGenerator
+{
+    public void Initialize(IncrementalGeneratorInitializationContext context)
+    {
+        context.RegisterPostInitializationOutput(context =>
+        {
+            context.AddSource("GherkinAttributes.cs",
+                $$"""
+                namespace BddDotNet.Gherkin;
+
+                [AttributeUsage(AttributeTargets.Method)]
+                internal sealed class GivenAttribute(string pattern) : System.Attribute
+                {
+                    public string Pattern { get; } = pattern;
+                }
+                
+                [AttributeUsage(AttributeTargets.Method)]
+                internal sealed class WhenAttribute(string pattern) : System.Attribute
+                {
+                    public string Pattern { get; } = pattern;
+                }
+                
+                [AttributeUsage(AttributeTargets.Method)]
+                internal sealed class ThenAttribute(string pattern) : System.Attribute
+                {
+                    public string Pattern { get; } = pattern;
+                }
+                """);
+        });
+    }
+}

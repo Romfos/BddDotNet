@@ -1,9 +1,9 @@
-using BddDotNet.Gherkin.Exceptions;
-using BddDotNet.Gherkin.Models;
+using BddDotNet.Exceptions;
+using BddDotNet.Models;
 
-namespace BddDotNet.Gherkin.Services;
+namespace BddDotNet.Services;
 
-internal sealed class StepExecutionService(IServiceProvider serviceProvider, IEnumerable<GherkinStep> steps)
+internal sealed class StepExecutionService(IServiceProvider serviceProvider, IEnumerable<Step> steps)
 {
     public async Task ExecuteAsync(StepType stepType, string text)
     {
@@ -22,7 +22,7 @@ internal sealed class StepExecutionService(IServiceProvider serviceProvider, IEn
         }
     }
 
-    private GherkinStep FindGherkinStep(StepType stepType, string text)
+    private Step FindGherkinStep(StepType stepType, string text)
     {
         var matchedSteps = steps
             .Where(x => x.StepType == stepType && x.Pattern.IsMatch(text))

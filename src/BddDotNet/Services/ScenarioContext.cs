@@ -1,6 +1,7 @@
-using BddDotNet.Gherkin.Models;
+using BddDotNet.Extensibility;
+using BddDotNet.Models;
 
-namespace BddDotNet.Gherkin.Services;
+namespace BddDotNet.Services;
 
 internal sealed class ScenarioContext(StepExecutionService stepExecutionService) : IScenarioContext
 {

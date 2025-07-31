@@ -1,4 +1,3 @@
-using BddDotNet.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Testing.Platform.Builder;
 

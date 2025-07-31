@@ -1,4 +1,4 @@
-using BddDotNet.Gherkin.SourceGenerator;
+using BddDotNet.Gherkin;
 
 namespace BddDotNet.Tests.Steps;
 

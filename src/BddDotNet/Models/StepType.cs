@@ -1,4 +1,4 @@
-namespace BddDotNet.Gherkin.Models;
+namespace BddDotNet.Models;
 
 internal enum StepType
 {

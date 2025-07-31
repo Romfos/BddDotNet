@@ -1,4 +1,4 @@
-namespace BddDotNet.Gherkin.Services;
+namespace BddDotNet.Extensibility;
 
 public interface IScenarioContext
 {

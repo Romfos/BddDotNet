@@ -4,10 +4,15 @@
   <PropertyGroup>
     <TargetFrameworks>net9.0;net8.0;net472</TargetFrameworks>
     <OutputType>exe</OutputType>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' != 'net472' ">
+    <IsAotCompatible>true</IsAotCompatible>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BddDotNet.Gherkin\BddDotNet.Gherkin.csproj" />
+    <ProjectReference Include="..\BddDotNet\BddDotNet.csproj" />
   </ItemGroup>
 
   <ItemGroup>
