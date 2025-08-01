@@ -5,7 +5,7 @@ Modern BDD framework for c# and .NET with gherkin support
 [![.github/workflows/build.yml](https://github.com/Romfos/BddDotNet/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/Romfos/BddDotNet/actions/workflows/build.yml)
 
 # Requirements
-- .NET 8+ or .NET Framework 4.7.2+. We recommend to use .NET 9 as a default option
+- .NET 8+ or .NET Framework 4.7.2+. We recommend .NET 9 as a default option
 - Visual Studio 2022 or Visual Studio Code
 - [Reqnroll plugin](https://marketplace.visualstudio.com/items?itemName=Reqnroll.ReqnrollForVisualStudio2022) for Visual Studio 2022 or [Cucumber plugin](https://marketplace.visualstudio.com/items?itemName=CucumberOpen.cucumber-official) for Visual Studio Code
 
