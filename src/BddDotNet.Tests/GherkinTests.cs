@@ -7,7 +7,7 @@ namespace BddDotNet.Tests;
 public sealed class GherkinTests
 {
     [TestMethod]
-    public async Task FeatureGeneratorAndStepDiscoveryTest()
+    public async Task GherkinFeatureAndStepsTest()
     {
         var traceService = new TraceService();
 
@@ -25,7 +25,10 @@ public sealed class GherkinTests
             Step2: true,
             Step3: true,
             Step4: "abcd",
-            Step5: [["book", "price"], ["sharpener", "30"], ["pencil", "15"]]
+            Step5: [["book", "price"], ["sharpener", "30"], ["pencil", "15"]],
+            Step6: true,
+            Step7: true,
+            Step8: true,
         });
     }
 }

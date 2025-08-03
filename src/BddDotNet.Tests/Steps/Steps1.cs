@@ -22,16 +22,4 @@ internal sealed class Steps1(TraceService traceService)
     {
         traceService.Step3 = true;
     }
-
-    [Given("given step with argument '(.*)'")]
-    public void Step4(string argument)
-    {
-        traceService.Step4 = argument;
-    }
-
-    [Then("this is step with table:")]
-    public void Step5(string[][] actual)
-    {
-        traceService.Step5 = actual;
-    }
 }

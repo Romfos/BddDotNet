@@ -2,13 +2,10 @@
   <Import Project="../BddDotNet.Gherkin.SourceGenerator.props" />
 
   <PropertyGroup>
-    <TargetFrameworks>net9.0;net8.0;net472</TargetFrameworks>
+    <TargetFrameworks>net9.0</TargetFrameworks>
     <OutputType>exe</OutputType>
-    <IsPackable>false</IsPackable>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' != 'net472' ">
     <PublishAot>true</PublishAot>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>

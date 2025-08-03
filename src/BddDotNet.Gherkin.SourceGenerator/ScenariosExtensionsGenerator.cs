@@ -74,7 +74,7 @@ internal sealed class ScenariosExtensionsGenerator : IIncrementalGenerator
             using var stringReader = new StringReader(feature.GetText()?.ToString());
             var gherkinDocument = new Parser().Parse(stringReader);
 
-            foreach (var scenario in gherkinDocument.Feature.Children.OfType<Scenario>())
+            foreach (var scenario in gherkinDocument.Feature.Children.OfType<Scenario>().Where(x => !x.Examples.Any()))
             {
                 declarations.AppendLine(GetScenarioDeclaration(assemblyName, feature.Path, gherkinDocument.Feature.Name, scenario));
             }
@@ -107,8 +107,15 @@ internal sealed class ScenariosExtensionsGenerator : IIncrementalGenerator
     {
         var stepDeclarations = new StringBuilder();
 
+        var keyword = "Given";
+
         foreach (var step in scenario.Steps)
         {
+            if (!step.Keyword.StartsWith("And"))
+            {
+                keyword = step.Keyword;
+            }
+
             stepDeclarations.AppendLine(
                 $""""
                 #line ({step.Location.Line}, {step.Location.Column})-({step.Location.Line + 1}, 1) 12 "{featurePath}"
@@ -118,7 +125,7 @@ internal sealed class ScenariosExtensionsGenerator : IIncrementalGenerator
             {
                 stepDeclarations.AppendLine(
                     $$""""
-                    await context.{{step.Keyword}}("""{{step.Text}}""", (object)new string[][]
+                    await context.{{keyword}}("""{{step.Text}}""", (object)new string[][]
                     {
                         {{GetDataTableDeclaration(dataTable)}}
                     });
@@ -132,7 +139,7 @@ internal sealed class ScenariosExtensionsGenerator : IIncrementalGenerator
             {
                 stepDeclarations.AppendLine(
                     $""""
-                    await context.{step.Keyword}("""{step.Text}""");
+                    await context.{keyword}("""{step.Text}""");
                     """");
             }
             else
