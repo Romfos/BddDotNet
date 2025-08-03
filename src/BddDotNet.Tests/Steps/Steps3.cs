@@ -5,21 +5,15 @@ namespace BddDotNet.Tests.Steps;
 
 internal sealed class Steps3(TraceService traceService)
 {
-    [Given("this is the first step with And keyword")]
-    public void Step6()
+    [Given("this is given step with argument '(.*)'")]
+    public void Step1(string argument)
     {
-        traceService.Step6 = true;
+        traceService.Trace(argument);
     }
 
-    [When("this is the second when step")]
-    public void Step7()
+    [Then("this is then step with table:")]
+    public void Step2(string[][] actual)
     {
-        traceService.Step7 = true;
-    }
-
-    [When("his is the third when step")]
-    public void Step8()
-    {
-        traceService.Step8 = true;
+        traceService.Trace(actual);
     }
 }

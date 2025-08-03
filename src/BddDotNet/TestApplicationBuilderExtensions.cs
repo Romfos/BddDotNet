@@ -14,6 +14,8 @@ public static class TestApplicationBuilderExtensions
 
         services.AddSingleton<BddDotNetTestFramework>();
 
+        services.AddScoped<TestContext>();
+        services.AddScoped<ITestContext>(services => services.GetRequiredService<TestContext>());
         services.AddScoped<ScenarioExecutionService>();
         services.AddScoped<StepExecutionService>();
         services.AddScoped<IScenarioContext, ScenarioContext>();

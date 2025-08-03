@@ -5,21 +5,21 @@ namespace BddDotNet.Tests.Steps;
 
 internal sealed class Steps1(TraceService traceService)
 {
-    [Given("this is given step")]
+    [Given("this is simple given step")]
     public void Step1()
     {
-        traceService.Step1 = true;
+        traceService.Trace("this is simple given step");
     }
 
-    [When("this is when step")]
+    [When("this is simple when step")]
     public void Step2()
     {
-        traceService.Step2 = true;
+        traceService.Trace("this is simple when step");
     }
 
-    [Then("this is then step")]
+    [Then("this is simple then step")]
     public void Step3()
     {
-        traceService.Step3 = true;
+        traceService.Trace("this is simple then step");
     }
 }

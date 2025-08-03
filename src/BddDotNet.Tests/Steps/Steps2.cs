@@ -5,15 +5,17 @@ namespace BddDotNet.Tests.Steps;
 
 internal sealed class Steps2(TraceService traceService)
 {
-    [Given("given step with argument '(.*)'")]
-    public void Step4(string argument)
+    [Given("this is async task given step")]
+    public async Task Step1()
     {
-        traceService.Step4 = argument;
+        await Task.Yield();
+        traceService.Trace("this is async task given step");
     }
 
-    [Then("this is step with table:")]
-    public void Step5(string[][] actual)
+    [Given("this is async value task given step")]
+    public async ValueTask Step2()
     {
-        traceService.Step5 = actual;
+        await Task.Yield();
+        traceService.Trace("this is async value task given step");
     }
 }

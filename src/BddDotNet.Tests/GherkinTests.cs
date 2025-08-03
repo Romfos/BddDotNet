@@ -9,26 +9,41 @@ public sealed class GherkinTests
     [TestMethod]
     public async Task GherkinFeatureAndStepsTest()
     {
-        var traceService = new TraceService();
+        var traces = new Dictionary<string, List<object>>();
 
         await Platform.RunTestAsync(services =>
         {
-            services.AddSingleton(traceService);
+            services.AddSingleton(traces);
+            services.AddScoped<TraceService>();
 
             services.SourceGeneratedGherkinScenarios();
             services.SourceGeneratedGherkinSteps();
         });
 
-        Assert.IsTrue(traceService is
-        {
-            Step1: true,
-            Step2: true,
-            Step3: true,
-            Step4: "abcd",
-            Step5: [["book", "price"], ["sharpener", "30"], ["pencil", "15"]],
-            Step6: true,
-            Step7: true,
-            Step8: true,
-        });
+        Assert.IsTrue(traces["simple steps"] is
+            [
+                "this is simple given step",
+                "this is simple when step",
+                "this is simple then step"
+            ]);
+
+        Assert.IsTrue(traces["simple async steps"] is
+            [
+                "this is async task given step",
+                "this is async value task given step",
+            ]);
+
+        Assert.IsTrue(traces["steps with arguments"] is
+            [
+                "abcd",
+                string[][] and [["book", "price"], ["sharpener", "30"], ["pencil", "15"]]
+            ]);
+
+        Assert.IsTrue(traces["And keyword steps"] is
+            [
+                "this is simple given step",
+                "this is simple when step",
+                "this is simple when step"
+            ]);
     }
 }

@@ -4,21 +4,15 @@ namespace BddDotNetAot.Steps;
 
 internal sealed class Steps2
 {
-    [Given("given step with argument '(.*)'")]
-    public void Step4(string actual)
+    [Given("this is async task given step")]
+    public async Task Step1()
     {
-        if (actual is not "abcd")
-        {
-            throw new Exception("Step4");
-        }
+        await Task.Yield();
     }
 
-    [Then("this is step with table:")]
-    public void Step5(string[][] actual)
+    [Given("this is async value task given step")]
+    public async ValueTask Step2()
     {
-        if (actual is not [["book", "price"], ["sharpener", "30"], ["pencil", "15"]])
-        {
-            throw new Exception("Step5");
-        }
+        await Task.Yield();
     }
 }

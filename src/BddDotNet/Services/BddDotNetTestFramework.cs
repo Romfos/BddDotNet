@@ -76,6 +76,9 @@ internal sealed class BddDotNetTestFramework(IServiceProvider services, IEnumera
         {
             await using var scope = services.CreateAsyncScope();
             var scenarioExecutionService = scope.ServiceProvider.GetRequiredService<ScenarioExecutionService>();
+            var testContext = scope.ServiceProvider.GetRequiredService<TestContext>();
+            testContext.Feature = scenario.Feature;
+            testContext.Scenario = scenario.Name;
             await scenarioExecutionService.ExecuteAsync(scenario);
             return PassedTestNodeStateProperty.CachedInstance;
         }

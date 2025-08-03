@@ -4,18 +4,21 @@ namespace BddDotNetAot.Steps;
 
 internal sealed class Steps3
 {
-    [Given("this is the first step with And keyword")]
-    public void Step6()
+    [Given("this is given step with argument '(.*)'")]
+    public void Step1(string actual)
     {
+        if (actual is not "abcd")
+        {
+            throw new Exception("Step4");
+        }
     }
 
-    [When("this is the second when step")]
-    public void Step7()
+    [Then("this is then step with table:")]
+    public void Step2(string[][] actual)
     {
-    }
-
-    [When("his is the third when step")]
-    public void Step8()
-    {
+        if (actual is not [["book", "price"], ["sharpener", "30"], ["pencil", "15"]])
+        {
+            throw new Exception("Step5");
+        }
     }
 }
