@@ -5,20 +5,26 @@ namespace BddDotNetApp.Steps;
 internal sealed class Steps1
 {
     [Given("this is given step")]
-    public Task Step1()
+    public void Step1()
     {
-        return Task.CompletedTask;
+    }
+
+    [Given("given step with argument '(.*)'")]
+    public void Step4(string argument)
+    {
+        if (argument != "1")
+        {
+            throw new Exception($"Unsupported argument {argument}");
+        }
     }
 
     [When("this is when step")]
-    public Task Step2()
+    public void Step2()
     {
-        return Task.CompletedTask;
     }
 
     [Then("this is then step")]
-    public Task Step3()
+    public void Step3()
     {
-        return Task.CompletedTask;
     }
 }

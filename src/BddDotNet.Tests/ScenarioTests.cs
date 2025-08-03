@@ -17,10 +17,9 @@ public sealed class ScenarioTests
                 traces.Add(3);
             });
 
-            services.Given(new("given1"), (IServiceProvider services) =>
+            services.Given(new("given1"), () =>
             {
                 traces.Add(2);
-                return Task.CompletedTask;
             });
         });
 
@@ -41,10 +40,9 @@ public sealed class ScenarioTests
                 traces.Add(3);
             });
 
-            services.When(new("when1"), (IServiceProvider services) =>
+            services.When(new("when1"), () =>
             {
                 traces.Add(2);
-                return Task.CompletedTask;
             });
         });
 
@@ -65,10 +63,9 @@ public sealed class ScenarioTests
                 traces.Add(3);
             });
 
-            services.Then(new("then1"), (IServiceProvider services) =>
+            services.Then(new("then1"), () =>
             {
                 traces.Add(2);
-                return Task.CompletedTask;
             });
         });
 

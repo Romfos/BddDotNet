@@ -2,7 +2,7 @@ namespace BddDotNet.Extensibility;
 
 public interface IScenarioContext
 {
-    Task Given(string text);
-    Task When(string text);
-    Task Then(string text);
+    Task Given(string text, params object?[] additionalStepArguments);
+    Task When(string text, params object?[] additionalStepArguments);
+    Task Then(string text, params object?[] additionalStepArguments);
 }
