@@ -13,6 +13,6 @@
   </Folder>
   <Folder Name="/Tests/">
     <Project Path="BddDotNet.Tests/BddDotNet.Tests.csproj" />
-    <Project Path="BddDotNetApp/BddDotNetApp.csproj" />
+    <Project Path="BddDotNetAot/BddDotNetAot.csproj" Id="1e0d0e6d-60f0-41ea-a11c-f61e6aad4e0d" />
   </Folder>
 </Solution>

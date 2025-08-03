@@ -1,37 +1,39 @@
 using BddDotNet.Gherkin;
-using BddDotNet.Tests.Services;
 
-namespace BddDotNet.Tests.Steps;
+namespace BddDotNetAot.Steps;
 
-internal sealed class Steps1(TraceService traceService)
+internal sealed class Steps1
 {
     [Given("this is given step")]
     public void Step1()
     {
-        traceService.Step1 = true;
     }
 
     [When("this is when step")]
     public void Step2()
     {
-        traceService.Step2 = true;
     }
 
     [Then("this is then step")]
     public void Step3()
     {
-        traceService.Step3 = true;
     }
 
     [Given("given step with argument '(.*)'")]
-    public void Step4(string argument)
+    public void Step4(string actual)
     {
-        traceService.Step4 = argument;
+        if (actual is not "abcd")
+        {
+            throw new Exception("Step4");
+        }
     }
 
     [Then("this is step with table:")]
     public void Step5(string[][] actual)
     {
-        traceService.Step5 = actual;
+        if (actual is not [["book", "price"], ["sharpener", "30"], ["pencil", "15"]])
+        {
+            throw new Exception("Step5");
+        }
     }
 }

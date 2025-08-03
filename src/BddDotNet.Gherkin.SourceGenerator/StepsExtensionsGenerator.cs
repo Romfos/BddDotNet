@@ -9,6 +9,13 @@ namespace BddDotNet.Gherkin.SourceGenerator;
 [Generator]
 internal sealed class StepsExtensionsGenerator : IIncrementalGenerator
 {
+    private sealed record StepDefinition(string Pattern, string ServiceTypeName, string MethodName)
+    {
+        public string Pattern { get; } = Pattern;
+        public string ServiceTypeName { get; } = ServiceTypeName;
+        public string MethodName { get; } = MethodName;
+    }
+
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         var assemblyName = context.CompilationProvider
@@ -53,9 +60,9 @@ internal sealed class StepsExtensionsGenerator : IIncrementalGenerator
     }
 
     private static string GetMethodBodyContent(
-        ImmutableArray<(string, string, string)> givenSteps,
-        ImmutableArray<(string, string, string)> whenSteps,
-        ImmutableArray<(string, string, string)> thenSteps)
+        ImmutableArray<StepDefinition> givenSteps,
+        ImmutableArray<StepDefinition> whenSteps,
+        ImmutableArray<StepDefinition> thenSteps)
     {
         var methodBodyContent = new StringBuilder();
 
@@ -70,32 +77,34 @@ internal sealed class StepsExtensionsGenerator : IIncrementalGenerator
 
     private static void AppendTypeRegistrations(
         StringBuilder methodBodyContent,
-        ImmutableArray<(string, string typeName, string)> givenSteps,
-        ImmutableArray<(string, string typeName, string)> whenSteps,
-        ImmutableArray<(string, string typeName, string)> thenSteps)
+        ImmutableArray<StepDefinition> givenSteps,
+        ImmutableArray<StepDefinition> whenSteps,
+        ImmutableArray<StepDefinition> thenSteps)
     {
-        var typeNames = givenSteps
+        var serviceTypeNames = givenSteps
             .Concat(whenSteps)
             .Concat(thenSteps)
-            .Select(x => x.typeName)
+            .Select(x => x.ServiceTypeName)
             .Distinct();
 
-        foreach (var typeName in typeNames)
+        foreach (var serviceTypeName in serviceTypeNames)
         {
             methodBodyContent.AppendLine(
                 $$"""
-                services.TryAddScoped<{{typeName}}>();
+                services.TryAddScoped<{{serviceTypeName}}>();
                 """);
         }
     }
 
-    private static void AppendStepDeclarations(StringBuilder output, string extensionMethodName, ImmutableArray<(string, string, string)> steps)
+    private static void AppendStepDeclarations(StringBuilder output, string extensionMethodName, ImmutableArray<StepDefinition> steps)
     {
-        foreach (var (pattern, typeName, methodName) in steps)
+        foreach (var step in steps)
         {
             output.AppendLine(
                 $$"""
-                services.{{extensionMethodName}}(new("{{pattern}}"), services => services.GetRequiredService<{{typeName}}>().{{methodName}});
+                services.{{extensionMethodName}}(
+                    new("{{step.Pattern}}"),
+                    services => services.GetRequiredService<{{step.ServiceTypeName}}>().{{step.MethodName}});
                 """);
         }
     }
@@ -132,7 +141,7 @@ internal sealed class StepsExtensionsGenerator : IIncrementalGenerator
             .ToString();
     }
 
-    private static (string, string, string) GetMetadataForStep(GeneratorAttributeSyntaxContext context, CancellationToken cancellationToken)
+    private static StepDefinition GetMetadataForStep(GeneratorAttributeSyntaxContext context, CancellationToken cancellationToken)
     {
         var methodDeclaration = (MethodDeclarationSyntax)context.TargetNode;
         var classDeclaration = (ClassDeclarationSyntax)methodDeclaration.Parent!;
@@ -144,6 +153,6 @@ internal sealed class StepsExtensionsGenerator : IIncrementalGenerator
             .Select(attr => (string)attr.ConstructorArguments[0].Value!)
             .Single();
 
-        return (pattern, typeName, methodName);
+        return new(pattern, typeName, methodName);
     }
 }

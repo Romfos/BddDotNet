@@ -36,13 +36,6 @@ internal sealed class ScenariosExtensionsGenerator : IIncrementalGenerator
 
     private static string GetTestClassContent(string assemblyName, ImmutableArray<AdditionalText> features)
     {
-        var declarations = new StringBuilder();
-
-        foreach (var feature in features)
-        {
-            ProcessFeature(declarations, assemblyName, feature);
-        }
-
         var featureClassContent =
            $$"""
             using BddDotNet;
@@ -54,7 +47,7 @@ internal sealed class ScenariosExtensionsGenerator : IIncrementalGenerator
             {
                 public static partial void SourceGeneratedGherkinScenarios(this IServiceCollection services)
                 {
-            {{declarations}}
+                    {{GetFeaturesDeclarations(assemblyName, features)}}
                 }
             }
             """;
@@ -72,42 +65,104 @@ internal sealed class ScenariosExtensionsGenerator : IIncrementalGenerator
             .ToString();
     }
 
-    private static void ProcessFeature(StringBuilder output, string assemblyName, AdditionalText feature)
-    {
-        using var stringReader = new StringReader(feature.GetText()?.ToString());
-        var gherkinDocument = new Parser().Parse(stringReader);
-
-        foreach (var scenario in gherkinDocument.Feature.Children.OfType<Scenario>())
-        {
-            ProcessScenario(output, assemblyName, feature.Path, gherkinDocument.Feature.Name, scenario);
-        }
-    }
-
-    private static void ProcessScenario(StringBuilder output, string assemblyName, string featurePath, string featureName, Scenario scenario)
+    private static string GetFeaturesDeclarations(string assemblyName, ImmutableArray<AdditionalText> features)
     {
         var declarations = new StringBuilder();
 
-        foreach (var step in scenario.Steps)
+        foreach (var feature in features)
         {
-            ProcessStep(declarations, featurePath, step);
+            using var stringReader = new StringReader(feature.GetText()?.ToString());
+            var gherkinDocument = new Parser().Parse(stringReader);
+
+            foreach (var scenario in gherkinDocument.Feature.Children.OfType<Scenario>())
+            {
+                declarations.AppendLine(GetScenarioDeclaration(assemblyName, feature.Path, gherkinDocument.Feature.Name, scenario));
+            }
         }
 
-        output.AppendLine(
-            $$""""
-            services.Scenario("{{assemblyName}}", "{{assemblyName}}", "{{featureName}}", "{{scenario.Name}}", """{{featurePath}}""", {{scenario.Location.Line}}, async context =>
-            {
-            {{declarations}}
-            #line default
-            });
-            """");
+        return declarations.ToString();
     }
 
-    private static void ProcessStep(StringBuilder output, string featurePath, Step step)
+    private static string GetScenarioDeclaration(string assemblyName, string featurePath, string featureName, Scenario scenario)
     {
-        output.AppendLine(
-            $""""
-            #line ({step.Location.Line}, {step.Location.Column})-({step.Location.Line + 1}, 1) 12 "{featurePath}"
-            await context.{step.Keyword}("""{step.Text}""");
-            """");
+        var declaration =
+            $$""""
+            services.Scenario(
+                "{{assemblyName}}",
+                "{{assemblyName}}",
+                "{{featureName}}",
+                "{{scenario.Name}}",
+                """{{featurePath}}""",
+                {{scenario.Location.Line}},
+                async context =>
+                {
+                    {{GetScenarioStepsDeclarations(featurePath, scenario)}}
+                });
+            """";
+
+        return declaration;
+    }
+
+    private static string GetScenarioStepsDeclarations(string featurePath, Scenario scenario)
+    {
+        var stepDeclarations = new StringBuilder();
+
+        foreach (var step in scenario.Steps)
+        {
+            stepDeclarations.AppendLine(
+                $""""
+                #line ({step.Location.Line}, {step.Location.Column})-({step.Location.Line + 1}, 1) 12 "{featurePath}"
+                """");
+
+            if (step.Argument is DataTable dataTable)
+            {
+                stepDeclarations.AppendLine(
+                    $$""""
+                    await context.{{step.Keyword}}("""{{step.Text}}""", (object)new string[][]
+                    {
+                        {{GetDataTableDeclaration(dataTable)}}
+                    });
+                    """");
+            }
+            else if (step.Argument is DocString docString)
+            {
+                throw new NotImplementedException("DocString are not supported for now");
+            }
+            else if (step.Argument is null)
+            {
+                stepDeclarations.AppendLine(
+                    $""""
+                    await context.{step.Keyword}("""{step.Text}""");
+                    """");
+            }
+            else
+            {
+                throw new NotImplementedException($"Unsupported step argument type: {step.Argument?.GetType().FullName}");
+            }
+        }
+
+        stepDeclarations.AppendLine("#line default");
+
+        return stepDeclarations.ToString();
+    }
+
+    private static string GetDataTableDeclaration(DataTable dataTable)
+    {
+        var dataTableDeclaration = new StringBuilder();
+
+        foreach (var row in dataTable.Rows)
+        {
+            dataTableDeclaration.Append("new[] {");
+            foreach (var cell in row.Cells)
+            {
+                dataTableDeclaration.Append(
+                    $""""
+                    """{cell.Value}""",
+                    """");
+            }
+            dataTableDeclaration.AppendLine("},");
+        }
+
+        return dataTableDeclaration.ToString();
     }
 }
