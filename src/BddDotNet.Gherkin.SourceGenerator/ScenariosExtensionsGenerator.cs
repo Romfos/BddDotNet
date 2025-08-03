@@ -54,7 +54,7 @@ internal sealed class ScenariosExtensionsGenerator : IIncrementalGenerator
             {
                 public static partial void SourceGeneratedGherkinScenarios(this IServiceCollection services)
                 {
-                    {{declarations}}
+            {{declarations}}
                 }
             }
             """;
@@ -89,22 +89,24 @@ internal sealed class ScenariosExtensionsGenerator : IIncrementalGenerator
 
         foreach (var step in scenario.Steps)
         {
-            ProcessStep(declarations, step);
+            ProcessStep(declarations, featurePath, step);
         }
 
         output.AppendLine(
             $$""""
             services.Scenario("{{assemblyName}}", "{{assemblyName}}", "{{featureName}}", "{{scenario.Name}}", """{{featurePath}}""", {{scenario.Location.Line}}, async context =>
             {
-                {{declarations}}
+            {{declarations}}
+            #line default
             });
             """");
     }
 
-    private static void ProcessStep(StringBuilder output, Step step)
+    private static void ProcessStep(StringBuilder output, string featurePath, Step step)
     {
         output.AppendLine(
             $""""
+            #line ({step.Location.Line}, {step.Location.Column})-({step.Location.Line + 1}, 1) 12 "{featurePath}"
             await context.{step.Keyword}("""{step.Text}""");
             """");
     }
