@@ -15,7 +15,7 @@ Wiki: [Basic setup .NET 8 project with Gherkin support](https://github.com/Romfo
 - https://www.nuget.org/packages/BddDotNet
 - https://www.nuget.org/packages/BddDotNet.Gherkin.SourceGenerator
 
-# Key points
+# Comparing with alternatives
 
 Comparing with Reqnroll (or Specflow, other popular framework in .NET Ecosystem) this framework has following difference:
 -	Microsoft.Extensions.* based
