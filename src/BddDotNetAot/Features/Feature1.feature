@@ -43,3 +43,10 @@ Scenario Outline: scenario outline with 2 examples
     Examples: 
     | book   | price |
     | pencil | 15    |
+
+@scenario-tag-5
+Scenario: step transformation scenario
+    Given this is given step with table transformation:
+    | Key    | Value |
+    | first  | 1     |
+    | second | 2     |

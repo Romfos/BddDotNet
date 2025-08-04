@@ -1,4 +1,4 @@
-using BddDotNet.Extensibility;
+using BddDotNet.Tests.Extensibility;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BddDotNet.Tests;
@@ -86,21 +86,21 @@ public sealed class ScenarioTests
 
             services.Scenario<ScenarioTests>("feature1", "scenario1", async context =>
             {
-                traces.Add(2);
+                traces.Add(1);
                 await context.Then("then1");
-                traces.Add(4);
+                traces.Add(3);
             });
 
-            services.BeforeScenario<LifecycleHooks>();
-            services.AfterScenario<LifecycleHooks>();
+            services.BeforeScenario<ScenarioLifecycleHooks>();
+            services.AfterScenario<ScenarioLifecycleHooks>();
 
             services.Then(new("then1"), () =>
             {
-                traces.Add(3);
+                traces.Add(2);
             });
         });
 
-        Assert.IsTrue(traces is [1, 2, 3, 4, null]);
+        Assert.IsTrue(traces is ["BeforeScenario", 1, 2, 3, null]);
     }
 
     [TestMethod]
@@ -114,13 +114,13 @@ public sealed class ScenarioTests
 
             services.Scenario<ScenarioTests>("feature1", "scenario1", async context =>
             {
-                traces.Add(2);
+                traces.Add(1);
                 await context.Then("then1");
-                traces.Add(4);
+                traces.Add(2);
             });
 
-            services.BeforeScenario<LifecycleHooks>();
-            services.AfterScenario<LifecycleHooks>();
+            services.BeforeScenario<ScenarioLifecycleHooks>();
+            services.AfterScenario<ScenarioLifecycleHooks>();
 
             services.Then(new("then1"), () =>
             {
@@ -128,21 +128,33 @@ public sealed class ScenarioTests
             });
         });
 
-        Assert.IsTrue(traces is [1, 2, "Test exception"]);
+        Assert.IsTrue(traces is ["BeforeScenario", 1, "Test exception"]);
     }
 
-    private class LifecycleHooks(List<object?> traces) : IBeforeScenario, IAfterScenario
+    [TestMethod]
+    public async Task ArgumentTransformationTest()
     {
-        public Task BeforeScenario()
-        {
-            traces.Add(1);
-            return Task.CompletedTask;
-        }
+        var traces = new List<object?>();
 
-        public Task AfterScenario(Exception? exception)
+        await Platform.RunTestAsync(services =>
         {
-            traces.Add(exception?.Message);
-            return Task.CompletedTask;
-        }
+            services.AddSingleton(traces);
+
+            services.Scenario<ScenarioTests>("feature1", "scenario1", async context =>
+            {
+                traces.Add(1);
+                await context.Then("then1 abcd");
+                traces.Add(2);
+            });
+
+            services.ArgumentTransformation<ArgumentTransformation>();
+
+            services.Then(new("then1 (.*)"), (string value) =>
+            {
+                traces.Add(value);
+            });
+        });
+
+        Assert.IsTrue(traces is [1, "abcd", "System.String", 2]);
     }
 }

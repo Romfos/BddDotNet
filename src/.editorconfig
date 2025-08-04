@@ -109,7 +109,7 @@ dotnet_diagnostic.CA1839.severity=error
 dotnet_diagnostic.CA2245.severity=error
 dotnet_diagnostic.CA2248.severity=error
 dotnet_diagnostic.CA2211.severity=error
-dotnet_diagnostic.CA1021.severity=error
+dotnet_diagnostic.CA1021.severity=suggestion
 dotnet_diagnostic.CA1852.severity=error
 
 [*Tests.cs]

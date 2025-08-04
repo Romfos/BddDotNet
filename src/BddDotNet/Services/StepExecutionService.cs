@@ -1,17 +1,23 @@
 using BddDotNet.Exceptions;
+using BddDotNet.Extensibility;
 using BddDotNet.Models;
+using System.Reflection;
 using System.Text.RegularExpressions;
 
 namespace BddDotNet.Services;
 
-internal sealed class StepExecutionService(IServiceProvider serviceProvider, IEnumerable<Step> steps)
+internal sealed class StepExecutionService(
+    IServiceProvider serviceProvider,
+    IEnumerable<Step> steps,
+    IEnumerable<IArgumentTransformation> transformations)
 {
     public async Task ExecuteAsync(StepType stepType, string text, object?[] additionalStepArguments)
     {
         var (step, match) = FindGherkinStep(stepType, text);
 
         var handler = step.Factory(serviceProvider);
-        var result = handler.DynamicInvoke([.. PrepareStepArguments(handler, match, additionalStepArguments)]);
+        var arguments = GetStepArguments(handler, match, additionalStepArguments);
+        var result = handler.DynamicInvoke(arguments);
 
         if (result is Task task)
         {
@@ -24,9 +30,31 @@ internal sealed class StepExecutionService(IServiceProvider serviceProvider, IEn
         }
     }
 
-    private IEnumerable<object?> PrepareStepArguments(Delegate handler, Match match, object?[] additionalStepArguments)
+    private object?[] GetStepArguments(Delegate handler, Match match, object?[] additionalStepArguments)
     {
-        foreach (var parameter in handler.Method.GetParameters())
+        var parameters = handler.Method.GetParameters();
+
+        return GetOriginalArguments(parameters, match, additionalStepArguments)
+            .Select((argument, index) => Transform(argument, parameters[index]))
+            .ToArray();
+    }
+
+    private object? Transform(object? argument, ParameterInfo parameter)
+    {
+        foreach (var transformation in transformations)
+        {
+            if (transformation.TryParse(argument, parameter.ParameterType, out var transformedArgument))
+            {
+                return transformedArgument;
+            }
+        }
+
+        return argument;
+    }
+
+    private IEnumerable<object?> GetOriginalArguments(ParameterInfo[] parameters, Match match, object?[] additionalStepArguments)
+    {
+        foreach (var parameter in parameters)
         {
             if (serviceProvider.GetService(parameter.ParameterType) is object service)
             {
