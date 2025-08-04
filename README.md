@@ -8,7 +8,7 @@ Modern BDD framework for C# and .NET with gherkin support
 [![BddDotNet.Gherkin.SourceGenerator](https://img.shields.io/nuget/v/BddDotNet.Gherkin.SourceGenerator?label=BddDotNet.Gherkin.SourceGenerator)](https://www.nuget.org/packages/BddDotNet.Gherkin.SourceGenerator)
 
 # Requirements
-- .NET 9 sdk (build dependency)
+- .NET 8 SDK or never (required for build phase)
 - .NET 8+ or .NET Framework 4.7.2+ for target execution runtime (We recommend .NET 9 as a default option)
 - Visual Studio 2022 or Visual Studio Code
 - [Reqnroll plugin](https://marketplace.visualstudio.com/items?itemName=Reqnroll.ReqnrollForVisualStudio2022) for Visual Studio 2022 or [Cucumber plugin](https://marketplace.visualstudio.com/items?itemName=CucumberOpen.cucumber-official) for Visual Studio Code
