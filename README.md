@@ -4,6 +4,10 @@ Modern BDD framework for c# and .NET with gherkin support
 
 [![.github/workflows/build.yml](https://github.com/Romfos/BddDotNet/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/Romfos/BddDotNet/actions/workflows/build.yml)
 
+[![BddDotNet](https://img.shields.io/nuget/v/BddDotNet?label=BddDotNet)](https://www.nuget.org/packages/BddDotNet)
+[![BddDotNet.Gherkin.SourceGenerator](https://img.shields.io/nuget/v/BddDotNet.Gherkin.SourceGenerator?label=BddDotNet.Gherkin.SourceGenerator)](https://www.nuget.org/packages/BddDotNet.Gherkin.SourceGenerator)
+
+
 # Requirements
 - .NET 8+ or .NET Framework 4.7.2+ (We recommend .NET 9 as a default option)
 - Visual Studio 2022 or Visual Studio Code
