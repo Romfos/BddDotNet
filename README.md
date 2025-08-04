@@ -9,7 +9,7 @@ Modern opensource BDD framework for C# and .NET with gherkin support
 
 # How to use
 
-Wiki: [Basic setup .NET 8 project with Gherkin support](https://github.com/Romfos/BddDotNet/wiki/Basic-setup-.NET-8--project-with-Gherkin-support)
+Wiki: [Setup .NET 8 project with Gherkin support](https://github.com/Romfos/BddDotNet/wiki/Setup-.NET-8-project-with-Gherkin-support)
 
 # Nuget packages links  
 - https://www.nuget.org/packages/BddDotNet
