@@ -7,11 +7,9 @@ Modern opensource BDD framework for C# and .NET with gherkin support
 [![BddDotNet](https://img.shields.io/nuget/v/BddDotNet?label=BddDotNet)](https://www.nuget.org/packages/BddDotNet)
 [![BddDotNet.Gherkin.SourceGenerator](https://img.shields.io/nuget/v/BddDotNet.Gherkin.SourceGenerator?label=BddDotNet.Gherkin.SourceGenerator)](https://www.nuget.org/packages/BddDotNet.Gherkin.SourceGenerator)
 
-# Requirements
-- .NET 8 SDK or never (required for build phase)
-- .NET 8+ or .NET Framework 4.7.2+ for target execution runtime (We recommend .NET 9 as a default option)
-- Visual Studio 2022 or Visual Studio Code
-- [Reqnroll plugin](https://marketplace.visualstudio.com/items?itemName=Reqnroll.ReqnrollForVisualStudio2022) for Visual Studio 2022 or [Cucumber plugin](https://marketplace.visualstudio.com/items?itemName=CucumberOpen.cucumber-official) for Visual Studio Code
+# How to use
+
+Guide: [Basic setup .NET 8 project with Gherkin support](https://github.com/Romfos/BddDotNet/wiki/Basic-setup-.NET-8--project-with-Gherkin-support)
 
 # Nuget packages links  
 - https://www.nuget.org/packages/BddDotNet
@@ -83,9 +81,6 @@ using var testApp = await builder.BuildAsync();
 return await testApp.RunAsync();
 
 ```
-# How to use
-
-Guide: [Basic setup .NET 8 project with Gherkin support](https://github.com/Romfos/BddDotNet/wiki/Basic-setup-.NET-8--project-with-Gherkin-support)
 
 
   
