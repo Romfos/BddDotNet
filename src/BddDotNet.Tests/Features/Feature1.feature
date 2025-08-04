@@ -29,7 +29,7 @@ Scenario: And keyword steps
         And this is simple when step
 
 @scenario-tag-4
-Scenario Outline: scnario outline with 2 examples
+Scenario Outline: scenario outline with 2 examples
     Given this is given step with argument '<book>'
     Then this is then step with table:
     | book   | price   |

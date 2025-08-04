@@ -1,5 +1,4 @@
-using Gherkin;
-using Gherkin.Ast;
+using BddDotNet.Gherkin.SourceGenerator.TestCases;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using System.Collections.Immutable;
@@ -29,30 +28,10 @@ internal sealed class ScenariosExtensionsGenerator : IIncrementalGenerator
             return;
         }
 
-        var featureClassContent = GetTestClassContent(args.assemblyName, args.features);
+        var testCases = TestCasesParser.GetTestCases(args.assemblyName, args.features);
+        var featureClassContent = GetTestClassContent(args.assemblyName, testCases);
         var formattedFeatureClassContent = FormatCode(featureClassContent);
         context.AddSource($"SourceGeneratedGherkinScenarios.g.cs", formattedFeatureClassContent);
-    }
-
-    private static string GetTestClassContent(string assemblyName, ImmutableArray<AdditionalText> features)
-    {
-        var featureClassContent =
-           $$"""
-            using BddDotNet;
-            using Microsoft.Extensions.DependencyInjection;
-
-            namespace {{assemblyName}};
-
-            public static partial class GherkinSourceGeneratorExtensions
-            {
-                public static partial void SourceGeneratedGherkinScenarios(this IServiceCollection services)
-                {
-                    {{GetFeaturesDeclarations(assemblyName, features)}}
-                }
-            }
-            """;
-
-        return featureClassContent;
     }
 
     public static string FormatCode(string code)
@@ -65,86 +44,84 @@ internal sealed class ScenariosExtensionsGenerator : IIncrementalGenerator
             .ToString();
     }
 
-    private static string GetFeaturesDeclarations(string assemblyName, ImmutableArray<AdditionalText> features)
+    private static string GetTestClassContent(string assemblyName, IEnumerable<TestCase> testCases)
+    {
+        var featureClassContent =
+           $$"""
+            using BddDotNet;
+            using Microsoft.Extensions.DependencyInjection;
+
+            namespace {{assemblyName}};
+
+            public static partial class GherkinSourceGeneratorExtensions
+            {
+                public static partial void SourceGeneratedGherkinScenarios(this IServiceCollection services)
+                {
+                    {{GetTestCasesContent(testCases)}}
+                }
+            }
+            """;
+
+        return featureClassContent;
+    }
+
+    private static string GetTestCasesContent(IEnumerable<TestCase> testCases)
     {
         var declarations = new StringBuilder();
-
-        foreach (var feature in features)
+        foreach (var testCase in testCases)
         {
-            using var stringReader = new StringReader(feature.GetText()?.ToString());
-            var gherkinDocument = new Parser().Parse(stringReader);
-
-            foreach (var scenario in gherkinDocument.Feature.Children.OfType<Scenario>().Where(x => !x.Examples.Any()))
-            {
-                declarations.AppendLine(GetScenarioDeclaration(assemblyName, feature.Path, gherkinDocument.Feature.Name, scenario));
-            }
+            declarations.AppendLine(GetTestCaseContent(testCase));
         }
-
         return declarations.ToString();
     }
 
-    private static string GetScenarioDeclaration(string assemblyName, string featurePath, string featureName, Scenario scenario)
+    private static string GetTestCaseContent(TestCase testCase)
     {
         var declaration =
             $$""""
             services.Scenario(
-                "{{assemblyName}}",
-                "{{assemblyName}}",
-                "{{featureName}}",
-                "{{scenario.Name}}",
-                """{{featurePath}}""",
-                {{scenario.Location.Line}},
+                "{{testCase.AssemblyName}}",
+                "{{testCase.AssemblyName}}",
+                "{{testCase.Feature}}",
+                "{{testCase.Scenario}}",
+                """{{testCase.FeaturePath}}""",
+                {{testCase.Line}},
                 async context =>
                 {
-                    {{GetScenarioStepsDeclarations(featurePath, scenario)}}
+                    {{GetTestStepsContent(testCase)}}
                 });
             """";
 
         return declaration;
     }
 
-    private static string GetScenarioStepsDeclarations(string featurePath, Scenario scenario)
+    private static string GetTestStepsContent(TestCase testCase)
     {
         var stepDeclarations = new StringBuilder();
 
-        var keyword = "Given";
-
-        foreach (var step in scenario.Steps)
+        foreach (var step in testCase.Steps)
         {
-            if (!step.Keyword.StartsWith("And"))
-            {
-                keyword = step.Keyword;
-            }
-
             stepDeclarations.AppendLine(
                 $""""
-                #line ({step.Location.Line}, {step.Location.Column})-({step.Location.Line + 1}, 1) 12 "{featurePath}"
+                #line ({step.Line}, {step.Column})-({step.Line + 1}, 1) 12 "{step.FeaturePath}"
                 """");
 
-            if (step.Argument is DataTable dataTable)
+            if (step.DataTable is { } dataTable)
             {
                 stepDeclarations.AppendLine(
                     $$""""
-                    await context.{{keyword}}("""{{step.Text}}""", (object)new string[][]
+                    await context.{{step.Keyword}}("""{{step.Text}}""", (object)new string[][]
                     {
-                        {{GetDataTableDeclaration(dataTable)}}
+                        {{GetDataTableContent(dataTable)}}
                     });
-                    """");
-            }
-            else if (step.Argument is DocString docString)
-            {
-                throw new NotImplementedException("DocString are not supported for now");
-            }
-            else if (step.Argument is null)
-            {
-                stepDeclarations.AppendLine(
-                    $""""
-                    await context.{keyword}("""{step.Text}""");
                     """");
             }
             else
             {
-                throw new NotImplementedException($"Unsupported step argument type: {step.Argument?.GetType().FullName}");
+                stepDeclarations.AppendLine(
+                    $""""
+                    await context.{step.Keyword}("""{step.Text}""");
+                    """");
             }
         }
 
@@ -153,18 +130,18 @@ internal sealed class ScenariosExtensionsGenerator : IIncrementalGenerator
         return stepDeclarations.ToString();
     }
 
-    private static string GetDataTableDeclaration(DataTable dataTable)
+    private static string GetDataTableContent(string[][] dataTable)
     {
         var dataTableDeclaration = new StringBuilder();
 
-        foreach (var row in dataTable.Rows)
+        foreach (var row in dataTable)
         {
             dataTableDeclaration.Append("new[] {");
-            foreach (var cell in row.Cells)
+            foreach (var cell in row)
             {
                 dataTableDeclaration.Append(
                     $""""
-                    """{cell.Value}""",
+                    """{cell}""",
                     """");
             }
             dataTableDeclaration.AppendLine("},");

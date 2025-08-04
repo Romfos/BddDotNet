@@ -45,5 +45,17 @@ public sealed class GherkinTests
                 "this is simple when step",
                 "this is simple when step"
             ]);
+
+        Assert.IsTrue(traces["#1. scenario outline with 2 examples"] is
+            [
+                "sharpener",
+                string[][] and [["book", "price"], ["sharpener", "30"], ["static", "99"]]
+            ]);
+
+        Assert.IsTrue(traces["#2. scenario outline with 2 examples"] is
+            [
+                "pencil",
+                string[][] and [["book", "price"], ["pencil", "15"], ["static", "99"]]
+            ]);
     }
 }
