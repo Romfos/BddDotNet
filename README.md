@@ -70,7 +70,6 @@ services.When(new("this is when step"), () =>
     Console.WriteLine("This is the when step.");
 });
 
-
 services.Then(new("this is then step"), () =>
 {
     Console.WriteLine("This is the then step.");
