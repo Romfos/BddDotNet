@@ -29,7 +29,9 @@ Comparing with Reqnroll (or Specflow, other popular framework in .NET Ecosystem)
 -	AOT & Trimming friendly. More info: [Native AOT deployment](https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot/)
 -	Nullable reference types and other modern dotnet features support
 
-# Gherkin syntax example
+# BddDotNet.Gherkin.SourceGenerator usage example
+Allow you to use Gherkin scenarios:
+
 ```gherkin
 Feature: Guess the word
 
@@ -45,7 +47,8 @@ Feature: Guess the word
     Then the Breaker must guess a word with 5 characters
 ```
 
-# C# syntax scenario example
+# BddDotNet usage example
+Alllow you to use builder syntax for building steps & scenarios
 
 Program.cs content:
 ```csharp
