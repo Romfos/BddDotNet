@@ -21,6 +21,7 @@ Feature: Guess the word
 
 # CSharp syntax scenario example
 
+Program.cs content:
 ```csharp
 using BddDotNet;
 using Microsoft.Testing.Platform.Builder;
@@ -44,7 +45,6 @@ services.When(new("this is when step"), () =>
 {
     Console.WriteLine("This is the when step.");
 });
-
 
 services.Then(new("this is then step"), () =>
 {
