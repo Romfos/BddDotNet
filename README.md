@@ -45,6 +45,7 @@ Feature: Guess the word
 
 # CSharp syntax scenario example
 
+Program.cs content:
 ```csharp
 using BddDotNet;
 using Microsoft.Testing.Platform.Builder;
