@@ -13,19 +13,19 @@ Modern BDD framework for c# and .NET with gherkin support
 - https://www.nuget.org/packages/BddDotNet
 - https://www.nuget.org/packages/BddDotNet.Gherkin.SourceGenerator
 
-# Benefits
+# Key points
 
-Comparing with Reqnroll (or Specflow, other popular framework in .NET Ecosystem) this framework has following benefits:
+Comparing with Reqnroll (or Specflow, other popular framework in .NET Ecosystem) this framework has following difference:
+-	Microsoft.Extensions.* based
+-	Microsoft testing platform as a backend. No hell with different unit tests providers.
+-	Source generator for features compilation & step registration
 -	Code first approach with builder pattern
 -	Extensibility via public interfaces and DI
 - Modular. Small and fast library. All extra features are provided as separate nuget packages
 -	No reflection usage (or quite limited)
--	Support .NET 8+ (Recommended option) and .NET Framework 4.7.2+ 
+-	Support .NET 8+ (.NET 9 is a recommended option) and .NET Framework 4.7.2+ 
 -	AOT & Trimming friendly. More info: [Native AOT deployment](https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot/)
--	Nullable reference types and other modern dotnet features
--	Microsoft testing platform as a backend. No hell with different unit tests providers.
--	Microsoft.Extensions.* based
--	Source generator for features compilation & step registration
+-	Nullable reference types and other modern dotnet features support
 
 # Gherkin syntax example
 ```gherkin
