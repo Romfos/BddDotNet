@@ -89,7 +89,7 @@ return await testApp.RunAsync();
 - https://www.nuget.org/packages/BddDotNet
 - https://www.nuget.org/packages/BddDotNet.Gherkin.SourceGenerator
 4) Configure test application in Program.cs
-```
+```csharp
 using DemoAppNamespace;
 using BddDotNetAot;
 using Microsoft.Testing.Platform.Builder;
