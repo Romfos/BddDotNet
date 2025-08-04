@@ -34,6 +34,3 @@ jobs:
 
       - name: Push to nupkg
         run: dotnet nuget push .\build\*.nupkg -k ${{ secrets.NUGET }} -s https://api.nuget.org/v3/index.json
-
-      - name: Push to snupkg
-        run: dotnet nuget push .\build\*.snupkg -k ${{ secrets.NUGET }} -s https://api.nuget.org/v3/index.json
