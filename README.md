@@ -7,7 +7,6 @@ Modern BDD framework for c# and .NET with gherkin support
 [![BddDotNet](https://img.shields.io/nuget/v/BddDotNet?label=BddDotNet)](https://www.nuget.org/packages/BddDotNet)
 [![BddDotNet.Gherkin.SourceGenerator](https://img.shields.io/nuget/v/BddDotNet.Gherkin.SourceGenerator?label=BddDotNet.Gherkin.SourceGenerator)](https://www.nuget.org/packages/BddDotNet.Gherkin.SourceGenerator)
 
-
 # Requirements
 - .NET 8+ or .NET Framework 4.7.2+ (We recommend .NET 9 as a default option)
 - Visual Studio 2022 or Visual Studio Code
@@ -81,3 +80,67 @@ services.Then(new("this is then step"), () =>
 
 using var testApp = await builder.BuildAsync();
 return await testApp.RunAsync();
+
+```
+# How to use
+1) Create new console application (In this example we will use .NET 9)
+2) Install required nuget packages
+- https://www.nuget.org/packages/BddDotNet
+- https://www.nuget.org/packages/BddDotNet.Gherkin.SourceGenerator
+4) Configure test application in Program.cs
+```
+using DemoAppNamespace;
+using BddDotNetAot;
+using Microsoft.Testing.Platform.Builder;
+
+var builder = await TestApplication.CreateBuilderAsync(args);
+
+var services = builder.AddBddDotNet();
+services.SourceGeneratedGherkinScenarios();
+services.SourceGeneratedGherkinSteps();
+
+using var testApp = await builder.BuildAsync();
+return await testApp.RunAsync();
+```
+5) Add .*feature files and Step classes. For example:
+
+DemoApp.Feature:
+```gherkin
+@feature-tag
+Feature: DemoApp feature
+
+A short summary of the feature
+
+@scenario-tag-1
+Scenario: simple steps
+    Given this is simple given step
+    When this is simple when step
+    Then this is simple then step
+```
+Steps.cs
+```csharp
+using BddDotNet.Gherkin;
+
+namespace BddDotNetAot.Steps;
+
+internal sealed class Steps1
+{
+    [Given("this is simple given step")]
+    public void Step1()
+    {
+    }
+
+    [When("this is simple when step")]
+    public void Step2()
+    {
+    }
+
+    [Then("this is simple then step")]
+    public void Step3()
+    {
+    }
+}
+```
+
+
+  
