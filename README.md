@@ -84,7 +84,7 @@ return await testApp.RunAsync();
 
 ```
 # How to use
-1) Create new console application (In this example we will use .NET 9)
+1) Create new console application (In this example we will use .NET 9  with gherkin syntax)
 2) Install required nuget packages
 - https://www.nuget.org/packages/BddDotNet
 - https://www.nuget.org/packages/BddDotNet.Gherkin.SourceGenerator
