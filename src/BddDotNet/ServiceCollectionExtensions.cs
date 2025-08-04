@@ -1,6 +1,7 @@
 using BddDotNet.Extensibility;
 using BddDotNet.Models;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
@@ -51,7 +52,7 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection Given(this IServiceCollection services, Regex pattern, Delegate method)
     {
-        services.AddScoped(_ => new Step(StepType.Given, pattern, (_) => method));
+        services.AddScoped(_ => new Step(StepType.Given, pattern, _ => method));
 
         return services;
     }
@@ -65,7 +66,7 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection When(this IServiceCollection services, Regex pattern, Delegate method)
     {
-        services.AddScoped(_ => new Step(StepType.When, pattern, (_) => method));
+        services.AddScoped(_ => new Step(StepType.When, pattern, _ => method));
 
         return services;
     }
@@ -79,7 +80,7 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection Then(this IServiceCollection services, Regex pattern, Delegate method)
     {
-        services.AddScoped(_ => new Step(StepType.Then, pattern, (_) => method));
+        services.AddScoped(_ => new Step(StepType.Then, pattern, _ => method));
 
         return services;
     }
@@ -94,7 +95,16 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection BeforeScenario<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(
         this IServiceCollection service) where T : class, IBeforeScenario
     {
-        service.AddScoped<IBeforeScenario, T>();
+        service.TryAddScoped<T>();
+        service.AddScoped<IBeforeScenario>(services => services.GetRequiredService<T>());
+        return service;
+    }
+
+    public static IServiceCollection AfterScenario<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(
+        this IServiceCollection service) where T : class, IAfterScenario
+    {
+        service.TryAddScoped<T>();
+        service.AddScoped<IAfterScenario>(services => services.GetRequiredService<T>());
         return service;
     }
 }
