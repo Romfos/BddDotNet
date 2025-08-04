@@ -47,7 +47,7 @@ Feature: Guess the word
     Then the Breaker must guess a word with 5 characters
 ```
 
-# CSharp syntax scenario example
+# C# syntax scenario example
 
 Program.cs content:
 ```csharp
