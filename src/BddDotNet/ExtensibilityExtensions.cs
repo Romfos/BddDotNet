@@ -5,7 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace BddDotNet;
 
-public static class ExtensibilityExtensions
+public static partial class ServiceCollectionExtensions
 {
     public static IServiceCollection BeforeScenario<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(
         this IServiceCollection service) where T : class, IBeforeScenario

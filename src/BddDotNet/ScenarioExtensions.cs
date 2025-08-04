@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 
 namespace BddDotNet;
 
-public static class ScenarioExtensions
+public static partial class ServiceCollectionExtensions
 {
     public static IServiceCollection Scenario<TFeature>(
         this IServiceCollection services,

@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace BddDotNet;
 
-public static class StepsExtensions
+public static partial class ServiceCollectionExtensions
 {
     public static IServiceCollection Given(this IServiceCollection services, Regex pattern, Delegate method)
     {
