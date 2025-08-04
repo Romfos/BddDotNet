@@ -1,3 +1,4 @@
+using BddDotNet.Gherkin.SourceGenerator.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -9,13 +10,6 @@ namespace BddDotNet.Gherkin.SourceGenerator;
 [Generator]
 internal sealed class StepsExtensionsGenerator : IIncrementalGenerator
 {
-    private sealed record StepDefinition(string Pattern, string ServiceTypeName, string MethodName)
-    {
-        public string Pattern { get; } = Pattern;
-        public string ServiceTypeName { get; } = ServiceTypeName;
-        public string MethodName { get; } = MethodName;
-    }
-
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         var assemblyName = context.CompilationProvider
@@ -25,21 +19,21 @@ internal sealed class StepsExtensionsGenerator : IIncrementalGenerator
             .ForAttributeWithMetadataName(
                 "BddDotNet.Gherkin.GivenAttribute",
                 static (node, _) => node is MethodDeclarationSyntax && node.Parent is ClassDeclarationSyntax,
-                GetMetadataForStep)
+                GetGherkinStep)
             .Collect();
 
         var whenStepDeclarationNodes = context.SyntaxProvider
             .ForAttributeWithMetadataName(
                 "BddDotNet.Gherkin.WhenAttribute",
                 static (node, _) => node is MethodDeclarationSyntax && node.Parent is ClassDeclarationSyntax,
-                GetMetadataForStep)
+                GetGherkinStep)
             .Collect();
 
         var thenStepDeclarationNodes = context.SyntaxProvider
             .ForAttributeWithMetadataName(
                 "BddDotNet.Gherkin.ThenAttribute",
                 static (node, _) => node is MethodDeclarationSyntax && node.Parent is ClassDeclarationSyntax,
-                GetMetadataForStep)
+                GetGherkinStep)
             .Collect();
 
         var arguments = givenStepDeclarationNodes
@@ -59,54 +53,14 @@ internal sealed class StepsExtensionsGenerator : IIncrementalGenerator
         });
     }
 
-    private static string GetMethodBodyContent(
-        ImmutableArray<StepDefinition> givenSteps,
-        ImmutableArray<StepDefinition> whenSteps,
-        ImmutableArray<StepDefinition> thenSteps)
+    public static string FormatCode(string code)
     {
-        var methodBodyContent = new StringBuilder();
-
-        AppendTypeRegistrations(methodBodyContent, givenSteps, whenSteps, thenSteps);
-
-        AppendStepDeclarations(methodBodyContent, "Given", givenSteps);
-        AppendStepDeclarations(methodBodyContent, "When", whenSteps);
-        AppendStepDeclarations(methodBodyContent, "Then", thenSteps);
-
-        return methodBodyContent.ToString();
-    }
-
-    private static void AppendTypeRegistrations(
-        StringBuilder methodBodyContent,
-        ImmutableArray<StepDefinition> givenSteps,
-        ImmutableArray<StepDefinition> whenSteps,
-        ImmutableArray<StepDefinition> thenSteps)
-    {
-        var serviceTypeNames = givenSteps
-            .Concat(whenSteps)
-            .Concat(thenSteps)
-            .Select(x => x.ServiceTypeName)
-            .Distinct();
-
-        foreach (var serviceTypeName in serviceTypeNames)
-        {
-            methodBodyContent.AppendLine(
-                $$"""
-                services.TryAddScoped<{{serviceTypeName}}>();
-                """);
-        }
-    }
-
-    private static void AppendStepDeclarations(StringBuilder output, string extensionMethodName, ImmutableArray<StepDefinition> steps)
-    {
-        foreach (var step in steps)
-        {
-            output.AppendLine(
-                $$"""
-                services.{{extensionMethodName}}(
-                    new("{{step.Pattern}}"),
-                    services => services.GetRequiredService<{{step.ServiceTypeName}}>().{{step.MethodName}});
-                """);
-        }
+        return CSharpSyntaxTree.ParseText(code)
+            .GetRoot()
+            .NormalizeWhitespace()
+            .SyntaxTree
+            .GetText()
+            .ToString();
     }
 
     private static string GenerateClassContent(string assemblyName, string methodBodyContent)
@@ -131,17 +85,60 @@ internal sealed class StepsExtensionsGenerator : IIncrementalGenerator
         return classContent;
     }
 
-    public static string FormatCode(string code)
+    private static string GetMethodBodyContent(ImmutableArray<GherkinStep> givenSteps, ImmutableArray<GherkinStep> whenSteps, ImmutableArray<GherkinStep> thenSteps)
     {
-        return CSharpSyntaxTree.ParseText(code)
-            .GetRoot()
-            .NormalizeWhitespace()
-            .SyntaxTree
-            .GetText()
-            .ToString();
+        var methodBodyContent = new StringBuilder();
+
+        methodBodyContent.AppendLine(GetServiceRegistrationsContent(givenSteps, whenSteps, thenSteps));
+        methodBodyContent.AppendLine(GetStepRegistrations("Given", givenSteps));
+        methodBodyContent.AppendLine(GetStepRegistrations("When", whenSteps));
+        methodBodyContent.AppendLine(GetStepRegistrations("Then", thenSteps));
+
+        return methodBodyContent.ToString();
     }
 
-    private static StepDefinition GetMetadataForStep(GeneratorAttributeSyntaxContext context, CancellationToken cancellationToken)
+    private static string GetServiceRegistrationsContent(
+        ImmutableArray<GherkinStep> givenSteps,
+        ImmutableArray<GherkinStep> whenSteps,
+        ImmutableArray<GherkinStep> thenSteps)
+    {
+        var typeRegistrations = new StringBuilder();
+
+        var serviceTypeNames = givenSteps
+            .Concat(whenSteps)
+            .Concat(thenSteps)
+            .Select(x => x.ServiceTypeName)
+            .Distinct();
+
+        foreach (var serviceTypeName in serviceTypeNames)
+        {
+            typeRegistrations.AppendLine(
+                $$"""
+                services.TryAddScoped<{{serviceTypeName}}>();
+                """);
+        }
+
+        return typeRegistrations.ToString();
+    }
+
+    private static string GetStepRegistrations(string extensionMethodName, ImmutableArray<GherkinStep> steps)
+    {
+        var stepRegistrations = new StringBuilder();
+
+        foreach (var step in steps)
+        {
+            stepRegistrations.AppendLine(
+                $$"""
+                services.{{extensionMethodName}}(
+                    new("{{step.Pattern}}"),
+                    services => services.GetRequiredService<{{step.ServiceTypeName}}>().{{step.MethodName}});
+                """);
+        }
+
+        return stepRegistrations.ToString();
+    }
+
+    private static GherkinStep GetGherkinStep(GeneratorAttributeSyntaxContext context, CancellationToken cancellationToken)
     {
         var methodDeclaration = (MethodDeclarationSyntax)context.TargetNode;
         var classDeclaration = (ClassDeclarationSyntax)methodDeclaration.Parent!;

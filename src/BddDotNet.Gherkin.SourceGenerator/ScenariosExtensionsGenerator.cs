@@ -1,4 +1,5 @@
-using BddDotNet.Gherkin.SourceGenerator.TestCases;
+using BddDotNet.Gherkin.SourceGenerator.Models;
+using BddDotNet.Gherkin.SourceGenerator.Services;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using System.Collections.Immutable;
@@ -28,7 +29,8 @@ internal sealed class ScenariosExtensionsGenerator : IIncrementalGenerator
             return;
         }
 
-        var testCases = TestCasesParser.GetTestCases(args.assemblyName, args.features);
+        var testCasesParser = new TestCasesParser();
+        var testCases = testCasesParser.GetTestCases(args.assemblyName, args.features);
         var featureClassContent = GetTestClassContent(args.assemblyName, testCases);
         var formattedFeatureClassContent = FormatCode(featureClassContent);
         context.AddSource($"SourceGeneratedGherkinScenarios.g.cs", formattedFeatureClassContent);

@@ -75,11 +75,14 @@ internal sealed class BddDotNetTestFramework(IServiceProvider services, IEnumera
         try
         {
             await using var scope = services.CreateAsyncScope();
-            var scenarioExecutionService = scope.ServiceProvider.GetRequiredService<ScenarioExecutionService>();
+
             var testContext = scope.ServiceProvider.GetRequiredService<TestContext>();
             testContext.Feature = scenario.Feature;
             testContext.Scenario = scenario.Name;
+
+            var scenarioExecutionService = scope.ServiceProvider.GetRequiredService<ScenarioExecutionService>();
             await scenarioExecutionService.ExecuteAsync(scenario);
+
             return PassedTestNodeStateProperty.CachedInstance;
         }
         catch (Exception ex)

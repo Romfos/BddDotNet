@@ -1,20 +1,21 @@
+using BddDotNet.Gherkin.SourceGenerator.Models;
 using Gherkin;
 using Gherkin.Ast;
 using Microsoft.CodeAnalysis;
 using System.Collections.Immutable;
 
-namespace BddDotNet.Gherkin.SourceGenerator.TestCases;
+namespace BddDotNet.Gherkin.SourceGenerator.Services;
 
-internal static class TestCasesParser
+internal sealed class TestCasesParser
 {
-    private static readonly Parser gherkinParser = new();
+    private readonly Parser gherkinParser = new();
 
-    public static IEnumerable<TestCase> GetTestCases(string assemblyName, ImmutableArray<AdditionalText> featureFiles)
+    public IEnumerable<TestCase> GetTestCases(string assemblyName, ImmutableArray<AdditionalText> featureFiles)
     {
         return featureFiles.SelectMany(x => GetTestCases(assemblyName, x.Path, x.GetText()?.ToString()!));
     }
 
-    public static IEnumerable<TestCase> GetTestCases(string assemblyName, string featureFilePath, string featureFileText)
+    private IEnumerable<TestCase> GetTestCases(string assemblyName, string featureFilePath, string featureFileText)
     {
         using var stringReader = new StringReader(featureFileText);
         var gherkinDocument = gherkinParser.Parse(stringReader);
@@ -41,7 +42,7 @@ internal static class TestCasesParser
         }
     }
 
-    private static IEnumerable<TestCase> GetScenarioOutlineTestCases(TestCase originalTestCase, IEnumerable<Examples> examples)
+    private IEnumerable<TestCase> GetScenarioOutlineTestCases(TestCase originalTestCase, IEnumerable<Examples> examples)
     {
         var index = 0;
 
@@ -66,7 +67,7 @@ internal static class TestCasesParser
         }
     }
 
-    private static IEnumerable<TestCaseStep> GetScenarioOutlineTestSteps(IEnumerable<TestCaseStep> originalSteps, string[] exampleHeaderCells, string[] exampleValuesCells)
+    private IEnumerable<TestCaseStep> GetScenarioOutlineTestSteps(IEnumerable<TestCaseStep> originalSteps, string[] exampleHeaderCells, string[] exampleValuesCells)
     {
         return originalSteps.Select(originalStep =>
         {
@@ -80,7 +81,7 @@ internal static class TestCasesParser
         });
     }
 
-    private static TestCase GetTestCaseForScenario(string assemblyName, string featureName, string featureFilePath, Scenario scenario)
+    private TestCase GetTestCaseForScenario(string assemblyName, string featureName, string featureFilePath, Scenario scenario)
     {
         var testCase = new TestCase(
             assemblyName,
@@ -94,7 +95,7 @@ internal static class TestCasesParser
         return testCase;
     }
 
-    private static IEnumerable<TestCaseStep> GetScenarioTestSteps(string featureFilePath, Scenario scenario)
+    private IEnumerable<TestCaseStep> GetScenarioTestSteps(string featureFilePath, Scenario scenario)
     {
         var keyword = "Given";
 
@@ -119,7 +120,7 @@ internal static class TestCasesParser
         }
     }
 
-    private static string Replace(string text, string[] exampleHeaderCells, string[] exampleValuesCells)
+    private string Replace(string text, string[] exampleHeaderCells, string[] exampleValuesCells)
     {
         for (var i = 0; i < exampleHeaderCells.Length; i++)
         {

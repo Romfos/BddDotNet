@@ -1,4 +1,4 @@
-namespace BddDotNet.Gherkin.SourceGenerator.TestCases;
+namespace BddDotNet.Gherkin.SourceGenerator.Models;
 
 internal sealed record TestCase(string AssemblyName, string Feature, string Scenario, string FeaturePath, int Line)
 {

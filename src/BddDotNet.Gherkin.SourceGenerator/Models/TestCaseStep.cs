@@ -1,4 +1,4 @@
-namespace BddDotNet.Gherkin.SourceGenerator.TestCases;
+namespace BddDotNet.Gherkin.SourceGenerator.Models;
 
 internal sealed record TestCaseStep(string Keyword, string Text, string[][]? DataTable, string FeaturePath, int Line, int Column)
 {

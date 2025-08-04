@@ -16,9 +16,10 @@ public static class TestApplicationBuilderExtensions
 
         services.AddScoped<TestContext>();
         services.AddScoped<ITestContext>(services => services.GetRequiredService<TestContext>());
+        services.AddScoped<IScenarioContext, ScenarioContext>();
+
         services.AddScoped<ScenarioExecutionService>();
         services.AddScoped<StepExecutionService>();
-        services.AddScoped<IScenarioContext, ScenarioContext>();
 
         builder.RegisterTestFramework(
             _ => new TestFrameworkCapabilities(),
