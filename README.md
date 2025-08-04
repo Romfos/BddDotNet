@@ -1,6 +1,6 @@
 # Overview
 
-Modern BDD framework for c# and .NET with gherkin support
+Modern BDD framework for C# and .NET with gherkin support
 
 [![.github/workflows/build.yml](https://github.com/Romfos/BddDotNet/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/Romfos/BddDotNet/actions/workflows/build.yml)
 
