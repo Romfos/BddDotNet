@@ -9,7 +9,7 @@ on:
 run-name: Release ${{ inputs.Version }}
 
 jobs:
-  build:
+  release:
     runs-on: windows-latest
     steps:
       - name: Checkout
