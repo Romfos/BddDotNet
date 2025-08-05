@@ -8,7 +8,7 @@ Modern opensource BDD framework for C# and .NET with gherkin support
 |--------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Core services. Responsible for scenario lifecycle & configuration. | [![BddDotNet](https://img.shields.io/nuget/v/BddDotNet?label=BddDotNet)](https://www.nuget.org/packages/BddDotNet)                                                                                                 |
 | Adding support for Gherkin language. Source generator.             | [![BddDotNet.Gherkin.SourceGenerator](https://img.shields.io/nuget/v/BddDotNet.Gherkin.SourceGenerator?label=BddDotNet.Gherkin.SourceGenerator)](https://www.nuget.org/packages/BddDotNet.Gherkin.SourceGenerator) |
-| Adding support for C# expressions for arguments.                   | (Prototype, not released) BddDotNet.CSharpExpressions                                                                                                                                                              |
+| Adding support for C# expressions for arguments.                   | [![BddDotNet.CSharpExpressions](https://img.shields.io/nuget/v/BddDotNet.CSharpExpressions?label=BddDotNet.CSharpExpressions)](https://www.nuget.org/packages/BddDotNet.CSharpExpressions)                         |
 
 # How to use
 
