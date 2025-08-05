@@ -9,13 +9,13 @@ Modern opensource BDD framework for C# and .NET with gherkin support
 
 # How to use
 
-Wiki: [Basic setup .NET 8 project with Gherkin support](https://github.com/Romfos/BddDotNet/wiki/Basic-setup-.NET-8--project-with-Gherkin-support)
+Wiki: [Setup .NET 8 project with Gherkin support](https://github.com/Romfos/BddDotNet/wiki/Setup-.NET-8-project-with-Gherkin-support)
 
 # Nuget packages links  
 - https://www.nuget.org/packages/BddDotNet
 - https://www.nuget.org/packages/BddDotNet.Gherkin.SourceGenerator
 
-# Key points
+# Comparing with alternatives
 
 Comparing with Reqnroll (or Specflow, other popular framework in .NET Ecosystem) this framework has following difference:
 -	Microsoft.Extensions.* based
@@ -29,7 +29,9 @@ Comparing with Reqnroll (or Specflow, other popular framework in .NET Ecosystem)
 -	AOT & Trimming friendly. More info: [Native AOT deployment](https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot/)
 -	Nullable reference types and other modern dotnet features support
 
-# Gherkin syntax example
+# BddDotNet.Gherkin.SourceGenerator usage example
+Allow you to use Gherkin scenarios:
+
 ```gherkin
 Feature: Guess the word
 
@@ -45,7 +47,8 @@ Feature: Guess the word
     Then the Breaker must guess a word with 5 characters
 ```
 
-# C# syntax scenario example
+# BddDotNet usage example
+Alllow you to use builder syntax for building steps & scenarios
 
 Program.cs content:
 ```csharp
