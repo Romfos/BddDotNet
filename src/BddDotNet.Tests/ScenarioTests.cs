@@ -176,8 +176,6 @@ public sealed class ScenarioTests
                 traces.Add(1);
                 await context.Then("then1 @Value");
                 traces.Add(2);
-                await context.Then("then1 @Value");
-                traces.Add(3);
             });
 
             services.Then(new("then1 (.*)"), (string value) =>
@@ -186,6 +184,33 @@ public sealed class ScenarioTests
             });
         });
 
-        Assert.IsTrue(traces is [1, "Value", 2, "Value", 3]);
+        Assert.IsTrue(traces is [1, "ExpressionValue", 2]);
+    }
+
+    [TestMethod]
+    public async Task CSharpExpressionsForDataTableTest()
+    {
+        var traces = new List<object?>();
+
+        await Platform.RunTestAsync(services =>
+        {
+            services.AddCSharpExpressions<CSharpExpressionsGlobals>();
+
+            services.AddSingleton(traces);
+
+            services.Scenario<ScenarioTests>("feature1", "scenario1", async context =>
+            {
+                traces.Add(1);
+                await context.Then("given", (object?)new string[][] { ["test", "@Value"] });
+                traces.Add(2);
+            });
+
+            services.Then(new("given"), (string[][] value) =>
+            {
+                traces.Add(value);
+            });
+        });
+
+        Assert.IsTrue(traces is [1, string[][] and [["test", "ExpressionValue"]], 2]);
     }
 }

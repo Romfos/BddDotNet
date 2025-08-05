@@ -2,9 +2,7 @@
   <Import Project="../Package.props" />
 
   <PropertyGroup>
-    <TargetFrameworks>net8.0;net472</TargetFrameworks>    
-    <!--Temporary disable packaging for this project-->
-    <IsPackable>false</IsPackable>
+    <TargetFrameworks>net8.0;net472</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
