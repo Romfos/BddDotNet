@@ -4,10 +4,11 @@ Modern opensource BDD framework for C# and .NET with gherkin support
 
 [![.github/workflows/build.yml](https://github.com/Romfos/BddDotNet/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/Romfos/BddDotNet/actions/workflows/build.yml)
 
-| Description                                                          | Package                                                                                                                                                                                                            |
-|----------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Main package with core services. Responsible for scenario lifecycle. | [![BddDotNet](https://img.shields.io/nuget/v/BddDotNet?label=BddDotNet)](https://www.nuget.org/packages/BddDotNet)                                                                                                 |
-| Source generator for Gherkin features support                        | [![BddDotNet.Gherkin.SourceGenerator](https://img.shields.io/nuget/v/BddDotNet.Gherkin.SourceGenerator?label=BddDotNet.Gherkin.SourceGenerator)](https://www.nuget.org/packages/BddDotNet.Gherkin.SourceGenerator) |
+| Description                                                        | Package                                                                                                                                                                                                            |
+|--------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Core services. Responsible for scenario lifecycle & configuration. | [![BddDotNet](https://img.shields.io/nuget/v/BddDotNet?label=BddDotNet)](https://www.nuget.org/packages/BddDotNet)                                                                                                 |
+| Adding support for Gherkin language. Source generator.             | [![BddDotNet.Gherkin.SourceGenerator](https://img.shields.io/nuget/v/BddDotNet.Gherkin.SourceGenerator?label=BddDotNet.Gherkin.SourceGenerator)](https://www.nuget.org/packages/BddDotNet.Gherkin.SourceGenerator) |
+| Adding support for C# expressions for arguments.                   | (Prototype, not released) BddDotNet.CSharpExpressions                                                                                                                                                              |
 
 # How to use
 
