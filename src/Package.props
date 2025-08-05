@@ -1,9 +1,5 @@
 <Project>
   
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net8.0' ">
-    <IsAotCompatible>true</IsAotCompatible>
-  </PropertyGroup>
-
   <PropertyGroup>
     <Authors>Romfos</Authors>
     <PackageReadmeFile>README.md</PackageReadmeFile>

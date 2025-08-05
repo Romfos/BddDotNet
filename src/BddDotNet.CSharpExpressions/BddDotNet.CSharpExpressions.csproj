@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../Package.props" />
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net472</TargetFrameworks>    
+    <!--Temporary disable packaging for this project-->
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.14.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BddDotNet\BddDotNet.csproj" />
+  </ItemGroup>
+
+</Project>

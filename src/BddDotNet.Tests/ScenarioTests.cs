@@ -1,4 +1,6 @@
+using BddDotNet.CSharpExpressions;
 using BddDotNet.Tests.Extensibility;
+using BddDotNet.Tests.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BddDotNet.Tests;
@@ -156,5 +158,34 @@ public sealed class ScenarioTests
         });
 
         Assert.IsTrue(traces is [1, "abcd", "System.String", 2]);
+    }
+
+    [TestMethod]
+    public async Task CSharpExpressionsTest()
+    {
+        var traces = new List<object?>();
+
+        await Platform.RunTestAsync(services =>
+        {
+            services.AddCSharpExpressions<CSharpExpressionsGlobals>();
+
+            services.AddSingleton(traces);
+
+            services.Scenario<ScenarioTests>("feature1", "scenario1", async context =>
+            {
+                traces.Add(1);
+                await context.Then("then1 @Value");
+                traces.Add(2);
+                await context.Then("then1 @Value");
+                traces.Add(3);
+            });
+
+            services.Then(new("then1 (.*)"), (string value) =>
+            {
+                traces.Add(value);
+            });
+        });
+
+        Assert.IsTrue(traces is [1, "Value", 2, "Value", 3]);
     }
 }
