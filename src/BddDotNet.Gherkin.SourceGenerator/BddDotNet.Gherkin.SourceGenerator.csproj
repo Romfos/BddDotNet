@@ -21,7 +21,7 @@
     <ItemGroup>
       <TargetPathWithTargetPlatformMoniker Include="$(PKGGherkin)\lib\netstandard2.0\Gherkin.dll" IncludeRuntimeDependency="false" />
 
-      <None Include="../BddDotNet.Gherkin.SourceGenerator.props" Pack="true" PackagePath="build" />
+      <None Include="./BddDotNet.Gherkin.SourceGenerator.props" Pack="true" PackagePath="build" />
       <None Include="$(OutputPath)\BddDotNet.Gherkin.SourceGenerator.dll" Pack="true" PackagePath="analyzers/dotnet/cs" />
       <None Include="$(PKGGherkin)\lib\netstandard2.0\Gherkin.dll" Pack="true" PackagePath="analyzers/dotnet/cs" />
     </ItemGroup>

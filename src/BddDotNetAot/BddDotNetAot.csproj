@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="../BddDotNet.Gherkin.SourceGenerator.props" />
+  <Import Project="../BddDotNet.Gherkin.SourceGenerator/BddDotNet.Gherkin.SourceGenerator.props" />
 
   <PropertyGroup>
     <TargetFrameworks>net9.0</TargetFrameworks>
