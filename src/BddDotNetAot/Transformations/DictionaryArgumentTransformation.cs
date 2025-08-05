@@ -4,7 +4,7 @@ namespace BddDotNetAot.Transformations;
 
 internal sealed class DictionaryArgumentTransformation : IArgumentTransformation
 {
-    public bool TryParse(object? input, Type targetType, out object? output)
+    public ValueTask<object?> TransformAsync(object? input, Type targetType)
     {
         if (input is string[][] dataTable && targetType == typeof(Dictionary<string, string>))
         {
@@ -15,11 +15,9 @@ internal sealed class DictionaryArgumentTransformation : IArgumentTransformation
                 dictionary[row[0]] = row[1];
             }
 
-            output = dictionary;
-            return true;
+            return new(dictionary);
         }
 
-        output = null;
-        return false;
+        return new(input);
     }
 }

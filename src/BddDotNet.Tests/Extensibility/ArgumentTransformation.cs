@@ -4,10 +4,15 @@ namespace BddDotNet.Tests.Extensibility;
 
 internal sealed class ArgumentTransformation(List<object?> traces) : IArgumentTransformation
 {
-    public bool TryParse(object? input, Type type, out object? output)
+    public object? Transform(object? input, Type targetType)
     {
         traces.Add(input);
-        output = type.FullName;
-        return true;
+        return targetType.FullName;
+    }
+
+    public ValueTask<object?> TransformAsync(object? input, Type targetType)
+    {
+        traces.Add(input);
+        return new(targetType.FullName);
     }
 }

@@ -9,14 +9,14 @@ namespace BddDotNet.Services;
 internal sealed class StepExecutionService(
     IServiceProvider serviceProvider,
     IEnumerable<Step> steps,
-    IEnumerable<IArgumentTransformation> transformations)
+    IEnumerable<IArgumentTransformation> argumentTransformations)
 {
     public async Task ExecuteAsync(StepType stepType, string text, object?[] additionalStepArguments)
     {
         var (step, match) = FindGherkinStep(stepType, text);
 
         var handler = step.Factory(serviceProvider);
-        var arguments = GetStepArguments(handler, match, additionalStepArguments);
+        var arguments = await GetStepArgumentsAsync(handler, match, additionalStepArguments);
         var result = handler.DynamicInvoke(arguments);
 
         if (result is Task task)
@@ -30,29 +30,31 @@ internal sealed class StepExecutionService(
         }
     }
 
-    private object?[] GetStepArguments(Delegate handler, Match match, object?[] additionalStepArguments)
+    private async ValueTask<object?[]> GetStepArgumentsAsync(Delegate handler, Match match, object?[] additionalStepArguments)
     {
         var parameters = handler.Method.GetParameters();
 
-        return GetOriginalArguments(parameters, match, additionalStepArguments)
-            .Select((argument, index) => Transform(argument, parameters[index]))
-            .ToArray();
+        var arguments = ExtractStepArguments(parameters, match, additionalStepArguments).ToArray();
+
+        for (var i = 0; i < parameters.Length; i++)
+        {
+            arguments[i] = await TransformAsync(arguments[i], parameters[i]);
+        }
+
+        return arguments;
     }
 
-    private object? Transform(object? argument, ParameterInfo parameter)
+    private async ValueTask<object?> TransformAsync(object? argument, ParameterInfo parameter)
     {
-        foreach (var transformation in transformations)
+        foreach (var argumentTransformation in argumentTransformations)
         {
-            if (transformation.TryParse(argument, parameter.ParameterType, out var transformedArgument))
-            {
-                return transformedArgument;
-            }
+            argument = await argumentTransformation.TransformAsync(argument, parameter.ParameterType);
         }
 
         return argument;
     }
 
-    private IEnumerable<object?> GetOriginalArguments(ParameterInfo[] parameters, Match match, object?[] additionalStepArguments)
+    private IEnumerable<object?> ExtractStepArguments(ParameterInfo[] parameters, Match match, object?[] additionalStepArguments)
     {
         foreach (var parameter in parameters)
         {
