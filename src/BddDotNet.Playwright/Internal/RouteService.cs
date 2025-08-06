@@ -1,6 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 
-namespace BddDotNet.Playwright.Services;
+namespace BddDotNet.Playwright.Internal;
 
 internal sealed class RouteService(IServiceProvider serviceProvider) : IRouteService
 {

@@ -1,7 +1,7 @@
 using BddDotNet.Gherkin;
 using BddDotNet.Playwright.Contracts;
 
-namespace BddDotNet.Playwright.Steps;
+namespace BddDotNet.Playwright.Internal;
 
 internal sealed class DefaultComponentSteps(IRouteService routeService)
 {
