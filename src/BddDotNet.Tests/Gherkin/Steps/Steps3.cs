@@ -1,19 +1,18 @@
 using BddDotNet.Gherkin;
-using BddDotNet.Tests.Services;
 
-namespace BddDotNet.Tests.Steps;
+namespace BddDotNet.Tests.Gherkin.Steps;
 
-internal sealed class Steps3(TraceService traceService)
+internal sealed class Steps3(GherkinTraceService gherkinTraceService)
 {
     [Given("this is given step with argument '(.*)'")]
     public void Step1(string argument)
     {
-        traceService.Trace(argument);
+        gherkinTraceService.Trace(argument);
     }
 
     [Then("this is then step with table:")]
     public void Step2(string[][] actual)
     {
-        traceService.Trace(actual);
+        gherkinTraceService.Trace(actual);
     }
 }

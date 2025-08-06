@@ -1,8 +1,8 @@
 using BddDotNet.Extensibility;
 
-namespace BddDotNet.Tests.Services;
+namespace BddDotNet.Tests.Gherkin;
 
-internal sealed class TraceService(ITestContext testContext, Dictionary<string, List<object>> traces)
+internal sealed class GherkinTraceService(ITestContext testContext, Dictionary<string, List<object>> traces)
 {
     public void Trace(object trace)
     {
@@ -14,3 +14,4 @@ internal sealed class TraceService(ITestContext testContext, Dictionary<string, 
         scenarioTraces.Add(trace);
     }
 }
+

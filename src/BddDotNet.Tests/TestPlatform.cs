@@ -3,7 +3,7 @@ using Microsoft.Testing.Platform.Builder;
 
 namespace BddDotNet.Tests;
 
-internal static class Platform
+internal static class TestPlatform
 {
     public static async Task<int> RunTestAsync(Action<IServiceCollection> configure)
     {

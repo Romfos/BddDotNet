@@ -9,6 +9,7 @@
   <Folder Name="/Packages/">
     <Project Path="BddDotNet.CSharpExpressions/BddDotNet.CSharpExpressions.csproj" />
     <Project Path="BddDotNet.Gherkin.SourceGenerator/BddDotNet.Gherkin.SourceGenerator.csproj" />
+    <Project Path="BddDotNet.Playwright/BddDotNet.Playwright.csproj" Id="ecf1fa74-5734-4a4f-83f5-14f297308b7c" />
     <Project Path="BddDotNet/BddDotNet.csproj" />
   </Folder>
   <Folder Name="/Tests/">

@@ -1,21 +1,20 @@
 using BddDotNet.Gherkin;
-using BddDotNet.Tests.Services;
 
-namespace BddDotNet.Tests.Steps;
+namespace BddDotNet.Tests.Gherkin.Steps;
 
-internal sealed class Steps2(TraceService traceService)
+internal sealed class Steps2(GherkinTraceService gherkinTraceService)
 {
     [Given("this is async task given step")]
     public async Task Step1()
     {
         await Task.Yield();
-        traceService.Trace("this is async task given step");
+        gherkinTraceService.Trace("this is async task given step");
     }
 
     [Given("this is async value task given step")]
     public async ValueTask Step2()
     {
         await Task.Yield();
-        traceService.Trace("this is async value task given step");
+        gherkinTraceService.Trace("this is async value task given step");
     }
 }

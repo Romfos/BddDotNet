@@ -1,8 +1,8 @@
 using BddDotNet.Extensibility;
 
-namespace BddDotNet.Tests.Extensibility;
+namespace BddDotNet.Tests.Core;
 
-internal sealed class ScenarioLifecycleHooks(List<object?> traces) : IBeforeScenario, IAfterScenario
+internal sealed class TestScenarioHooks(List<object?> traces) : IBeforeScenario, IAfterScenario
 {
     public Task BeforeScenario()
     {

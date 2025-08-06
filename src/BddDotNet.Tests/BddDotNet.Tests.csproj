@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BddDotNet.CSharpExpressions\BddDotNet.CSharpExpressions.csproj" />
+    <ProjectReference Include="..\BddDotNet.Playwright\BddDotNet.Playwright.csproj" />
     <ProjectReference Include="..\BddDotNet\BddDotNet.csproj" />
   </ItemGroup>
 

@@ -1,8 +1,8 @@
 using BddDotNet.Extensibility;
 
-namespace BddDotNet.Tests.Extensibility;
+namespace BddDotNet.Tests.Core;
 
-internal sealed class ArgumentTransformation(List<object?> traces) : IArgumentTransformation
+internal sealed class TestArgumentTransformation(List<object?> traces) : IArgumentTransformation
 {
     public object? Transform(object? input, Type targetType)
     {

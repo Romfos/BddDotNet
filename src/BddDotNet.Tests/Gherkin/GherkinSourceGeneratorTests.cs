@@ -1,20 +1,19 @@
-using BddDotNet.Tests.Services;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace BddDotNet.Tests;
+namespace BddDotNet.Tests.Gherkin;
 
 [TestClass]
-public sealed class GherkinTests
+public sealed class GherkinSourceGeneratorTests
 {
     [TestMethod]
     public async Task GherkinFeatureAndStepsTest()
     {
         var traces = new Dictionary<string, List<object>>();
 
-        await Platform.RunTestAsync(services =>
+        await TestPlatform.RunTestAsync(services =>
         {
             services.AddSingleton(traces);
-            services.AddScoped<TraceService>();
+            services.AddScoped<GherkinTraceService>();
 
             services.SourceGeneratedGherkinScenarios();
             services.SourceGeneratedGherkinSteps();
