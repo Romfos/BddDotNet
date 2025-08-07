@@ -1,5 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="../Package.props" />
+  <Import Project="../DeterministicBuild.props" />
 
   <PropertyGroup>
     <TargetFrameworks>net8.0;net472</TargetFrameworks>
@@ -7,14 +8,6 @@
 
   <PropertyGroup Condition=" '$(TargetFramework)' != 'net472' ">
     <IsAotCompatible>true</IsAotCompatible>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(CI)' == 'True'">
-    <!--Deterministic Build and Source Link settings -->
-    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/.global/">
     <File Path=".editorconfig" />
+    <File Path="DeterministicBuild.props" />
     <File Path="Directory.Build.props" />
     <File Path="icon.jpg" />
     <File Path="Package.props" />

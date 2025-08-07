@@ -1,5 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="../Package.props" />
+  <Import Project="../DeterministicBuild.props" />
 
   <PropertyGroup>
     <TargetFrameworks>net8.0;net472</TargetFrameworks>    

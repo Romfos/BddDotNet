@@ -1,0 +1,11 @@
+<Project>
+  
+  <PropertyGroup Condition="'$(CI)' == 'True'">
+    <!--Deterministic Build and Source Link settings -->
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+
+</Project>
