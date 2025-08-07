@@ -1,20 +1,28 @@
 <Solution>
   <Folder Name="/.global/">
     <File Path=".editorconfig" />
-    <File Path="DeterministicBuild.props" />
+    <File Path="AOT.props" />
     <File Path="Directory.Build.props" />
     <File Path="icon.jpg" />
     <File Path="Package.props" />
+    <File Path="PackageSymbols.props" />
     <File Path="README.md" />
   </Folder>
   <Folder Name="/Packages/">
+    <Project Path="BddDotNet/BddDotNet.csproj" />
+  </Folder>
+  <Folder Name="/Packages/Components/">
+    <Project Path="BddDotNet.Components.Browser/BddDotNet.Components.Browser.csproj" Id="50ba464e-a015-479c-8b99-b39050961510" />
+    <Project Path="BddDotNet.Components.Routing/BddDotNet.Components.Routing.csproj" Id="77b7dc90-27b6-4124-9367-e41fa105e4f2" />
+    <Project Path="BddDotNet.Playwright.DefaultComponents/BddDotNet.Playwright.DefaultComponents.csproj" Id="4bf7211d-6b93-4036-bdac-2029297f81b3" />
+  </Folder>
+  <Folder Name="/Packages/Gherkin/">
     <Project Path="BddDotNet.CSharpExpressions/BddDotNet.CSharpExpressions.csproj" />
     <Project Path="BddDotNet.Gherkin.SourceGenerator/BddDotNet.Gherkin.SourceGenerator.csproj" />
-    <Project Path="BddDotNet.Playwright/BddDotNet.Playwright.csproj" Id="ecf1fa74-5734-4a4f-83f5-14f297308b7c" />
-    <Project Path="BddDotNet/BddDotNet.csproj" />
   </Folder>
   <Folder Name="/Tests/">
     <Project Path="BddDotNet.Tests/BddDotNet.Tests.csproj" />
     <Project Path="BddDotNetAot/BddDotNetAot.csproj" />
+    <Project Path="PlaywrightApp/PlaywrightApp.csproj" Id="5951df93-5e57-44bc-8359-3a50e849bd55" />
   </Folder>
 </Solution>

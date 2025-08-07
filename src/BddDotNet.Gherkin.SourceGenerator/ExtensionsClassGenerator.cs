@@ -18,7 +18,7 @@ internal sealed class ExtensionsClassGenerator : IIncrementalGenerator
                 
                 namespace {{assemblyName}};
                     
-                public static partial class GherkinSourceGeneratorExtensions
+                internal static partial class GherkinSourceGeneratorExtensions
                 {
                     public static partial void SourceGeneratedGherkinSteps(this IServiceCollection services);
                 

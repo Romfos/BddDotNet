@@ -1,4 +1,5 @@
-using BddDotNet.Playwright;
+using BddDotNet.Components.Browser;
+using BddDotNet.Components.Routing;
 using BddDotNet.Tests.Playwright.Components;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,8 +17,11 @@ public sealed class PlaywrightTests
         {
             services.AddSingleton(traces);
 
-            services.AddPlaywright();
+            services.ComponentRoutingSystem();
+            services.EnableBrowserContracts();
+
             services.Component<TestClickComponent>("main page -> login");
+            services.ComponentOptions("main page -> login", ".btn-primary");
 
             services.Scenario<PlaywrightTests>("feature1", "scenario1", async context =>
             {

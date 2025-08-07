@@ -1,8 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
 
-namespace BddDotNet.Playwright.Internal;
+namespace BddDotNet.Components.Routing.Internal;
 
-internal sealed class RouteService(IServiceProvider serviceProvider) : IRouteService
+internal sealed class RoutingService(IServiceProvider serviceProvider) : IRoutingService
 {
     public T GetComponent<T>(string path) where T : class
     {
@@ -15,7 +15,7 @@ internal sealed class RouteService(IServiceProvider serviceProvider) : IRouteSer
 
         if (component is not T contract)
         {
-            throw new Exception($"Component at path '{path}' is not implementing contract '{typeof(T).Name}'");
+            throw new Exception($"Component at path '{path}' is not implementing '{typeof(T).Name}'");
         }
 
         return contract;

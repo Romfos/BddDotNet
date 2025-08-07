@@ -1,5 +1,5 @@
-using BddDotNet.Playwright;
-using BddDotNet.Playwright.Contracts;
+using BddDotNet.Components.Browser;
+using BddDotNet.Components.Routing;
 
 namespace BddDotNet.Tests.Playwright.Components;
 

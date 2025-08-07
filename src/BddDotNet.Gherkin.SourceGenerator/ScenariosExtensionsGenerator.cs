@@ -55,7 +55,7 @@ internal sealed class ScenariosExtensionsGenerator : IIncrementalGenerator
 
             namespace {{assemblyName}};
 
-            public static partial class GherkinSourceGeneratorExtensions
+            internal static partial class GherkinSourceGeneratorExtensions
             {
                 public static partial void SourceGeneratedGherkinScenarios(this IServiceCollection services)
                 {
