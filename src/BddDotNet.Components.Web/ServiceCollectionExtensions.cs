@@ -4,9 +4,9 @@ namespace BddDotNet.Components.Web;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection EnableWebContracts(this IServiceCollection services)
+    public static IServiceCollection WebContracts(this IServiceCollection services)
     {
-        services.EnableComponents();
+        services.ComponentsFramework();
 
         services.SourceGeneratedGherkinSteps();
 

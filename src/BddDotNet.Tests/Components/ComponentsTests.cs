@@ -16,7 +16,7 @@ public sealed class ComponentsTests
         {
             services.AddSingleton(traces);
 
-            services.EnableWebContracts();
+            services.WebContracts();
             services.Component<TestClickComponent>("button1").Options("button1 options");
 
             services.Scenario<ComponentsTests>("feature1", "scenario1", async context =>

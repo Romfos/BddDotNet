@@ -1,4 +1,5 @@
 using BddDotNet.Components.Routing;
+using BddDotNet.Components.Web.Contracts;
 
 namespace BddDotNet.Components.Web.Internal;
 

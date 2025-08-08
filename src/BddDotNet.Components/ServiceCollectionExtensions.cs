@@ -10,7 +10,7 @@ namespace BddDotNet.Components;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection EnableComponents(this IServiceCollection services)
+    public static IServiceCollection ComponentsFramework(this IServiceCollection services)
     {
         services.TryAddScoped<IOptionsService, OptionsService>();
         services.TryAddScoped<IRoutingService, RoutingService>();

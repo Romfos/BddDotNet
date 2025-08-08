@@ -14,7 +14,7 @@ public sealed class CSharpExpressionsTests
 
         await TestPlatform.RunTestAsync(services =>
         {
-            services.EnableCSharpExpressions<TestCSharpExpressionsGlobals>();
+            services.CSharpExpressions<TestCSharpExpressionsGlobals>();
 
             services.AddSingleton(traces);
 
@@ -41,7 +41,7 @@ public sealed class CSharpExpressionsTests
 
         await TestPlatform.RunTestAsync(services =>
         {
-            services.EnableCSharpExpressions<TestCSharpExpressionsGlobals>();
+            services.CSharpExpressions<TestCSharpExpressionsGlobals>();
 
             services.AddSingleton(traces);
 

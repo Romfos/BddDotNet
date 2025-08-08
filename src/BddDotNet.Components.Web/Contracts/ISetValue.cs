@@ -1,4 +1,4 @@
-namespace BddDotNet.Components.Web;
+namespace BddDotNet.Components.Web.Contracts;
 
 public interface ISetValue<T>
 {

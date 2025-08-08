@@ -8,8 +8,8 @@ using PlaywrightApp;
 var builder = await TestApplication.CreateBuilderAsync(args);
 
 var services = builder.AddBddDotNet();
-services.EnableCSharpExpressions<Expressions>();
-services.PlaywrightForSinglePageChromium(new() { Headless = false });
+services.CSharpExpressions<Expressions>();
+services.SinglePageChromiumPlaywright(new() { Headless = false });
 
 services.Component<Button>("checkout > continue to checkout").Options(".btn-primary");
 services.Component<Input>("checkout > first name").Options("#firstName");

@@ -7,9 +7,9 @@ namespace BddDotNet.Playwright.DefaultComponents;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection PlaywrightForSinglePageChromium(this IServiceCollection services, BrowserTypeLaunchOptions browserTypeLaunchOptions)
+    public static IServiceCollection SinglePageChromiumPlaywright(this IServiceCollection services, BrowserTypeLaunchOptions browserTypeLaunchOptions)
     {
-        services.EnableWebContracts();
+        services.WebContracts();
 
         services.TryAddSingleton(_ =>
         {
