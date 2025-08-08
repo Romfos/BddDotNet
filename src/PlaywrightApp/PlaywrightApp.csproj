@@ -9,11 +9,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BddDotNet.CSharpExpressions\BddDotNet.CSharpExpressions.csproj" />
+    <ProjectReference Include="..\BddDotNet.Playwright.DefaultComponents\BddDotNet.Playwright.DefaultComponents.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\BddDotNet.Gherkin.SourceGenerator\BddDotNet.Gherkin.SourceGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
-    <ProjectReference Include="..\BddDotNet.Playwright.DefaultComponents\BddDotNet.Playwright.DefaultComponents.csproj" />
   </ItemGroup>
 
 </Project>
