@@ -1,5 +1,3 @@
-using BddDotNet.Gherkin;
-
 namespace BddDotNetAot.Steps;
 
 internal sealed class Steps2

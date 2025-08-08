@@ -1,5 +1,3 @@
-using BddDotNet.Gherkin;
-
 namespace BddDotNet.Tests.Gherkin;
 
 internal sealed class TestStepClass(GherkinTraceService gherkinTraceService)

@@ -1,5 +1,4 @@
 using BddDotNet;
-using BddDotNetAot;
 using BddDotNetAot.Transformations;
 using Microsoft.Testing.Platform.Builder;
 

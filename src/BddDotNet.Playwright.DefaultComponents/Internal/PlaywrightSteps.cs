@@ -1,4 +1,3 @@
-using BddDotNet.Gherkin;
 using Microsoft.Playwright;
 
 namespace BddDotNet.Playwright.DefaultComponents.Internal;
