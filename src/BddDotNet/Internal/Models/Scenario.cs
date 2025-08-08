@@ -1,6 +1,6 @@
 using BddDotNet.Extensibility;
 
-namespace BddDotNet.Models;
+namespace BddDotNet.Internal.Models;
 
 internal sealed class Scenario(
     string assemblyName,

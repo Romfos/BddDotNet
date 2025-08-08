@@ -1,11 +1,11 @@
-using BddDotNet.Models;
+using BddDotNet.Internal.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Testing.Platform.Extensions.Messages;
 using Microsoft.Testing.Platform.Extensions.TestFramework;
 using Microsoft.Testing.Platform.Messages;
 using Microsoft.Testing.Platform.Requests;
 
-namespace BddDotNet.Services;
+namespace BddDotNet.Internal.Services;
 
 internal sealed class BddDotNetTestFramework(IServiceProvider services, IEnumerable<Scenario> scenarios) : ITestFramework, IDataProducer
 {

@@ -1,4 +1,4 @@
-namespace BddDotNet.Models;
+namespace BddDotNet.Internal.Models;
 
 internal enum StepType
 {

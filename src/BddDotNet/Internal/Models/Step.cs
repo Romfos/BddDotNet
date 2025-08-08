@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-namespace BddDotNet.Models;
+namespace BddDotNet.Internal.Models;
 
 internal sealed class Step(
     StepType stepType,

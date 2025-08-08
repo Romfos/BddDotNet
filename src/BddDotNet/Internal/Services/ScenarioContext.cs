@@ -1,7 +1,7 @@
 using BddDotNet.Extensibility;
-using BddDotNet.Models;
+using BddDotNet.Internal.Models;
 
-namespace BddDotNet.Services;
+namespace BddDotNet.Internal.Services;
 
 internal sealed class ScenarioContext(StepExecutionService stepExecutionService) : IScenarioContext
 {

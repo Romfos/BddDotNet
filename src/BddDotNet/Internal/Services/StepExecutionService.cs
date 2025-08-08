@@ -1,10 +1,10 @@
-using BddDotNet.Exceptions;
 using BddDotNet.Extensibility;
-using BddDotNet.Models;
+using BddDotNet.Internal.Exceptions;
+using BddDotNet.Internal.Models;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
-namespace BddDotNet.Services;
+namespace BddDotNet.Internal.Services;
 
 internal sealed class StepExecutionService(
     IServiceProvider serviceProvider,

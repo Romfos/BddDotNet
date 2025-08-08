@@ -1,6 +1,6 @@
 using BddDotNet.Extensibility;
 
-namespace BddDotNet.Services;
+namespace BddDotNet.Internal.Services;
 
 internal sealed class TestContext : ITestContext
 {

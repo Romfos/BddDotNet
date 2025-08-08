@@ -1,4 +1,4 @@
-using BddDotNet.Models;
+using BddDotNet.Internal.Models;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text.RegularExpressions;
 

@@ -2,7 +2,7 @@ using BddDotNet.Extensibility;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 
-namespace BddDotNet.CSharpExpressions.Transformations;
+namespace BddDotNet.CSharpExpressions.Internal;
 
 internal sealed class CSharpExpressionTransformation<TGlobals>(TGlobals globals, ScriptOptions scriptOptions) : IArgumentTransformation
 {

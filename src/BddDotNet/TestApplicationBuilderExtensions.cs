@@ -1,5 +1,5 @@
 using BddDotNet.Extensibility;
-using BddDotNet.Services;
+using BddDotNet.Internal.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Testing.Platform.Builder;
 using Microsoft.Testing.Platform.Capabilities.TestFramework;

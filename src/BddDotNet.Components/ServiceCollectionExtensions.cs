@@ -1,7 +1,7 @@
 using BddDotNet.Components.Options;
 using BddDotNet.Components.Options.Internal;
 using BddDotNet.Components.Routing;
-using BddDotNet.Components.Routing.Internal;
+using BddDotNet.Components.Routing.Internal.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Diagnostics.CodeAnalysis;
@@ -28,7 +28,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection ComponentOptions<T>(
         this IServiceCollection services, string path, T value) where T : notnull
     {
-        services.AddKeyedSingleton(path.Trim(), (_, path) => new ComponentOptions(value));
+        services.AddKeyedSingleton(path.Trim(), (_, _) => new ComponentOptions(value));
         return services;
     }
 }

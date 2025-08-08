@@ -1,6 +1,7 @@
+using BddDotNet.Components.Routing.Internal.Exceptions;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace BddDotNet.Components.Routing.Internal;
+namespace BddDotNet.Components.Routing.Internal.Services;
 
 internal sealed class RoutingService(IServiceProvider serviceProvider) : IRoutingService
 {
@@ -10,12 +11,12 @@ internal sealed class RoutingService(IServiceProvider serviceProvider) : IRoutin
 
         if (component == null)
         {
-            throw new Exception($"Unable to locate component by path '{path}'");
+            throw new UnableToLocateComponentException(path);
         }
 
         if (component is not T contract)
         {
-            throw new Exception($"Component at path '{path}' is not implementing '{typeof(T).Name}'");
+            throw new UnsupportedContractException(path, typeof(T).Name);
         }
 
         return contract;
