@@ -25,6 +25,6 @@
   <Folder Name="/Tests/">
     <Project Path="BddDotNet.Tests/BddDotNet.Tests.csproj" />
     <Project Path="BddDotNetAot/BddDotNetAot.csproj" />
-    <Project Path="PlaywrightApp/PlaywrightApp.csproj" Id="5951df93-5e57-44bc-8359-3a50e849bd55" />
+    <Project Path="PlaywrightApp/PlaywrightApp.csproj" />
   </Folder>
 </Solution>
