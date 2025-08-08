@@ -12,9 +12,8 @@
     <Project Path="BddDotNet/BddDotNet.csproj" />
   </Folder>
   <Folder Name="/Packages/Components/">
-    <Project Path="BddDotNet.Components.Options/BddDotNet.Components.Options.csproj" Id="03856729-2bd8-4f01-9321-f5ce39e7fa84" />
-    <Project Path="BddDotNet.Components.Routing/BddDotNet.Components.Routing.csproj" Id="77b7dc90-27b6-4124-9367-e41fa105e4f2" />
-    <Project Path="BddDotNet.Components.WebContracts/BddDotNet.Components.WebContracts.csproj" Id="1d38da5c-55ec-4d52-89bc-fa32f1c71b1d" />
+    <Project Path="BddDotNet.Components.Web/BddDotNet.Components.Web.csproj" Id="82a83eec-3f42-49ce-af21-8cd2b6669b36" />
+    <Project Path="BddDotNet.Components/BddDotNet.Components.csproj" Id="91c290db-1fcd-480a-b467-e653cf114b9a" />
     <Project Path="BddDotNet.Playwright.DefaultComponents/BddDotNet.Playwright.DefaultComponents.csproj" Id="4bf7211d-6b93-4036-bdac-2029297f81b3" />
   </Folder>
   <Folder Name="/Packages/Gherkin/">

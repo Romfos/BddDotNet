@@ -1,7 +1,7 @@
 using BddDotNet.Components.Routing;
 using BddDotNet.Gherkin;
 
-namespace BddDotNet.Components.WebContracts.Internal;
+namespace BddDotNet.Components.Web.Internal;
 
 internal sealed class WebContractsSteps(IRoutingService routingService)
 {

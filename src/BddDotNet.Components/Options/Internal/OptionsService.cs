@@ -1,3 +1,4 @@
+using BddDotNet.Components.Options;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BddDotNet.Components.Options.Internal;

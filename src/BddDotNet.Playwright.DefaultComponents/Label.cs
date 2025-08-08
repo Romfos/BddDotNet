@@ -1,6 +1,6 @@
 using BddDotNet.Components.Options;
 using BddDotNet.Components.Routing;
-using BddDotNet.Components.WebContracts;
+using BddDotNet.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Playwright;
 

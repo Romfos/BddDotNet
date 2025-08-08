@@ -1,13 +1,12 @@
-using BddDotNet.Components.Routing;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace BddDotNet.Components.WebContracts;
+namespace BddDotNet.Components.Web;
 
 public static class ServiceCollectionExtensions
 {
     public static IServiceCollection EnableWebContracts(this IServiceCollection services)
     {
-        services.EnableComponentRouting();
+        services.EnableComponents();
 
         services.SourceGeneratedGherkinSteps();
 

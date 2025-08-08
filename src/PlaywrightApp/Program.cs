@@ -1,6 +1,6 @@
 using BddDotNet;
-using BddDotNet.Components.Routing;
-using BddDotNet.Components.WebContracts;
+using BddDotNet.Components;
+using BddDotNet.Components.Web;
 using BddDotNet.CSharpExpressions;
 using BddDotNet.Playwright.DefaultComponents;
 using Microsoft.Testing.Platform.Builder;

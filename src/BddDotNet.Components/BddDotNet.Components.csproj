@@ -12,5 +12,5 @@
   <ItemGroup>
     <ProjectReference Include="..\BddDotNet\BddDotNet.csproj" />
   </ItemGroup>
-  
+
 </Project>

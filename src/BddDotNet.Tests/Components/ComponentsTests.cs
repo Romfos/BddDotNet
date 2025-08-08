@@ -1,5 +1,5 @@
-using BddDotNet.Components.Routing;
-using BddDotNet.Components.WebContracts;
+using BddDotNet.Components;
+using BddDotNet.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BddDotNet.Tests.Components;

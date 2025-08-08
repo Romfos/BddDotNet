@@ -1,4 +1,4 @@
-using BddDotNet.Components.WebContracts;
+using BddDotNet.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Playwright;

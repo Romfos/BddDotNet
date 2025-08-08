@@ -12,12 +12,9 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Playwright" Version="1.54.0" />
   </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\BddDotNet.Components.WebContracts\BddDotNet.Components.WebContracts.csproj" />
-  </ItemGroup>
   
   <ItemGroup>
+    <ProjectReference Include="..\BddDotNet.Components.Web\BddDotNet.Components.Web.csproj" />
     <ProjectReference Include="..\BddDotNet.Gherkin.SourceGenerator\BddDotNet.Gherkin.SourceGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
 

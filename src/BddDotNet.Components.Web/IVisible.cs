@@ -1,4 +1,4 @@
-namespace BddDotNet.Components.WebContracts;
+namespace BddDotNet.Components.Web;
 
 public interface IVisible
 {

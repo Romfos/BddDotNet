@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BddDotNet.Components.WebContracts\BddDotNet.Components.WebContracts.csproj" />
+    <ProjectReference Include="..\BddDotNet.Components.Web\BddDotNet.Components.Web.csproj" />
     <ProjectReference Include="..\BddDotNet.CSharpExpressions\BddDotNet.CSharpExpressions.csproj" />
   </ItemGroup>
 
