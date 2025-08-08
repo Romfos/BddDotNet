@@ -17,16 +17,16 @@ Wiki: [Setup .NET 8 project with Gherkin support](https://github.com/Romfos/BddD
 # Comparing with alternatives
 
 Comparing with Reqnroll (or Specflow, other popular framework in .NET Ecosystem) this framework has following difference:
--	Microsoft.Extensions.* based
--	Microsoft testing platform as a backend. No hell with different unit tests providers.
--	Source generator for features compilation & step registration
--	Code first approach with builder pattern
--	Extensibility via public interfaces and DI
+- Microsoft.Extensions.* based
+- Microsoft testing platform as a backend. No hell with different unit tests providers.
+- Source generator for features compilation & step registration
+- Code first approach with builder pattern
+- Extensibility via public interfaces and DI
 - Modular. Small and fast library. All extra features are provided as separate nuget packages
--	No reflection usage (or quite limited)
--	Support .NET 8+ (.NET 9 is a recommended option) and .NET Framework 4.7.2+ 
--	AOT & Trimming friendly. More info: [Native AOT deployment](https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot/)
--	Nullable reference types and other modern dotnet features support
+- No reflection usage (or quite limited)
+- Support .NET 8+  and .NET Framework 4.7.2+  (we recommend to use .NET 9 as best option if possible)
+- AOT & Trimming friendly. More info: [Native AOT deployment](https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot/)
+- Nullable reference types and other modern dotnet features support
 
 # BddDotNet.Gherkin.SourceGenerator usage example
 Allow you to use Gherkin scenarios:
