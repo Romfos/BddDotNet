@@ -1,3 +1,4 @@
+using BddDotNet.Gherkin.SourceGenerator.Exceptions;
 using BddDotNet.Gherkin.SourceGenerator.Models;
 using Gherkin;
 using Gherkin.Ast;
@@ -10,21 +11,53 @@ internal sealed class TestCasesParser
 {
     private readonly Parser gherkinParser = new();
 
-    public IEnumerable<TestCase> GetTestCases(string assemblyName, ImmutableArray<AdditionalText> featureFiles)
+    public List<TestCase> Parse(string assemblyName, ImmutableArray<AdditionalText> featureFiles)
     {
-        return featureFiles.SelectMany(x => GetTestCases(assemblyName, x.Path, x.GetText()?.ToString()!));
+        var testCases = new List<TestCase>();
+        var errors = new List<TestCasesParserError>();
+
+        foreach (var featureFile in featureFiles)
+        {
+            try
+            {
+                var featureTestCases = GetFeatureTestCases(
+                    assemblyName,
+                    featureFile.Path,
+                    featureFile.GetText()?.ToString()!);
+
+                testCases.AddRange(featureTestCases);
+            }
+            catch (CompositeParserException exception)
+            {
+                foreach (var error in exception.Errors)
+                {
+                    errors.Add(new TestCasesParserError(
+                        error.Message,
+                        featureFile.Path,
+                        error.Location?.Line ?? 1,
+                        error.Location?.Column ?? 1));
+                }
+            }
+        }
+
+        if (errors.Any())
+        {
+            throw new TestCasesParserException(errors);
+        }
+
+        return testCases;
     }
 
-    private IEnumerable<TestCase> GetTestCases(string assemblyName, string featureFilePath, string featureFileText)
+    public IEnumerable<TestCase> GetFeatureTestCases(string assemblyName, string featureFilePath, string featureFileText)
     {
         using var stringReader = new StringReader(featureFileText);
-        var gherkinDocument = gherkinParser.Parse(stringReader);
+        var feature = gherkinParser.Parse(stringReader).Feature;
 
-        foreach (var scenario in gherkinDocument.Feature.Children.OfType<Scenario>())
+        foreach (var scenario in feature.Children.OfType<Scenario>())
         {
             var testCase = GetTestCaseForScenario(
                 assemblyName,
-                gherkinDocument.Feature.Name,
+                feature.Name,
                 featureFilePath,
                 scenario);
 

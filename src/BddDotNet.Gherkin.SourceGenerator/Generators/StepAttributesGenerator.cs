@@ -1,6 +1,6 @@
 using Microsoft.CodeAnalysis;
 
-namespace BddDotNet.Gherkin.SourceGenerator;
+namespace BddDotNet.Gherkin.SourceGenerator.Generators;
 
 [Generator]
 internal sealed class StepAttributesGenerator : IIncrementalGenerator

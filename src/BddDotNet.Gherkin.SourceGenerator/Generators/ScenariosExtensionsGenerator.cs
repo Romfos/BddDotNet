@@ -1,3 +1,4 @@
+using BddDotNet.Gherkin.SourceGenerator.Exceptions;
 using BddDotNet.Gherkin.SourceGenerator.Models;
 using BddDotNet.Gherkin.SourceGenerator.Services;
 using Microsoft.CodeAnalysis;
@@ -5,7 +6,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using System.Collections.Immutable;
 using System.Text;
 
-namespace BddDotNet.Gherkin.SourceGenerator;
+namespace BddDotNet.Gherkin.SourceGenerator.Generators;
 
 [Generator]
 internal sealed class ScenariosExtensionsGenerator : IIncrementalGenerator
@@ -29,13 +30,11 @@ internal sealed class ScenariosExtensionsGenerator : IIncrementalGenerator
             return;
         }
 
-        var testCasesParser = new TestCasesParser();
-        var testCases = testCasesParser.GetTestCases(args.assemblyName, args.features);
-        var featureClassContent = GetTestClassContent(testCases);
+        var declarations = GetTestCasesContent(args.assemblyName, args.features);
+        var featureClassContent = GetTestClassContent(declarations);
         var formattedFeatureClassContent = FormatCode(featureClassContent);
         context.AddSource($"SourceGeneratedGherkinScenarios.g.cs", formattedFeatureClassContent);
     }
-
     public static string FormatCode(string code)
     {
         return CSharpSyntaxTree.ParseText(code)
@@ -46,7 +45,24 @@ internal sealed class ScenariosExtensionsGenerator : IIncrementalGenerator
             .ToString();
     }
 
-    private static string GetTestClassContent(IEnumerable<TestCase> testCases)
+    private static string GetTestCasesContent(string assemblyName, ImmutableArray<AdditionalText> features)
+    {
+        var testCasesParser = new TestCasesParser();
+
+        try
+        {
+            var testCases = testCasesParser.Parse(assemblyName, features);
+            var declarations = GetTestCasesDeclarations(testCases);
+            return declarations;
+        }
+        catch (TestCasesParserException exception)
+        {
+            var featureErrorsDeclarations = GetParserErrorsDeclarations(exception);
+            return featureErrorsDeclarations;
+        }
+    }
+
+    private static string GetTestClassContent(string declarations)
     {
         var featureClassContent =
            $$"""
@@ -63,7 +79,7 @@ internal sealed class ScenariosExtensionsGenerator : IIncrementalGenerator
             {
                 public static partial void SourceGeneratedGherkinScenarios(this IServiceCollection services)
                 {
-                    {{GetTestCasesContent(testCases)}}
+                    {{declarations}}
                 }
             }
             """;
@@ -71,7 +87,7 @@ internal sealed class ScenariosExtensionsGenerator : IIncrementalGenerator
         return featureClassContent;
     }
 
-    private static string GetTestCasesContent(IEnumerable<TestCase> testCases)
+    private static string GetTestCasesDeclarations(IEnumerable<TestCase> testCases)
     {
         var declarations = new StringBuilder();
         foreach (var testCase in testCases)
@@ -79,6 +95,24 @@ internal sealed class ScenariosExtensionsGenerator : IIncrementalGenerator
             declarations.AppendLine(GetTestCaseContent(testCase));
         }
         return declarations.ToString();
+    }
+
+    private static string GetParserErrorsDeclarations(TestCasesParserException exception)
+    {
+        var declaration = new StringBuilder();
+
+        foreach (var error in exception.Errors)
+        {
+            declaration.AppendLine(
+                $$"""
+                #line ({{error.Line}}, {{error.Column}})-({{error.Line + 1}}, 1) 12 "{{error.FeatureFilePath}}"
+                #error {{error.Message}}
+                """);
+        }
+
+        declaration.AppendLine("#line default");
+
+        return declaration.ToString();
     }
 
     private static string GetTestCaseContent(TestCase testCase)

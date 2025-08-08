@@ -5,7 +5,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Immutable;
 using System.Text;
 
-namespace BddDotNet.Gherkin.SourceGenerator;
+namespace BddDotNet.Gherkin.SourceGenerator.Generators;
 
 [Generator]
 internal sealed class StepsExtensionsGenerator : IIncrementalGenerator
