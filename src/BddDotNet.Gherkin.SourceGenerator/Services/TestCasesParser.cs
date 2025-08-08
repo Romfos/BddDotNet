@@ -73,6 +73,17 @@ internal sealed class TestCasesParser
                 yield return testCase;
             }
         }
+
+        var unsupportedFeatureElementTypes = feature.Children
+            .Where(x => x is not Scenario)
+            .Select(x => x.GetType().Name)
+            .Distinct()
+            .ToList();
+
+        if (unsupportedFeatureElementTypes.Any())
+        {
+            throw new Exception($"Unsupported feature items: {string.Join(",", unsupportedFeatureElementTypes)}");
+        }
     }
 
     private IEnumerable<TestCase> GetScenarioOutlineTestCases(TestCase originalTestCase, IEnumerable<Examples> examples)
