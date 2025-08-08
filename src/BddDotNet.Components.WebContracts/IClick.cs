@@ -1,4 +1,4 @@
-namespace BddDotNet.Components.Browser;
+namespace BddDotNet.Components.WebContracts;
 
 public interface IClick
 {

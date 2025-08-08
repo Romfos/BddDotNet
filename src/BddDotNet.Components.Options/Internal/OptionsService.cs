@@ -1,6 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 
-namespace BddDotNet.Components.Routing.Internal;
+namespace BddDotNet.Components.Options.Internal;
 
 internal sealed class OptionsService(IServiceProvider serviceProvider) : IOptionsService
 {

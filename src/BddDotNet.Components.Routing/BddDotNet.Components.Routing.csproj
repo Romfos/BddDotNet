@@ -8,9 +8,9 @@
     <!--Temporary disable packaging untill full implementation-->
     <IsPackable>false</IsPackable>
   </PropertyGroup>
-
+  
   <ItemGroup>
-    <ProjectReference Include="..\BddDotNet\BddDotNet.csproj" />
+    <ProjectReference Include="..\BddDotNet.Components.Options\BddDotNet.Components.Options.csproj" />
   </ItemGroup>
 
 </Project>

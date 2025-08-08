@@ -1,4 +1,4 @@
-namespace BddDotNet.Components.Routing;
+namespace BddDotNet.Components.Options;
 
 public interface IOptionsService
 {

@@ -6,13 +6,19 @@ using Microsoft.Playwright;
 
 namespace BddDotNet.Playwright.DefaultComponents;
 
-public sealed class Button([ServiceKey] string path, IOptionsService optionsService, IPage page) : IComponent, IClick, IVisible, IEnabled
+public sealed class Input([ServiceKey] string path, IOptionsService optionsService, IPage page)
+    : IComponent, ISetValue<string>, IGetValue<string>, IVisible, IEnabled
 {
     private readonly string locator = optionsService.GetOptions<string>(path);
 
-    public async Task ClickAsync()
+    public async Task<string> GetValueAsync()
     {
-        await page.ClickAsync(locator);
+        return await page.Locator(locator).InputValueAsync();
+    }
+
+    public async Task SetValueAsync(string value)
+    {
+        await page.Locator(locator).FillAsync(value);
     }
 
     public async Task<bool> IsVisibleAsync()

@@ -1,4 +1,4 @@
-namespace BddDotNet.Components.Routing.Internal;
+namespace BddDotNet.Components.Options.Internal;
 
 internal sealed class ComponentOptions(object value)
 {

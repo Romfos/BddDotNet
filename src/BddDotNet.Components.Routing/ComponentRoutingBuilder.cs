@@ -1,13 +1,14 @@
+using BddDotNet.Components.Options;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BddDotNet.Components.Routing;
 
-public sealed class ComponentBuilder
+public sealed class ComponentRoutingBuilder
 {
     private readonly IServiceCollection services;
     private readonly string path;
 
-    internal ComponentBuilder(IServiceCollection services, string path)
+    internal ComponentRoutingBuilder(IServiceCollection services, string path)
     {
         this.services = services;
         this.path = path;

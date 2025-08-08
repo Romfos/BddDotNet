@@ -1,3 +1,4 @@
+using BddDotNet.Components.WebContracts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Playwright;
@@ -6,8 +7,10 @@ namespace BddDotNet.Playwright.DefaultComponents;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection SinglePageGoogleChromePlaywright(this IServiceCollection services, BrowserTypeLaunchOptions browserTypeLaunchOptions)
+    public static IServiceCollection PlaywrightForSinglePageChromium(this IServiceCollection services, BrowserTypeLaunchOptions browserTypeLaunchOptions)
     {
+        services.EnableWebContracts();
+
         services.TryAddSingleton(_ =>
         {
             Program.Main(["install", "chromium"]);
@@ -28,6 +31,8 @@ public static class ServiceCollectionExtensions
             var browser = services.GetRequiredService<IBrowser>();
             return browser.NewPageAsync().Result;
         });
+
+        services.SourceGeneratedGherkinSteps();
 
         return services;
     }

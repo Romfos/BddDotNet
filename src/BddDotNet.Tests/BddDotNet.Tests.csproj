@@ -12,9 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BddDotNet.Components.Browser\BddDotNet.Components.Browser.csproj" />
+    <ProjectReference Include="..\BddDotNet.Components.WebContracts\BddDotNet.Components.WebContracts.csproj" />
     <ProjectReference Include="..\BddDotNet.CSharpExpressions\BddDotNet.CSharpExpressions.csproj" />
-    <ProjectReference Include="..\BddDotNet\BddDotNet.csproj" />
   </ItemGroup>
 
   <ItemGroup>
