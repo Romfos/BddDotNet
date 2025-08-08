@@ -1,8 +1,8 @@
 namespace BddDotNet.Components.Web.Internal;
 
-internal static class DataTablesExtensions
+internal static class DataTableExtensions
 {
-    internal static IEnumerable<(string, string)> ParseNameValueTable(this string[][] values)
+    internal static IEnumerable<(string, string)> AsNameValueTable(this string[][] values)
     {
         if (!(values.Length > 1
             && values.All(x => x.Length == 2)
@@ -15,13 +15,13 @@ internal static class DataTablesExtensions
         return values.Skip(1).Select(x => (x[0], x[1]));
     }
 
-    internal static IEnumerable<string> ParseSingleColumnNameTable(this string[][] values)
+    internal static IEnumerable<string> AsSingleColumnNameTable(this string[][] values)
     {
         if (!(values.Length > 1
             && values.All(x => x.Length == 1)
             && values[0][0] == "Name"))
         {
-            throw new ArgumentException("Invalid table format. Single column table with Name header with at least one row is expected ");
+            throw new ArgumentException("Invalid table format. Single column table with Name header with at least one row is expected");
         }
 
         return values.Skip(1).Select(x => x[0]);

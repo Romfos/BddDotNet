@@ -14,7 +14,7 @@ internal sealed class WebContractsSteps(IRoutingService routingService)
     [When(@"set following values:")]
     public async Task WhenSetFollowingValuesToFields(string[][] values)
     {
-        foreach (var (path, value) in values.ParseNameValueTable())
+        foreach (var (path, value) in values.AsNameValueTable())
         {
             await routingService.GetComponent<ISetValue<string>>(path).SetValueAsync(value);
         }
@@ -25,7 +25,7 @@ internal sealed class WebContractsSteps(IRoutingService routingService)
     {
         var errors = new List<string>();
 
-        foreach (var (path, expected) in values.ParseNameValueTable())
+        foreach (var (path, expected) in values.AsNameValueTable())
         {
             var actual = await routingService.GetComponent<IGetValue<string>>(path).GetValueAsync();
 
@@ -47,7 +47,7 @@ internal sealed class WebContractsSteps(IRoutingService routingService)
     {
         var errors = new List<string>();
 
-        foreach (var path in values.ParseSingleColumnNameTable())
+        foreach (var path in values.AsSingleColumnNameTable())
         {
             if (!await routingService.GetComponent<IVisible>(path).IsVisibleAsync())
             {
@@ -66,7 +66,7 @@ internal sealed class WebContractsSteps(IRoutingService routingService)
     {
         var errors = new List<string>();
 
-        foreach (var path in values.ParseSingleColumnNameTable())
+        foreach (var path in values.AsSingleColumnNameTable())
         {
             if (await routingService.GetComponent<IVisible>(path).IsVisibleAsync())
             {
@@ -85,7 +85,7 @@ internal sealed class WebContractsSteps(IRoutingService routingService)
     {
         var errors = new List<string>();
 
-        foreach (var path in values.ParseSingleColumnNameTable())
+        foreach (var path in values.AsSingleColumnNameTable())
         {
             if (await routingService.GetComponent<IEnabled>(path).IsEnabledAsync())
             {
@@ -104,7 +104,7 @@ internal sealed class WebContractsSteps(IRoutingService routingService)
     {
         var errors = new List<string>();
 
-        foreach (var path in values.ParseSingleColumnNameTable())
+        foreach (var path in values.AsSingleColumnNameTable())
         {
             if (!await routingService.GetComponent<IEnabled>(path).IsEnabledAsync())
             {
