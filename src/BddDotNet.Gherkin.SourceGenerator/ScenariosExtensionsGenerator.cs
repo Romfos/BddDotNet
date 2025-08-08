@@ -57,6 +57,8 @@ internal sealed class ScenariosExtensionsGenerator : IIncrementalGenerator
             using BddDotNet;
             using Microsoft.Extensions.DependencyInjection;
 
+            namespace BddDotNet.Gherkin;
+
             internal static partial class GherkinSourceGeneratorExtensions
             {
                 public static partial void SourceGeneratedGherkinScenarios(this IServiceCollection services)

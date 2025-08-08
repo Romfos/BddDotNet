@@ -17,6 +17,8 @@ internal sealed class ExtensionsClassGenerator : IIncrementalGenerator
 
                 using Microsoft.Extensions.DependencyInjection;
 
+                namespace BddDotNet.Gherkin;
+
                 internal static partial class GherkinSourceGeneratorExtensions
                 {
                     public static partial void SourceGeneratedGherkinSteps(this IServiceCollection services);

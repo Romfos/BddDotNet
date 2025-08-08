@@ -14,21 +14,21 @@ internal sealed class StepsExtensionsGenerator : IIncrementalGenerator
     {
         var givenStepDeclarationNodes = context.SyntaxProvider
             .ForAttributeWithMetadataName(
-                "GivenAttribute",
+                "BddDotNet.Gherkin.GivenAttribute",
                 static (node, _) => node is MethodDeclarationSyntax && node.Parent is ClassDeclarationSyntax,
                 GetGherkinStep)
             .Collect();
 
         var whenStepDeclarationNodes = context.SyntaxProvider
             .ForAttributeWithMetadataName(
-                "WhenAttribute",
+                "BddDotNet.Gherkin.WhenAttribute",
                 static (node, _) => node is MethodDeclarationSyntax && node.Parent is ClassDeclarationSyntax,
                 GetGherkinStep)
             .Collect();
 
         var thenStepDeclarationNodes = context.SyntaxProvider
             .ForAttributeWithMetadataName(
-                "ThenAttribute",
+                "BddDotNet.Gherkin.ThenAttribute",
                 static (node, _) => node is MethodDeclarationSyntax && node.Parent is ClassDeclarationSyntax,
                 GetGherkinStep)
             .Collect();
@@ -70,7 +70,9 @@ internal sealed class StepsExtensionsGenerator : IIncrementalGenerator
             using BddDotNet;
             using Microsoft.Extensions.DependencyInjection;
             using Microsoft.Extensions.DependencyInjection.Extensions;
-            
+
+            namespace BddDotNet.Gherkin;
+
             internal static partial class GherkinSourceGeneratorExtensions
             {
                 public static partial void SourceGeneratedGherkinSteps(this IServiceCollection services)
