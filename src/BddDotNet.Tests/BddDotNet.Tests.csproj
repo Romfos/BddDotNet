@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BddDotNet.Components.Web\BddDotNet.Components.Web.csproj" />
-    <ProjectReference Include="..\BddDotNet.CSharpExpressions\BddDotNet.CSharpExpressions.csproj" />
+    <ProjectReference Include="..\BddDotNet.Gherkin.CSharpExpressions\BddDotNet.Gherkin.CSharpExpressions.csproj" />
   </ItemGroup>
 
   <ItemGroup>

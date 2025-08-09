@@ -1,4 +1,4 @@
-using BddDotNet.CSharpExpressions;
+using BddDotNet.Gherkin.CSharpExpressions;
 using BddDotNet.Tests.Core;
 using Microsoft.Extensions.DependencyInjection;
 

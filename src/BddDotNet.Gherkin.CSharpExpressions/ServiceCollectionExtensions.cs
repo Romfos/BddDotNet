@@ -1,9 +1,9 @@
-using BddDotNet.CSharpExpressions.Internal;
+using BddDotNet.Gherkin.CSharpExpressions.Internal;
 using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace BddDotNet.CSharpExpressions;
+namespace BddDotNet.Gherkin.CSharpExpressions;
 
 public static class ServiceCollectionExtensions
 {

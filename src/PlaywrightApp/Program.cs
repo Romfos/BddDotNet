@@ -1,6 +1,6 @@
 using BddDotNet;
 using BddDotNet.Components;
-using BddDotNet.CSharpExpressions;
+using BddDotNet.Gherkin.CSharpExpressions;
 using BddDotNet.Playwright.DefaultComponents;
 using Microsoft.Testing.Platform.Builder;
 using PlaywrightApp;

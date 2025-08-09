@@ -16,7 +16,7 @@
     <Project Path="BddDotNet.Components/BddDotNet.Components.csproj" />
   </Folder>
   <Folder Name="/Packages/Gherkin/">
-    <Project Path="BddDotNet.CSharpExpressions/BddDotNet.CSharpExpressions.csproj" />
+    <Project Path="BddDotNet.Gherkin.CSharpExpressions/BddDotNet.Gherkin.CSharpExpressions.csproj" />
     <Project Path="BddDotNet.Gherkin.SourceGenerator/BddDotNet.Gherkin.SourceGenerator.csproj" />
   </Folder>
   <Folder Name="/Packages/Playwright/">

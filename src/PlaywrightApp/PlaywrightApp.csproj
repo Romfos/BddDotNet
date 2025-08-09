@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BddDotNet.CSharpExpressions\BddDotNet.CSharpExpressions.csproj" />
+    <ProjectReference Include="..\BddDotNet.Gherkin.CSharpExpressions\BddDotNet.Gherkin.CSharpExpressions.csproj" />
     <ProjectReference Include="..\BddDotNet.Playwright.DefaultComponents\BddDotNet.Playwright.DefaultComponents.csproj" />
   </ItemGroup>
 
