@@ -8,20 +8,20 @@
     <File Path="PackageSymbols.props" />
     <File Path="README.md" />
   </Folder>
-  <Folder Name="/Packages/">
-    <Project Path="BddDotNet/BddDotNet.csproj" />
-  </Folder>
-  <Folder Name="/Packages/Experimental/" />
-  <Folder Name="/Packages/Experimental/Components/">
+  <Folder Name="/Experimental/" />
+  <Folder Name="/Experimental/Components/">
     <Project Path="BddDotNet.Components.Composition/BddDotNet.Components.Composition.csproj" Id="70f20836-c5b2-470c-bcd0-12b05b85526c" />
     <Project Path="BddDotNet.Components/BddDotNet.Components.csproj" />
   </Folder>
-  <Folder Name="/Packages/Experimental/Gherkin/">
+  <Folder Name="/Experimental/Gherkin/">
     <Project Path="BddDotNet.Gherkin.Models/BddDotNet.Gherkin.Models.csproj" />
   </Folder>
-  <Folder Name="/Packages/Experimental/Playwright/">
+  <Folder Name="/Experimental/Playwright/">
     <Project Path="BddDotNet.Playwright.Contracts/BddDotNet.Playwright.Contracts.csproj" />
     <Project Path="BddDotNet.Playwright.DefaultComponents/BddDotNet.Playwright.DefaultComponents.csproj" />
+  </Folder>
+  <Folder Name="/Packages/">
+    <Project Path="BddDotNet/BddDotNet.csproj" />
   </Folder>
   <Folder Name="/Packages/Gherkin/">
     <Project Path="BddDotNet.Gherkin.CSharpExpressions/BddDotNet.Gherkin.CSharpExpressions.csproj" />
