@@ -1,6 +1,7 @@
 using BddDotNet.Components.Options;
 using BddDotNet.Components.Options.Internal;
 using BddDotNet.Components.Routing;
+using BddDotNet.Components.Routing.Internal.Extensions;
 using BddDotNet.Components.Routing.Internal.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -26,14 +27,14 @@ public static class ServiceCollectionExtensions
     public static ComponentRoutingBuilder Component(this IServiceCollection services, string path,
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] Type componentType)
     {
-        path = path.SanitizePath();
+        path = path.GetPathKey();
         services.AddKeyedTransient(typeof(IComponent), path, componentType);
         return new(services, path);
     }
 
     public static IServiceCollection ComponentOptions(this IServiceCollection services, string path, object value)
     {
-        path = path.SanitizePath();
+        path = path.GetPathKey();
         services.AddKeyedSingleton(path.Trim(), (_, _) => new ComponentOptions(value));
         return services;
     }

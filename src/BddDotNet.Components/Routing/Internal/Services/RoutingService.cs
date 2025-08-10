@@ -1,4 +1,5 @@
 using BddDotNet.Components.Routing.Internal.Exceptions;
+using BddDotNet.Components.Routing.Internal.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BddDotNet.Components.Routing.Internal.Services;
@@ -7,7 +8,7 @@ internal sealed class RoutingService(IServiceProvider serviceProvider) : IRoutin
 {
     public T GetComponent<T>(string path) where T : class
     {
-        path = path.SanitizePath();
+        path = path.GetPathKey();
         var component = serviceProvider.GetKeyedService<IComponent>(path);
 
         if (component == null)
