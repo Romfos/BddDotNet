@@ -6,7 +6,8 @@ internal sealed class OptionsService(IServiceProvider serviceProvider) : IOption
 {
     public T GetOptions<T>(string path)
     {
-        if (serviceProvider.GetKeyedService<ComponentOptions>(path.Trim())?.Value is not T value)
+        path = path.SanitizePath();
+        if (serviceProvider.GetKeyedService<ComponentOptions>(path)?.Value is not T value)
         {
             throw new Exception($"Invalid options for '{path}'");
         }

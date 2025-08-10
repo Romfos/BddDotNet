@@ -1,20 +1,19 @@
 using BddDotNet;
-using BddDotNet.Components;
+using BddDotNet.Components.Composition;
 using BddDotNet.Gherkin.CSharpExpressions;
 using BddDotNet.Playwright.DefaultComponents;
 using Microsoft.Testing.Platform.Builder;
 using PlaywrightApp;
+using PlaywrightApp.Pages;
 
 var builder = await TestApplication.CreateBuilderAsync(args);
 
 var services = builder.AddBddDotNet();
+
 services.CSharpExpressions<Expressions>();
 services.SinglePageChromiumPlaywright(new() { Headless = false });
 
-services.Component<Button>("checkout > continue to checkout").Options(".btn-primary");
-services.Component<Input>("checkout > first name").Options("#firstName");
-services.Component<Input>("checkout > last name").Options("#lastName");
-services.Component<Label>("checkout > username error message").Options("#username ~ .invalid-feedback");
+services.CollectComponentsAndOptions<ApplicationRootPage>();
 
 services.SourceGeneratedGherkinScenarios();
 services.SourceGeneratedGherkinSteps();

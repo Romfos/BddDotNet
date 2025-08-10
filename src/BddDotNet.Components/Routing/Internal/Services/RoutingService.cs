@@ -7,7 +7,8 @@ internal sealed class RoutingService(IServiceProvider serviceProvider) : IRoutin
 {
     public T GetComponent<T>(string path) where T : class
     {
-        var component = serviceProvider.GetKeyedService<IComponent>(path.Trim());
+        path = path.SanitizePath();
+        var component = serviceProvider.GetKeyedService<IComponent>(path);
 
         if (component == null)
         {

@@ -13,6 +13,7 @@
   </Folder>
   <Folder Name="/Packages/Experimental/" />
   <Folder Name="/Packages/Experimental/Components/">
+    <Project Path="BddDotNet.Components.Composition/BddDotNet.Components.Composition.csproj" Id="70f20836-c5b2-470c-bcd0-12b05b85526c" />
     <Project Path="BddDotNet.Components/BddDotNet.Components.csproj" />
   </Folder>
   <Folder Name="/Packages/Experimental/Gherkin/">

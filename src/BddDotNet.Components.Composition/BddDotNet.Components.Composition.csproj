@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../Package.props" />
+  <Import Project="../PackageSymbols.props" />
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net472</TargetFrameworks>
+    <!--This package is experemental and not ready for release-->
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BddDotNet.Components\BddDotNet.Components.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -20,14 +20,20 @@ public static class ServiceCollectionExtensions
     public static ComponentRoutingBuilder Component<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TComponent>(
         this IServiceCollection services, string path) where TComponent : class, IComponent
     {
-        path = path.Trim();
-        services.AddKeyedTransient<IComponent, TComponent>(path);
+        return Component(services, path, typeof(TComponent));
+    }
+
+    public static ComponentRoutingBuilder Component(this IServiceCollection services, string path,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] Type componentType)
+    {
+        path = path.SanitizePath();
+        services.AddKeyedTransient(typeof(IComponent), path, componentType);
         return new(services, path);
     }
 
-    public static IServiceCollection ComponentOptions<T>(
-        this IServiceCollection services, string path, T value) where T : notnull
+    public static IServiceCollection ComponentOptions(this IServiceCollection services, string path, object value)
     {
+        path = path.SanitizePath();
         services.AddKeyedSingleton(path.Trim(), (_, _) => new ComponentOptions(value));
         return services;
     }

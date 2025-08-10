@@ -13,7 +13,7 @@ public sealed class ComponentRoutingBuilder
         this.path = path;
     }
 
-    public void Options<T>(T value) where T : notnull
+    public void Options(object value)
     {
         services.ComponentOptions(path, value);
     }
