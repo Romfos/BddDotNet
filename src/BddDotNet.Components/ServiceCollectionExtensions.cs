@@ -35,7 +35,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection ComponentOptions(this IServiceCollection services, string path, object value)
     {
         path = path.GetPathKey();
-        services.AddKeyedSingleton(path.Trim(), (_, _) => new ComponentOptions(value));
+        services.AddKeyedSingleton(path, (_, _) => new ComponentOptions(value));
         return services;
     }
 }
