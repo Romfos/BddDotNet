@@ -5,7 +5,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net8.0;net472</TargetFrameworks>
-    <!--Temporary disable packaging untill full implementation-->
+    <!--This package is experemental and not ready for release-->
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 

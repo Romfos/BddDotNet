@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BddDotNet.Gherkin.Models\BddDotNet.Gherkin.Models.csproj" />
     <ProjectReference Include="..\BddDotNet\BddDotNet.csproj" />
   </ItemGroup>
 

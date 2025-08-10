@@ -1,4 +1,6 @@
 using BddDotNet;
+using BddDotNet.Gherkin.Models;
+using BddDotNetAot.Models;
 using BddDotNetAot.Transformations;
 using Microsoft.Testing.Platform.Builder;
 
@@ -8,6 +10,7 @@ var services = builder.AddBddDotNet();
 services.SourceGeneratedGherkinScenarios();
 services.SourceGeneratedGherkinSteps();
 
+services.ModelTransformation<ModelTransformation>();
 services.ArgumentTransformation<DictionaryArgumentTransformation>();
 
 using var testApp = await builder.BuildAsync();

@@ -50,3 +50,11 @@ Scenario: step transformation scenario
     | Key    | Value |
     | first  | 1     |
     | second | 2     |
+
+@scenario-tag-6
+Scenario: step with model transformation scenario
+    When this is given step with model transformation:
+    | Name   | Value |
+    | first  | 1     |
+    | second | abcd  |
+    | third  | 3     |

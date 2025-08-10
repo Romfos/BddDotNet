@@ -11,16 +11,20 @@
   <Folder Name="/Packages/">
     <Project Path="BddDotNet/BddDotNet.csproj" />
   </Folder>
-  <Folder Name="/Packages/Components/">
+  <Folder Name="/Packages/Experimental/" />
+  <Folder Name="/Packages/Experimental/Components/">
     <Project Path="BddDotNet.Components.Web/BddDotNet.Components.Web.csproj" />
     <Project Path="BddDotNet.Components/BddDotNet.Components.csproj" />
+  </Folder>
+  <Folder Name="/Packages/Experimental/Gherkin/">
+    <Project Path="BddDotNet.Gherkin.Models/BddDotNet.Gherkin.Models.csproj" Id="81730add-3dab-42ad-9a6b-9d7741b098a9" />
+  </Folder>
+  <Folder Name="/Packages/Experimental/Playwright/">
+    <Project Path="BddDotNet.Playwright.DefaultComponents/BddDotNet.Playwright.DefaultComponents.csproj" />
   </Folder>
   <Folder Name="/Packages/Gherkin/">
     <Project Path="BddDotNet.Gherkin.CSharpExpressions/BddDotNet.Gherkin.CSharpExpressions.csproj" />
     <Project Path="BddDotNet.Gherkin.SourceGenerator/BddDotNet.Gherkin.SourceGenerator.csproj" />
-  </Folder>
-  <Folder Name="/Packages/Playwright/">
-    <Project Path="BddDotNet.Playwright.DefaultComponents/BddDotNet.Playwright.DefaultComponents.csproj" />
   </Folder>
   <Folder Name="/Tests/">
     <Project Path="BddDotNet.Tests/BddDotNet.Tests.csproj" />
