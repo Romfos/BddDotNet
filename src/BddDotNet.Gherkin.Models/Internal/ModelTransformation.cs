@@ -6,7 +6,9 @@ namespace BddDotNet.Gherkin.Models.Internal;
 
 internal sealed class ModelTransformation<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TModel>() : IArgumentTransformation
 {
+    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
     private static readonly Type type = typeof(TModel);
+
     private static readonly ParameterInfo[] firstConstructorParameters = type.GetConstructors().First().GetParameters();
     private static readonly PropertyInfo[] properties = type.GetProperties();
     private static readonly FieldInfo[] fields = type.GetFields();

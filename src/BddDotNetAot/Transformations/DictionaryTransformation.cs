@@ -2,7 +2,7 @@ using BddDotNet.Extensibility;
 
 namespace BddDotNetAot.Transformations;
 
-internal sealed class DictionaryArgumentTransformation : IArgumentTransformation
+internal sealed class DictionaryTransformation : IArgumentTransformation
 {
     public ValueTask<object?> TransformAsync(object? input, Type targetType)
     {

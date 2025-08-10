@@ -10,8 +10,8 @@ var services = builder.AddBddDotNet();
 services.SourceGeneratedGherkinScenarios();
 services.SourceGeneratedGherkinSteps();
 
-services.ModelTransformation<ModelTransformation>();
-services.ArgumentTransformation<DictionaryArgumentTransformation>();
+services.ModelTransformation<Model1>();
+services.ArgumentTransformation<DictionaryTransformation>();
 
 using var testApp = await builder.BuildAsync();
 return await testApp.RunAsync();

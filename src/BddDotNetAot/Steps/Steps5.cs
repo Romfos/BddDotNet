@@ -5,7 +5,7 @@ namespace BddDotNetAot.Steps;
 internal sealed class Steps5
 {
     [When("this is given step with model transformation:")]
-    public void Step1(ModelTransformation model)
+    public void Step1(Model1 model)
     {
         if (model is not { first: 1, Second: "abcd", third: 3 })
         {
