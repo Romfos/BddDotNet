@@ -1,4 +1,4 @@
-namespace BddDotNet.Components.Web.Internal;
+namespace BddDotNet.Playwright.Contracts.Internal;
 
 internal static class DataTableExtensions
 {

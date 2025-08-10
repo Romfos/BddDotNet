@@ -1,6 +1,6 @@
 using BddDotNet.Components.Options;
 using BddDotNet.Components.Routing;
-using BddDotNet.Components.Web.Contracts;
+using BddDotNet.Playwright.Contracts.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BddDotNet.Tests.Components;

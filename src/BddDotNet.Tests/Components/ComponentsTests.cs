@@ -1,5 +1,5 @@
 using BddDotNet.Components;
-using BddDotNet.Components.Web;
+using BddDotNet.Playwright.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BddDotNet.Tests.Components;
@@ -16,7 +16,7 @@ public sealed class ComponentsTests
         {
             services.AddSingleton(traces);
 
-            services.WebContracts();
+            services.PlaywrightContracts();
             services.Component<TestClickComponent>("button1").Options("button1 options");
 
             services.Scenario<ComponentsTests>("feature1", "scenario1", async context =>

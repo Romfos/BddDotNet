@@ -1,7 +1,7 @@
 using BddDotNet.Components.Routing;
-using BddDotNet.Components.Web.Contracts;
+using BddDotNet.Playwright.Contracts.Contracts;
 
-namespace BddDotNet.Components.Web.Internal;
+namespace BddDotNet.Playwright.Contracts.Internal;
 
 internal sealed class WebContractsSteps(IRoutingService routingService)
 {

@@ -12,12 +12,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BddDotNet.Components.Web\BddDotNet.Components.Web.csproj" />
     <ProjectReference Include="..\BddDotNet.Gherkin.CSharpExpressions\BddDotNet.Gherkin.CSharpExpressions.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\BddDotNet.Gherkin.SourceGenerator\BddDotNet.Gherkin.SourceGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\BddDotNet.Playwright.Contracts\BddDotNet.Playwright.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

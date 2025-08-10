@@ -1,4 +1,4 @@
-using BddDotNet.Components.Web;
+using BddDotNet.Playwright.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Playwright;
@@ -9,7 +9,7 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection SinglePageChromiumPlaywright(this IServiceCollection services, BrowserTypeLaunchOptions browserTypeLaunchOptions)
     {
-        services.WebContracts();
+        services.PlaywrightContracts();
 
         services.TryAddSingleton(_ =>
         {
