@@ -53,7 +53,6 @@ services.Then(new("this is then step"), () =>
 
 using var testApp = await builder.BuildAsync();
 return await testApp.RunAsync();
-
 ```
 
 More info: https://github.com/Romfos/BddDotNet
