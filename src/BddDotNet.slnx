@@ -9,16 +9,8 @@
     <File Path="README.md" />
   </Folder>
   <Folder Name="/Experimental/" />
-  <Folder Name="/Experimental/Components/">
-    <Project Path="BddDotNet.Components.Composition/BddDotNet.Components.Composition.csproj" Id="70f20836-c5b2-470c-bcd0-12b05b85526c" />
-    <Project Path="BddDotNet.Components/BddDotNet.Components.csproj" />
-  </Folder>
   <Folder Name="/Experimental/Gherkin/">
     <Project Path="BddDotNet.Gherkin.Models/BddDotNet.Gherkin.Models.csproj" />
-  </Folder>
-  <Folder Name="/Experimental/Playwright/">
-    <Project Path="BddDotNet.Playwright.Contracts/BddDotNet.Playwright.Contracts.csproj" />
-    <Project Path="BddDotNet.Playwright.DefaultComponents/BddDotNet.Playwright.DefaultComponents.csproj" />
   </Folder>
   <Folder Name="/Packages/">
     <Project Path="BddDotNet/BddDotNet.csproj" />
@@ -30,6 +22,5 @@
   <Folder Name="/Tests/">
     <Project Path="BddDotNet.Tests/BddDotNet.Tests.csproj" />
     <Project Path="BddDotNetAot/BddDotNetAot.csproj" />
-    <Project Path="PlaywrightApp/PlaywrightApp.csproj" />
   </Folder>
 </Solution>
