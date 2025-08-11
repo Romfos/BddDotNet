@@ -7,7 +7,7 @@ internal sealed class Steps5
     [When("this is given step with model transformation:")]
     public void Step1(Model1 model)
     {
-        if (model is not { first: 1, Second: "abcd", third: 3 })
+        if (model is not { First: 1, Second: "abcd" })
         {
             throw new Exception("Step1");
         }

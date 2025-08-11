@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BddDotNet.Gherkin.CSharpExpressions\BddDotNet.Gherkin.CSharpExpressions.csproj" />
+    <ProjectReference Include="..\BddDotNet.Gherkin.Models\BddDotNet.Gherkin.Models.csproj" />
   </ItemGroup>
 
   <ItemGroup>

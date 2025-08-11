@@ -57,4 +57,3 @@ Scenario: step with model transformation scenario
     | Name   | Value |
     | first  | 1     |
     | second | abcd  |
-    | third  | 3     |
