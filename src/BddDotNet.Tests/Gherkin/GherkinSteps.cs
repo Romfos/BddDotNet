@@ -1,6 +1,6 @@
 namespace BddDotNet.Tests.Gherkin;
 
-internal sealed class TestStepClass(GherkinTraceService gherkinTraceService)
+internal sealed class GherkinSteps(GherkinTraceService gherkinTraceService)
 {
     [Given("this is simple given step")]
     public void Step1()
