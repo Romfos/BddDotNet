@@ -8,56 +8,55 @@ namespace BddDotNet.Tests.CSharpExpressions;
 public sealed class CSharpExpressionsTests
 {
     [TestMethod]
-    public async Task CSharpExpressionsTest()
+    public async Task ExpressionsInStepArgumentTest()
     {
         var traces = new List<object?>();
 
         await TestPlatform.RunTestAsync(services =>
         {
-            services.CSharpExpressions<TestCSharpExpressionsGlobals>();
-
             services.AddSingleton(traces);
 
-            services.Scenario<BddDotNetTests>("feature1", "scenario1", async context =>
-            {
-                traces.Add(1);
-                await context.Then("then1 @Value");
-                traces.Add(2);
-            });
+            services.CSharpExpressions<CSharpExpressionsGlobals1>();
 
+            services.Scenario<ScenarioAndStepTests>("feature1", "scenario1", async context =>
+            {
+                await context.Then("then1 @Value");
+            });
             services.Then(new("then1 (.*)"), (string value) =>
             {
                 traces.Add(value);
             });
         });
 
-        Assert.IsTrue(traces is [1, "ExpressionValue", 2]);
+        Assert.IsTrue(traces is ["ExpressionValue"]);
     }
 
     [TestMethod]
-    public async Task CSharpExpressionsForDataTableTest()
+    public async Task ExpressionsInDataTableTest()
     {
         var traces = new List<object?>();
 
         await TestPlatform.RunTestAsync(services =>
         {
-            services.CSharpExpressions<TestCSharpExpressionsGlobals>();
-
             services.AddSingleton(traces);
 
-            services.Scenario<BddDotNetTests>("feature1", "scenario1", async context =>
-            {
-                traces.Add(1);
-                await context.Then("given", (object?)new string[][] { ["test", "@Value"] });
-                traces.Add(2);
-            });
+            services.CSharpExpressions<CSharpExpressionsGlobals1>();
 
+            services.Scenario<ScenarioAndStepTests>("feature1", "scenario1", async context =>
+            {
+                await context.Then("given", (object?)new string[][] { ["test", "@Value"] });
+            });
             services.Then(new("given"), (string[][] value) =>
             {
                 traces.Add(value);
             });
         });
 
-        Assert.IsTrue(traces is [1, string[][] and [["test", "ExpressionValue"]], 2]);
+        Assert.IsTrue(traces is [string[][] and [["test", "ExpressionValue"]]]);
     }
+}
+
+public sealed class CSharpExpressionsGlobals1
+{
+    public string Value { get; } = "ExpressionValue";
 }
