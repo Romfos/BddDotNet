@@ -63,8 +63,14 @@ internal sealed class BddDotNetTestFramework(IServiceProvider services, IEnumera
             if (request.Filter is not TestNodeUidListFilter testNodeUidListFilter
                 || testNodeUidListFilter.TestNodeUids.Contains(testNode.Uid))
             {
+                var startTime = DateTimeOffset.Now;
                 var testResultProperty = await RunScenarioAsync(scenario);
+                var stopTime = DateTimeOffset.Now;
+
+                var timingProperty = new TimingProperty(new TimingInfo(startTime, stopTime, stopTime - startTime));
                 testNode.Properties.Add(testResultProperty);
+                testNode.Properties.Add(timingProperty);
+
                 await messageBus.PublishAsync(this, new TestNodeUpdateMessage(request.Session.SessionUid, testNode));
             }
         }
@@ -120,7 +126,7 @@ internal sealed class BddDotNetTestFramework(IServiceProvider services, IEnumera
         {
             Uid = $"{scenario.Feature} -> {scenario.Name}",
             DisplayName = scenario.Name,
-            Properties = new PropertyBag(testMethodIdentifierProperty, testFileLocationProperty)
+            Properties = new PropertyBag(testMethodIdentifierProperty, testFileLocationProperty),
         };
 
         return testNode;
