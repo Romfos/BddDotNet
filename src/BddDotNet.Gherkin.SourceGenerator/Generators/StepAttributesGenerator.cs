@@ -17,20 +17,20 @@ internal sealed class StepAttributesGenerator : IIncrementalGenerator
 
                 namespace BddDotNet.Gherkin;
 
-                [AttributeUsage(AttributeTargets.Method)]
-                internal sealed class GivenAttribute(string pattern) : System.Attribute
+                [global::System.AttributeUsage(global::System.AttributeTargets.Method)]
+                internal sealed class GivenAttribute(string pattern) : global::System.Attribute
                 {
                     public string Pattern { get; } = pattern;
                 }
                 
-                [AttributeUsage(AttributeTargets.Method)]
-                internal sealed class WhenAttribute(string pattern) : System.Attribute
+                [global::System.AttributeUsage(global::System.AttributeTargets.Method)]
+                internal sealed class WhenAttribute(string pattern) : global::System.Attribute
                 {
                     public string Pattern { get; } = pattern;
                 }
                 
-                [AttributeUsage(AttributeTargets.Method)]
-                internal sealed class ThenAttribute(string pattern) : System.Attribute
+                [global::System.AttributeUsage(global::System.AttributeTargets.Method)]
+                internal sealed class ThenAttribute(string pattern) : global::System.Attribute
                 {
                     public string Pattern { get; } = pattern;
                 }
