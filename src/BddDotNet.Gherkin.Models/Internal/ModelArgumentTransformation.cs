@@ -4,18 +4,18 @@ using System.Reflection;
 
 namespace BddDotNet.Gherkin.Models.Internal;
 
-internal sealed class ModelTransformation<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TModel>() : IArgumentTransformation
+internal sealed class ModelArgumentTransformation<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TModel>() : IArgumentTransformation
 {
     [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
-    private static readonly Type type = typeof(TModel);
+    private static readonly Type modelType = typeof(TModel);
 
-    private static readonly ParameterInfo[] firstConstructorParameters = type.GetConstructors().First().GetParameters();
-    private static readonly PropertyInfo[] properties = type.GetProperties();
-    private static readonly FieldInfo[] fields = type.GetFields();
+    private static readonly ParameterInfo[] firstConstructorParameters = modelType.GetConstructors().First().GetParameters();
+    private static readonly PropertyInfo[] properties = modelType.GetProperties().Where(x => x.CanWrite).ToArray();
+    private static readonly FieldInfo[] fields = modelType.GetFields();
 
     public ValueTask<object?> TransformAsync(object? input, Type targetType)
     {
-        if (input is string[][] dataTable && targetType == typeof(TModel))
+        if (input is string[][] dataTable && targetType == modelType)
         {
             var modelData = GetModelData(dataTable);
             var model = Transform(modelData);
@@ -58,7 +58,7 @@ internal sealed class ModelTransformation<[DynamicallyAccessedMembers(Dynamicall
             modelConstructorParameters[i] = Convert.ChangeType(value, constructorParameterType);
         }
 
-        var model = (TModel)Activator.CreateInstance(typeof(TModel), modelConstructorParameters)!;
+        var model = (TModel)Activator.CreateInstance(modelType, modelConstructorParameters)!;
 
         foreach (var modelDataRow in modelData)
         {
