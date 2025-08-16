@@ -5,7 +5,8 @@
 
   <PropertyGroup>
     <TargetFrameworks>net8.0;net472</TargetFrameworks>
-    <!--This package is experemental and not ready for release-->
+    <!--This package is in preview and not ready for production-->
+    <VersionSuffix>preview</VersionSuffix>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
