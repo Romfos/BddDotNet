@@ -8,15 +8,12 @@
     <File Path="PackageSymbols.props" />
     <File Path="README.md" />
   </Folder>
-  <Folder Name="/Experimental/" />
-  <Folder Name="/Experimental/Gherkin/">
-    <Project Path="BddDotNet.Gherkin.Models/BddDotNet.Gherkin.Models.csproj" />
-  </Folder>
   <Folder Name="/Packages/">
     <Project Path="BddDotNet/BddDotNet.csproj" />
   </Folder>
   <Folder Name="/Packages/Gherkin/">
     <Project Path="BddDotNet.Gherkin.CSharpExpressions/BddDotNet.Gherkin.CSharpExpressions.csproj" />
+    <Project Path="BddDotNet.Gherkin.Models/BddDotNet.Gherkin.Models.csproj" />
     <Project Path="BddDotNet.Gherkin.SourceGenerator/BddDotNet.Gherkin.SourceGenerator.csproj" />
   </Folder>
   <Folder Name="/Tests/">
