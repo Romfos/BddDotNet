@@ -50,12 +50,6 @@ Feature: Guess the word
 ```csharp
 internal sealed class SampleSteps
 {
-    [Given("Maker starts a game")]
-    public void Sample1()
-    {
-        Console.WriteLine("Maker starts a game");
-    }
-
     [When("the Maker starts a game")]
     public void Sample2()
     {
