@@ -47,6 +47,30 @@ Feature: Guess the word
     Then the Breaker must guess a word with 5 characters
 ```
 
+```csharp
+internal sealed class SampleSteps
+{
+    [Given("Maker starts a game")]
+    public void Sample1()
+    {
+        Console.WriteLine("Maker starts a game");
+    }
+
+    [When("the Maker starts a game")]
+    public void Sample2()
+    {
+        Console.WriteLine("the Maker starts a game");
+    }
+
+    [Then("the Maker waits for a Breaker to join")]
+    public void Sample3()
+    {
+        Console.WriteLine("the Maker waits for a Breaker to join");
+    }
+}
+
+```
+
 # BddDotNet usage example
 Alllow you to use builder syntax for building steps & scenarios
 
