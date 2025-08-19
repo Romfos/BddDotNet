@@ -49,3 +49,16 @@ Scenario Outline: scenario outline with 2 examples
     Examples: 
     | book   | price |
     | pencil | 15    |
+
+Rule: this is example of rule
+
+Scenario: scenario from rule
+    And this is simple given step
+
+Scenario Outline: scenario outline from rule
+    Given this is given step with argument '<book>'
+
+    Examples: 
+    | book      |
+    | sharpener |
+    | pencil    | 

@@ -53,6 +53,30 @@ internal sealed class TestCasesParser
         using var stringReader = new StringReader(featureFileText);
         var feature = gherkinParser.Parse(stringReader).Feature;
 
+        foreach (var rule in feature.Children.OfType<Rule>())
+        {
+            foreach (var scenario in rule.Children.OfType<Scenario>())
+            {
+                var testCase = GetTestCaseForScenario(
+                    assemblyName,
+                    feature.Name,
+                    featureFilePath,
+                    scenario);
+
+                if (scenario.Examples.Any())
+                {
+                    foreach (var outlineTestCase in GetScenarioOutlineTestCases(testCase, scenario.Examples))
+                    {
+                        yield return outlineTestCase;
+                    }
+                }
+                else
+                {
+                    yield return testCase;
+                }
+            }
+        }
+
         foreach (var scenario in feature.Children.OfType<Scenario>())
         {
             var testCase = GetTestCaseForScenario(
@@ -75,7 +99,7 @@ internal sealed class TestCasesParser
         }
 
         var unsupportedFeatureElementTypes = feature.Children
-            .Where(x => x is not Scenario)
+            .Where(x => x is not Scenario and not Rule)
             .Select(x => x.GetType().Name)
             .Distinct()
             .ToList();

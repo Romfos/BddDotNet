@@ -61,5 +61,20 @@ public sealed class GherkinSourceGeneratorTests
                 "pencil",
                 string[][] and [["book", "price"], ["pencil", "15"], ["static", "99"]]
             ]);
+
+        Assert.IsTrue(traces["scenario from rule"] is
+            [
+                "this is simple given step",
+            ]);
+
+        Assert.IsTrue(traces["#1. scenario outline from rule"] is
+            [
+                "sharpener"
+            ]);
+
+        Assert.IsTrue(traces["#2. scenario outline from rule"] is
+            [
+                "pencil"
+            ]);
     }
 }
