@@ -145,7 +145,7 @@ internal sealed class TestCasesParser
 
         foreach (var step in scenario.Steps)
         {
-            if (!step.Keyword.StartsWith("And"))
+            if (step.KeywordType != StepKeywordType.Conjunction)
             {
                 keyword = step.Keyword;
             }

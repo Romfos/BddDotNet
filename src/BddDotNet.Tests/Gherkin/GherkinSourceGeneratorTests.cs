@@ -41,6 +41,7 @@ public sealed class GherkinSourceGeneratorTests
         Assert.IsTrue(traces["And keyword steps"] is
             [
                 "this is simple given step",
+                "this is simple given step",
                 "this is simple when step",
                 "this is simple when step"
             ]);

@@ -25,6 +25,7 @@ Scenario: steps with arguments
 @scenario-tag-3
 Scenario: And keyword steps
     And this is simple given step
+    But this is simple given step
     When this is simple when step
         And this is simple when step
 
