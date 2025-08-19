@@ -156,6 +156,16 @@ internal sealed class ScenariosExtensionsGenerator : IIncrementalGenerator
                     });
                     """");
             }
+            else if (step.DocString is string docString)
+            {
+                stepDeclarations.AppendLine(
+                    $$""""
+                    await context.{{step.Keyword}}("""{{step.Text}}""",
+                    """
+                    {{docString}}
+                    """);
+                    """");
+            }
             else
             {
                 stepDeclarations.AppendLine(

@@ -156,6 +156,9 @@ internal sealed class TestCasesParser
                 step.Argument is DataTable dataTable
                     ? dataTable.Rows.Select(x => x.Cells.Select(x => x.Value).ToArray()).ToArray()
                     : null,
+                step.Argument is DocString docString
+                    ? docString.Content
+                    : null,
                 featureFilePath,
                 step.Location.Line,
                 step.Location.Column);

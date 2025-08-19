@@ -21,6 +21,11 @@ Scenario: steps with arguments
     | book      | price |
     | sharpener | 30    |
     | pencil    | 15    |
+    Then this is then step with doc string:
+    """
+    this is DocString text
+    with multiple lines
+    """
 
 @scenario-tag-3
 Scenario: And keyword steps

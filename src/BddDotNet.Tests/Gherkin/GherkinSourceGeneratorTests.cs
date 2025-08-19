@@ -35,7 +35,11 @@ public sealed class GherkinSourceGeneratorTests
         Assert.IsTrue(traces["steps with arguments"] is
             [
                 "abcd",
-                string[][] and [["book", "price"], ["sharpener", "30"], ["pencil", "15"]]
+                string[][] and [["book", "price"], ["sharpener", "30"], ["pencil", "15"]],
+                """
+                this is DocString text
+                with multiple lines
+                """
             ]);
 
         Assert.IsTrue(traces["And keyword steps"] is
