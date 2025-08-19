@@ -11,7 +11,7 @@
   </ItemGroup>
 
    <ItemGroup>
-    <PackageReference Include="MSTest" Version="3.10.1" />
+    <PackageReference Include="MSTest" Version="3.10.2" />
     <PackageReference Include="Microsoft.Bcl.Memory" Version="9.0.8" />
   </ItemGroup>
 
