@@ -1,6 +1,13 @@
 namespace BddDotNet.Gherkin.SourceGenerator.Models;
 
-internal sealed record TestCaseStep(string Keyword, string Text, string[][]? DataTable, string? DocString, string FeaturePath, int Line, int Column)
+internal sealed record TestCaseStep(
+    string Keyword,
+    string Text,
+    string[][]? DataTable,
+    string? DocString,
+    string FeaturePath,
+    int Line,
+    int Column)
 {
     public string Keyword { get; } = Keyword;
     public string Text { get; set; } = Text;

@@ -33,32 +33,3 @@ Scenario: And keyword steps
     But this is simple given step
     When this is simple when step
         And this is simple when step
-
-@scenario-tag-4
-Scenario Outline: scenario outline with 2 examples
-    Given this is given step with argument '<book>'
-    Then this is then step with table:
-    | book   | price   |
-    | <book> | <price> |
-    | static | 99      |
-
-    Examples: 
-    | book      | price |
-    | sharpener | 30    |
-
-    Examples: 
-    | book   | price |
-    | pencil | 15    |
-
-Rule: this is example of rule
-
-Scenario: scenario from rule
-    And this is simple given step
-
-Scenario Outline: scenario outline from rule
-    Given this is given step with argument '<book>'
-
-    Examples: 
-    | book      |
-    | sharpener |
-    | pencil    | 

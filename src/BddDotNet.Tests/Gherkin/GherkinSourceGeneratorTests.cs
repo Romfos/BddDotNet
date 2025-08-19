@@ -76,5 +76,17 @@ public sealed class GherkinSourceGeneratorTests
             [
                 "pencil"
             ]);
+
+        Assert.IsTrue(traces["simple steps with background"] is
+            [
+                "this is simple given step",
+                "this is simple when step",
+            ]);
+
+        Assert.IsTrue(traces["scenario from rule with background"] is
+            [
+                "this is simple when step",
+                "this is simple then step",
+            ]);
     }
 }

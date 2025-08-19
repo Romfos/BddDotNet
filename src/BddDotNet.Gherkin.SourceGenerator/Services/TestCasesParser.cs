@@ -1,4 +1,3 @@
-using BddDotNet.Gherkin.SourceGenerator.Exceptions;
 using BddDotNet.Gherkin.SourceGenerator.Models;
 using Gherkin;
 using Gherkin.Ast;
@@ -11,68 +10,69 @@ internal sealed class TestCasesParser
 {
     private readonly Parser gherkinParser = new();
 
-    public List<TestCase> Parse(string assemblyName, ImmutableArray<AdditionalText> featureFiles)
+    public TestCaseParserResult Parse(string assemblyName, ImmutableArray<AdditionalText> featureFiles)
     {
-        var testCases = new List<TestCase>();
-        var errors = new List<TestCasesParserError>();
+        var result = new TestCaseParserResult();
 
         foreach (var featureFile in featureFiles)
         {
-            try
-            {
-                var featureTestCases = GetFeatureTestCases(
-                    assemblyName,
-                    featureFile.Path,
-                    featureFile.GetText()?.ToString()!);
+            var featureDocument = GetFeatureDocument(result, featureFile);
 
-                testCases.AddRange(featureTestCases);
-            }
-            catch (CompositeParserException exception)
+            if (featureDocument != null)
             {
-                foreach (var error in exception.Errors)
-                {
-                    errors.Add(new TestCasesParserError(
-                        error.Message,
-                        featureFile.Path,
-                        error.Location?.Line ?? 1,
-                        error.Location?.Column ?? 1));
-                }
+                ParseFeatureTestCases(result, assemblyName, featureFile.Path, featureDocument);
             }
         }
 
-        if (errors.Any())
-        {
-            throw new TestCasesParserException(errors);
-        }
-
-        return testCases;
+        return result;
     }
 
-    public IEnumerable<TestCase> GetFeatureTestCases(string assemblyName, string featureFilePath, string featureFileText)
+    private Feature? GetFeatureDocument(TestCaseParserResult result, AdditionalText featureFile)
     {
-        using var stringReader = new StringReader(featureFileText);
-        var feature = gherkinParser.Parse(stringReader).Feature;
+        try
+        {
+            using var stringReader = new StringReader(featureFile.GetText()?.ToString()!);
+            return gherkinParser.Parse(stringReader).Feature;
+        }
+        catch (CompositeParserException exception)
+        {
+            foreach (var error in exception.Errors)
+            {
+                result.Errors.Add(new TestCasesParserError(
+                    error.Message,
+                    featureFile.Path,
+                    error.Location?.Line ?? 1,
+                    error.Location?.Column ?? 1));
+            }
+        }
+
+        return null;
+    }
+
+    public void ParseFeatureTestCases(TestCaseParserResult result, string assemblyName, string featureFilePath, Feature feature)
+    {
+        var featureBackground = GetTestCaseBackground(result, feature, featureFilePath);
 
         foreach (var rule in feature.Children.OfType<Rule>())
         {
+            var ruleBackground = GetTestCaseBackground(result, rule, featureFilePath);
+
             foreach (var scenario in rule.Children.OfType<Scenario>())
             {
                 var testCase = GetTestCaseForScenario(
                     assemblyName,
                     feature.Name,
                     featureFilePath,
-                    scenario);
+                    scenario,
+                    ruleBackground);
 
                 if (scenario.Examples.Any())
                 {
-                    foreach (var outlineTestCase in GetScenarioOutlineTestCases(testCase, scenario.Examples))
-                    {
-                        yield return outlineTestCase;
-                    }
+                    ParseScenarioOutlineTestCases(result, testCase, scenario.Examples);
                 }
                 else
                 {
-                    yield return testCase;
+                    result.TestCases.Add(testCase);
                 }
             }
         }
@@ -83,23 +83,27 @@ internal sealed class TestCasesParser
                 assemblyName,
                 feature.Name,
                 featureFilePath,
-                scenario);
+                scenario,
+                featureBackground);
 
             if (scenario.Examples.Any())
             {
-                foreach (var outlineTestCase in GetScenarioOutlineTestCases(testCase, scenario.Examples))
-                {
-                    yield return outlineTestCase;
-                }
+                ParseScenarioOutlineTestCases(result, testCase, scenario.Examples);
             }
             else
             {
-                yield return testCase;
+                result.TestCases.Add(testCase);
             }
         }
 
+        CheckUnsupportedFeatureElementTypes(feature);
+    }
+
+    private void CheckUnsupportedFeatureElementTypes(Feature feature)
+    {
         var unsupportedFeatureElementTypes = feature.Children
-            .Where(x => x is not Scenario and not Rule)
+            .Where(x => x is not Scenario and not Rule and not Background)
+            .Concat(feature.Children.OfType<Rule>().SelectMany(x => x.Children).Where(x => x is not Scenario and not Background))
             .Select(x => x.GetType().Name)
             .Distinct()
             .ToList();
@@ -110,7 +114,35 @@ internal sealed class TestCasesParser
         }
     }
 
-    private IEnumerable<TestCase> GetScenarioOutlineTestCases(TestCase originalTestCase, IEnumerable<Examples> examples)
+    private TestCaseBackground? GetTestCaseBackground(TestCaseParserResult result, IHasChildren container, string featureFilePath)
+    {
+        var backgrounds = container.Children.OfType<Background>().ToList();
+
+        if (backgrounds.Count == 0)
+        {
+            return null;
+        }
+
+        if (backgrounds.Count > 1)
+        {
+            result.Errors.Add(new TestCasesParserError(
+                "Multiple backgrounds are not supported",
+                featureFilePath,
+                backgrounds[1].Location.Line,
+                backgrounds[1].Location.Column));
+
+            return null;
+        }
+
+        var testCaseBackground = new TestCaseBackground(result.Backgrounds.Count);
+        testCaseBackground.Steps.AddRange(GetTestSteps(featureFilePath, backgrounds[0]));
+
+        result.Backgrounds.Add(testCaseBackground);
+
+        return testCaseBackground;
+    }
+
+    private void ParseScenarioOutlineTestCases(TestCaseParserResult result, TestCase originalTestCase, IEnumerable<Examples> examples)
     {
         var index = 0;
 
@@ -130,7 +162,7 @@ internal sealed class TestCasesParser
                     Steps = GetScenarioOutlineTestSteps(originalTestCase.Steps, exampleHeaderCells, exampleValuesCells).ToList()
                 };
 
-                yield return testCase;
+                result.TestCases.Add(testCase);
             }
         }
     }
@@ -149,25 +181,26 @@ internal sealed class TestCasesParser
         });
     }
 
-    private TestCase GetTestCaseForScenario(string assemblyName, string featureName, string featureFilePath, Scenario scenario)
+    private TestCase GetTestCaseForScenario(string assemblyName, string featureName, string featureFilePath, Scenario scenario, TestCaseBackground? background)
     {
         var testCase = new TestCase(
             assemblyName,
             featureName,
             scenario.Name,
             featureFilePath,
-            scenario.Location.Line);
+            scenario.Location.Line,
+            background);
 
-        testCase.Steps.AddRange(GetScenarioTestSteps(featureFilePath, scenario));
+        testCase.Steps.AddRange(GetTestSteps(featureFilePath, scenario));
 
         return testCase;
     }
 
-    private IEnumerable<TestCaseStep> GetScenarioTestSteps(string featureFilePath, Scenario scenario)
+    private IEnumerable<TestCaseStep> GetTestSteps(string featureFilePath, IHasSteps container)
     {
         var keyword = "Given";
 
-        foreach (var step in scenario.Steps)
+        foreach (var step in container.Steps)
         {
             if (step.KeywordType != StepKeywordType.Conjunction)
             {

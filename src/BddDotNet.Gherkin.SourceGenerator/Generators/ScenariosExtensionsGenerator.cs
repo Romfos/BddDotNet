@@ -1,4 +1,3 @@
-using BddDotNet.Gherkin.SourceGenerator.Exceptions;
 using BddDotNet.Gherkin.SourceGenerator.Models;
 using BddDotNet.Gherkin.SourceGenerator.Services;
 using Microsoft.CodeAnalysis;
@@ -49,17 +48,16 @@ internal sealed class ScenariosExtensionsGenerator : IIncrementalGenerator
     {
         var testCasesParser = new TestCasesParser();
 
-        try
+        var result = testCasesParser.Parse(assemblyName, features);
+        if (result.Errors.Any())
         {
-            var testCases = testCasesParser.Parse(assemblyName, features);
-            var declarations = GetTestCasesDeclarations(testCases);
-            return declarations;
-        }
-        catch (TestCasesParserException exception)
-        {
-            var featureErrorsDeclarations = GetParserErrorsDeclarations(exception);
+            var featureErrorsDeclarations = GetParserErrorsDeclarations(result);
             return featureErrorsDeclarations;
         }
+
+        var declarations = GetTestCasesDeclarations(result);
+
+        return declarations;
     }
 
     private static string GetTestClassContent(string declarations)
@@ -87,21 +85,28 @@ internal sealed class ScenariosExtensionsGenerator : IIncrementalGenerator
         return featureClassContent;
     }
 
-    private static string GetTestCasesDeclarations(IEnumerable<TestCase> testCases)
+    private static string GetTestCasesDeclarations(TestCaseParserResult testCaseParserResult)
     {
         var declarations = new StringBuilder();
-        foreach (var testCase in testCases)
+
+        foreach (var background in testCaseParserResult.Backgrounds)
+        {
+            declarations.AppendLine(GetBackgroundContent(background));
+        }
+
+        foreach (var testCase in testCaseParserResult.TestCases)
         {
             declarations.AppendLine(GetTestCaseContent(testCase));
         }
+
         return declarations.ToString();
     }
 
-    private static string GetParserErrorsDeclarations(TestCasesParserException exception)
+    private static string GetParserErrorsDeclarations(TestCaseParserResult result)
     {
         var declaration = new StringBuilder();
 
-        foreach (var error in exception.Errors)
+        foreach (var error in result.Errors)
         {
             declaration.AppendLine(
                 $$"""
@@ -113,6 +118,19 @@ internal sealed class ScenariosExtensionsGenerator : IIncrementalGenerator
         declaration.AppendLine("#line default");
 
         return declaration.ToString();
+    }
+
+    private static string GetBackgroundContent(TestCaseBackground background)
+    {
+        var declaration =
+            $$""""
+            var background{{background.Index}} = async (BddDotNet.Extensibility.IScenarioContext context) =>
+            {
+                {{GetTestStepsContent(background.Steps)}}
+            };
+            """";
+
+        return declaration;
     }
 
     private static string GetTestCaseContent(TestCase testCase)
@@ -128,18 +146,34 @@ internal sealed class ScenariosExtensionsGenerator : IIncrementalGenerator
                 {{testCase.Line}},
                 async context =>
                 {
-                    {{GetTestStepsContent(testCase)}}
+                    {{GetTestStepBackgroundContent(testCase)}}
+                    {{GetTestStepsContent(testCase.Steps)}}
                 });
             """";
 
         return declaration;
     }
 
-    private static string GetTestStepsContent(TestCase testCase)
+    private static string GetTestStepBackgroundContent(TestCase testCase)
+    {
+        if (testCase.Background == null)
+        {
+            return string.Empty;
+        }
+
+        var content =
+            $"""
+            await background{testCase.Background.Index}(context);
+            """;
+
+        return content;
+    }
+
+    private static string GetTestStepsContent(List<TestCaseStep> steps)
     {
         var stepDeclarations = new StringBuilder();
 
-        foreach (var step in testCase.Steps)
+        foreach (var step in steps)
         {
             stepDeclarations.AppendLine(
                 $""""
