@@ -1,6 +1,6 @@
 namespace BddDotNet.Gherkin.SourceGenerator.Models;
 
-internal sealed record TestCase(string AssemblyName, string Feature, string Scenario, string FeaturePath, int Line, TestCaseBackground? Background)
+internal sealed record GherkinScenario(string AssemblyName, string Feature, string Scenario, string FeaturePath, int Line, GherkinBackground? Background)
 {
     public string AssemblyName { get; } = AssemblyName;
     public string Feature { get; } = Feature;
@@ -8,6 +8,6 @@ internal sealed record TestCase(string AssemblyName, string Feature, string Scen
     public string FeaturePath { get; } = FeaturePath;
     public int Line { get; } = Line;
 
-    public TestCaseBackground? Background { get; } = Background;
-    public List<TestCaseStep> Steps { get; set; } = [];
+    public GherkinBackground? Background { get; } = Background;
+    public List<GherkinStep> Steps { get; set; } = [];
 }

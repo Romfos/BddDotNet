@@ -1,6 +1,6 @@
 namespace BddDotNet.Gherkin.SourceGenerator.Models;
 
-internal sealed class TestCasesParserError(string message, string featureFilePath, int Line, int Column)
+internal sealed class GherkinParserError(string message, string featureFilePath, int Line, int Column)
 {
     public string Message { get; } = message;
     public string FeatureFilePath { get; } = featureFilePath;

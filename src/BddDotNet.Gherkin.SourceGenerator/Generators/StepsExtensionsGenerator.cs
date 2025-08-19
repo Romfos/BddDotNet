@@ -85,7 +85,10 @@ internal sealed class StepsExtensionsGenerator : IIncrementalGenerator
         return classContent;
     }
 
-    private static string GetMethodBodyContent(ImmutableArray<GherkinStep> givenSteps, ImmutableArray<GherkinStep> whenSteps, ImmutableArray<GherkinStep> thenSteps)
+    private static string GetMethodBodyContent(
+        ImmutableArray<StepRegistration> givenSteps,
+        ImmutableArray<StepRegistration> whenSteps,
+        ImmutableArray<StepRegistration> thenSteps)
     {
         var methodBodyContent = new StringBuilder();
 
@@ -98,9 +101,9 @@ internal sealed class StepsExtensionsGenerator : IIncrementalGenerator
     }
 
     private static string GetServiceRegistrationsContent(
-        ImmutableArray<GherkinStep> givenSteps,
-        ImmutableArray<GherkinStep> whenSteps,
-        ImmutableArray<GherkinStep> thenSteps)
+        ImmutableArray<StepRegistration> givenSteps,
+        ImmutableArray<StepRegistration> whenSteps,
+        ImmutableArray<StepRegistration> thenSteps)
     {
         var typeRegistrations = new StringBuilder();
 
@@ -121,7 +124,7 @@ internal sealed class StepsExtensionsGenerator : IIncrementalGenerator
         return typeRegistrations.ToString();
     }
 
-    private static string GetStepRegistrations(string extensionMethodName, ImmutableArray<GherkinStep> steps)
+    private static string GetStepRegistrations(string extensionMethodName, ImmutableArray<StepRegistration> steps)
     {
         var stepRegistrations = new StringBuilder();
 
@@ -138,7 +141,7 @@ internal sealed class StepsExtensionsGenerator : IIncrementalGenerator
         return stepRegistrations.ToString();
     }
 
-    private static GherkinStep GetGherkinStep(GeneratorAttributeSyntaxContext context, CancellationToken cancellationToken)
+    private static StepRegistration GetGherkinStep(GeneratorAttributeSyntaxContext context, CancellationToken cancellationToken)
     {
         var methodDeclaration = (MethodDeclarationSyntax)context.TargetNode;
         var classDeclaration = (ClassDeclarationSyntax)methodDeclaration.Parent!;

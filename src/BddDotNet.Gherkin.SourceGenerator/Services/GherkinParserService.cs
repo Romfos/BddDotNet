@@ -6,13 +6,13 @@ using System.Collections.Immutable;
 
 namespace BddDotNet.Gherkin.SourceGenerator.Services;
 
-internal sealed class TestCasesParser
+internal sealed class GherkinParserService
 {
     private readonly Parser gherkinParser = new();
 
-    public TestCaseParserResult Parse(string assemblyName, ImmutableArray<AdditionalText> featureFiles)
+    public GherkinParserResult Parse(string assemblyName, ImmutableArray<AdditionalText> featureFiles)
     {
-        var result = new TestCaseParserResult();
+        var result = new GherkinParserResult();
 
         foreach (var featureFile in featureFiles)
         {
@@ -20,14 +20,14 @@ internal sealed class TestCasesParser
 
             if (featureDocument != null)
             {
-                ParseFeatureTestCases(result, assemblyName, featureFile.Path, featureDocument);
+                ParseFeature(result, assemblyName, featureFile.Path, featureDocument);
             }
         }
 
         return result;
     }
 
-    private Feature? GetFeatureDocument(TestCaseParserResult result, AdditionalText featureFile)
+    private Feature? GetFeatureDocument(GherkinParserResult result, AdditionalText featureFile)
     {
         try
         {
@@ -38,7 +38,7 @@ internal sealed class TestCasesParser
         {
             foreach (var error in exception.Errors)
             {
-                result.Errors.Add(new TestCasesParserError(
+                result.Errors.Add(new GherkinParserError(
                     error.Message,
                     featureFile.Path,
                     error.Location?.Line ?? 1,
@@ -49,17 +49,17 @@ internal sealed class TestCasesParser
         return null;
     }
 
-    public void ParseFeatureTestCases(TestCaseParserResult result, string assemblyName, string featureFilePath, Feature feature)
+    public void ParseFeature(GherkinParserResult result, string assemblyName, string featureFilePath, Feature feature)
     {
-        var featureBackground = GetTestCaseBackground(result, feature, featureFilePath);
+        var featureBackground = GetGherkinBackground(result, feature, featureFilePath);
 
         foreach (var rule in feature.Children.OfType<Rule>())
         {
-            var ruleBackground = GetTestCaseBackground(result, rule, featureFilePath);
+            var ruleBackground = GetGherkinBackground(result, rule, featureFilePath);
 
             foreach (var scenario in rule.Children.OfType<Scenario>())
             {
-                var testCase = GetTestCaseForScenario(
+                var gherkinScenario = GetGherkinScenario(
                     assemblyName,
                     feature.Name,
                     featureFilePath,
@@ -68,18 +68,18 @@ internal sealed class TestCasesParser
 
                 if (scenario.Examples.Any())
                 {
-                    ParseScenarioOutlineTestCases(result, testCase, scenario.Examples);
+                    ParseScenarioOutline(result, gherkinScenario, scenario.Examples);
                 }
                 else
                 {
-                    result.TestCases.Add(testCase);
+                    result.Scenarios.Add(gherkinScenario);
                 }
             }
         }
 
         foreach (var scenario in feature.Children.OfType<Scenario>())
         {
-            var testCase = GetTestCaseForScenario(
+            var gherkinScenario = GetGherkinScenario(
                 assemblyName,
                 feature.Name,
                 featureFilePath,
@@ -88,11 +88,11 @@ internal sealed class TestCasesParser
 
             if (scenario.Examples.Any())
             {
-                ParseScenarioOutlineTestCases(result, testCase, scenario.Examples);
+                ParseScenarioOutline(result, gherkinScenario, scenario.Examples);
             }
             else
             {
-                result.TestCases.Add(testCase);
+                result.Scenarios.Add(gherkinScenario);
             }
         }
 
@@ -114,7 +114,7 @@ internal sealed class TestCasesParser
         }
     }
 
-    private TestCaseBackground? GetTestCaseBackground(TestCaseParserResult result, IHasChildren container, string featureFilePath)
+    private GherkinBackground? GetGherkinBackground(GherkinParserResult result, IHasChildren container, string featureFilePath)
     {
         var backgrounds = container.Children.OfType<Background>().ToList();
 
@@ -125,7 +125,7 @@ internal sealed class TestCasesParser
 
         if (backgrounds.Count > 1)
         {
-            result.Errors.Add(new TestCasesParserError(
+            result.Errors.Add(new GherkinParserError(
                 "Multiple backgrounds are not supported",
                 featureFilePath,
                 backgrounds[1].Location.Line,
@@ -134,15 +134,15 @@ internal sealed class TestCasesParser
             return null;
         }
 
-        var testCaseBackground = new TestCaseBackground(result.Backgrounds.Count);
-        testCaseBackground.Steps.AddRange(GetTestSteps(featureFilePath, backgrounds[0]));
+        var gherkinBackground = new GherkinBackground(result.Backgrounds.Count);
+        gherkinBackground.Steps.AddRange(GetGherkinSteps(featureFilePath, backgrounds[0]));
 
-        result.Backgrounds.Add(testCaseBackground);
+        result.Backgrounds.Add(gherkinBackground);
 
-        return testCaseBackground;
+        return gherkinBackground;
     }
 
-    private void ParseScenarioOutlineTestCases(TestCaseParserResult result, TestCase originalTestCase, IEnumerable<Examples> examples)
+    private void ParseScenarioOutline(GherkinParserResult result, GherkinScenario originalScenario, IEnumerable<Examples> examples)
     {
         var index = 0;
 
@@ -156,18 +156,21 @@ internal sealed class TestCasesParser
 
                 var exampleValuesCells = exampleTableRow.Cells.Select(x => x.Value).ToArray();
 
-                var testCase = originalTestCase with
+                var scenario = originalScenario with
                 {
-                    Scenario = $"#{index}. {originalTestCase.Scenario}",
-                    Steps = GetScenarioOutlineTestSteps(originalTestCase.Steps, exampleHeaderCells, exampleValuesCells).ToList()
+                    Scenario = $"#{index}. {originalScenario.Scenario}",
+                    Steps = GetScenarioOutlineSteps(originalScenario.Steps, exampleHeaderCells, exampleValuesCells).ToList()
                 };
 
-                result.TestCases.Add(testCase);
+                result.Scenarios.Add(scenario);
             }
         }
     }
 
-    private IEnumerable<TestCaseStep> GetScenarioOutlineTestSteps(IEnumerable<TestCaseStep> originalSteps, string[] exampleHeaderCells, string[] exampleValuesCells)
+    private IEnumerable<GherkinStep> GetScenarioOutlineSteps(
+        IEnumerable<GherkinStep> originalSteps,
+        string[] exampleHeaderCells,
+        string[] exampleValuesCells)
     {
         return originalSteps.Select(originalStep =>
         {
@@ -176,14 +179,19 @@ internal sealed class TestCasesParser
                 Text = Replace(originalStep.Text, exampleHeaderCells, exampleValuesCells),
                 DataTable = originalStep.DataTable?
                    .Select(row => row.Select(cell => Replace(cell, exampleHeaderCells, exampleValuesCells)).ToArray())
-                   .ToArray()
+                   .ToArray(),
             };
         });
     }
 
-    private TestCase GetTestCaseForScenario(string assemblyName, string featureName, string featureFilePath, Scenario scenario, TestCaseBackground? background)
+    private GherkinScenario GetGherkinScenario(
+        string assemblyName,
+        string featureName,
+        string featureFilePath,
+        Scenario scenario,
+        GherkinBackground? background)
     {
-        var testCase = new TestCase(
+        var gherkinScenario = new GherkinScenario(
             assemblyName,
             featureName,
             scenario.Name,
@@ -191,12 +199,12 @@ internal sealed class TestCasesParser
             scenario.Location.Line,
             background);
 
-        testCase.Steps.AddRange(GetTestSteps(featureFilePath, scenario));
+        gherkinScenario.Steps.AddRange(GetGherkinSteps(featureFilePath, scenario));
 
-        return testCase;
+        return gherkinScenario;
     }
 
-    private IEnumerable<TestCaseStep> GetTestSteps(string featureFilePath, IHasSteps container)
+    private IEnumerable<GherkinStep> GetGherkinSteps(string featureFilePath, IHasSteps container)
     {
         var keyword = "Given";
 
@@ -207,7 +215,7 @@ internal sealed class TestCasesParser
                 keyword = step.Keyword;
             }
 
-            var testCaseStep = new TestCaseStep(
+            var gherkinStep = new GherkinStep(
                 keyword,
                 step.Text,
                 step.Argument is DataTable dataTable
@@ -220,7 +228,7 @@ internal sealed class TestCasesParser
                 step.Location.Line,
                 step.Location.Column);
 
-            yield return testCaseStep;
+            yield return gherkinStep;
         }
     }
 

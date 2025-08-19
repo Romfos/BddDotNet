@@ -46,7 +46,7 @@ internal sealed class ScenariosExtensionsGenerator : IIncrementalGenerator
 
     private static string GetTestCasesContent(string assemblyName, ImmutableArray<AdditionalText> features)
     {
-        var testCasesParser = new TestCasesParser();
+        var testCasesParser = new GherkinParserService();
 
         var result = testCasesParser.Parse(assemblyName, features);
         if (result.Errors.Any())
@@ -85,7 +85,7 @@ internal sealed class ScenariosExtensionsGenerator : IIncrementalGenerator
         return featureClassContent;
     }
 
-    private static string GetTestCasesDeclarations(TestCaseParserResult testCaseParserResult)
+    private static string GetTestCasesDeclarations(GherkinParserResult testCaseParserResult)
     {
         var declarations = new StringBuilder();
 
@@ -94,7 +94,7 @@ internal sealed class ScenariosExtensionsGenerator : IIncrementalGenerator
             declarations.AppendLine(GetBackgroundContent(background));
         }
 
-        foreach (var testCase in testCaseParserResult.TestCases)
+        foreach (var testCase in testCaseParserResult.Scenarios)
         {
             declarations.AppendLine(GetTestCaseContent(testCase));
         }
@@ -102,7 +102,7 @@ internal sealed class ScenariosExtensionsGenerator : IIncrementalGenerator
         return declarations.ToString();
     }
 
-    private static string GetParserErrorsDeclarations(TestCaseParserResult result)
+    private static string GetParserErrorsDeclarations(GherkinParserResult result)
     {
         var declaration = new StringBuilder();
 
@@ -120,7 +120,7 @@ internal sealed class ScenariosExtensionsGenerator : IIncrementalGenerator
         return declaration.ToString();
     }
 
-    private static string GetBackgroundContent(TestCaseBackground background)
+    private static string GetBackgroundContent(GherkinBackground background)
     {
         var declaration =
             $$""""
@@ -133,7 +133,7 @@ internal sealed class ScenariosExtensionsGenerator : IIncrementalGenerator
         return declaration;
     }
 
-    private static string GetTestCaseContent(TestCase testCase)
+    private static string GetTestCaseContent(GherkinScenario testCase)
     {
         var declaration =
             $$""""
@@ -154,7 +154,7 @@ internal sealed class ScenariosExtensionsGenerator : IIncrementalGenerator
         return declaration;
     }
 
-    private static string GetTestStepBackgroundContent(TestCase testCase)
+    private static string GetTestStepBackgroundContent(GherkinScenario testCase)
     {
         if (testCase.Background == null)
         {
@@ -169,7 +169,7 @@ internal sealed class ScenariosExtensionsGenerator : IIncrementalGenerator
         return content;
     }
 
-    private static string GetTestStepsContent(List<TestCaseStep> steps)
+    private static string GetTestStepsContent(List<GherkinStep> steps)
     {
         var stepDeclarations = new StringBuilder();
 
