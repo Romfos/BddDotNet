@@ -5,11 +5,11 @@ namespace BddDotNet.Tests.Gherkin;
 [TestClass]
 public sealed class GherkinSourceGeneratorTests
 {
-    [TestMethod]
-    public async Task GherkinFeatureAndStepsTest()
-    {
-        var traces = new Dictionary<string, List<object>>();
+    private readonly Dictionary<string, List<object>> traces = [];
 
+    [TestInitialize]
+    public async Task Initialize()
+    {
         await TestPlatform.RunTestAsync(services =>
         {
             services.AddSingleton(traces);
@@ -18,20 +18,32 @@ public sealed class GherkinSourceGeneratorTests
             services.SourceGeneratedGherkinScenarios();
             services.SourceGeneratedGherkinSteps();
         });
+    }
 
+    [TestMethod]
+    public void SimpleStepsTest()
+    {
         Assert.IsTrue(traces["simple steps"] is
             [
                 "this is simple given step",
                 "this is simple when step",
                 "this is simple then step"
             ]);
+    }
 
+    [TestMethod]
+    public void SimpleAsyncStepsTest()
+    {
         Assert.IsTrue(traces["simple async steps"] is
             [
                 "this is async task given step",
                 "this is async value task given step",
             ]);
+    }
 
+    [TestMethod]
+    public void StepsWithArgumentTest()
+    {
         Assert.IsTrue(traces["steps with arguments"] is
             [
                 "abcd",
@@ -41,7 +53,11 @@ public sealed class GherkinSourceGeneratorTests
                 with multiple lines
                 """
             ]);
+    }
 
+    [TestMethod]
+    public void ConjunctionKeywordsTest()
+    {
         Assert.IsTrue(traces["And keyword steps"] is
             [
                 "this is simple given step",
@@ -49,7 +65,11 @@ public sealed class GherkinSourceGeneratorTests
                 "this is simple when step",
                 "this is simple when step"
             ]);
+    }
 
+    [TestMethod]
+    public void ScenarioOutlineTest()
+    {
         Assert.IsTrue(traces["#1. scenario outline with 2 examples"] is
             [
                 "sharpener",
@@ -61,7 +81,11 @@ public sealed class GherkinSourceGeneratorTests
                 "pencil",
                 string[][] and [["book", "price"], ["pencil", "15"], ["static", "99"]]
             ]);
+    }
 
+    [TestMethod]
+    public void RuleTest()
+    {
         Assert.IsTrue(traces["scenario from rule"] is
             [
                 "this is simple given step",
@@ -76,7 +100,11 @@ public sealed class GherkinSourceGeneratorTests
             [
                 "pencil"
             ]);
+    }
 
+    [TestMethod]
+    public void BackgroundTest()
+    {
         Assert.IsTrue(traces["simple steps with background"] is
             [
                 "this is simple given step",
