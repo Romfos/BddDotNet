@@ -2,7 +2,7 @@
   <Import Project="../BddDotNet.Gherkin.SourceGenerator/BddDotNet.Gherkin.SourceGenerator.props" />
 
   <PropertyGroup>
-    <TargetFrameworks>net9.0</TargetFrameworks>
+    <TargetFrameworks>net10.0</TargetFrameworks>
     <OutputType>exe</OutputType>
     <PublishAot>true</PublishAot>
     <IsPackable>false</IsPackable>
