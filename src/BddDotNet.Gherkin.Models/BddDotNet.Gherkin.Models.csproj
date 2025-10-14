@@ -5,6 +5,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net8.0;net472</TargetFrameworks>
+    <IsTestingPlatformApplication>false</IsTestingPlatformApplication>
     <!--This package is in preview and not ready for production-->
     <VersionSuffix>preview</VersionSuffix>
   </PropertyGroup>
