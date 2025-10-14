@@ -25,17 +25,17 @@ jobs:
 
       - name: .NET Framework Tests
         if: matrix.os == 'windows-latest'
-        run: dotnet test -f net472 --no-build --no-restore ./src/BddDotNet.slnx
+        run: dotnet test -f net472 --no-build --no-restore --solution ./src/BddDotNet.slnx --no-progress
 
       - name: .NET 8 Tests
-        run: dotnet test -f net8.0 --no-build --no-restore ./src/BddDotNet.slnx
+        run: dotnet test -f net8.0 --no-build --no-restore --solution ./src/BddDotNet.slnx --no-progress
 
       - name: .NET 9 Tests
-        run: dotnet test -f net9.0 --no-build --no-restore ./src/BddDotNet.slnx
+        run: dotnet test -f net9.0 --no-build --no-restore --solution ./src/BddDotNet.slnx --no-progress
 
       - name: .NET 10 Tests
-        run: dotnet test -f net10.0 --no-build --no-restore ./src/BddDotNet.slnx
-        
+        run: dotnet test -f net10.0 --no-build --no-restore --solution ./src/BddDotNet.slnx --no-progress
+
   format-verify:
     runs-on: ubuntu-latest
     steps:
