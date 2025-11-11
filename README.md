@@ -25,7 +25,7 @@ Comparing with Reqnroll (or Specflow, other popular framework in .NET Ecosystem)
 - Extensibility via public interfaces and DI
 - Modular. Small and fast library. All extra features are provided as separate nuget packages
 - No reflection usage (or quite limited)
-- Support .NET 8+  and .NET Framework 4.7.2+  (we recommend to use .NET 9 as best option if possible)
+- Support .NET 8+  and .NET Framework 4.7.2+  (we recommend to use .NET 10 as best option if possible)
 - AOT & Trimming friendly. More info: [Native AOT deployment](https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot/)
 - Nullable reference types and other modern dotnet features support
 
