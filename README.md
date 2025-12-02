@@ -19,13 +19,13 @@ Wiki: [Setup .NET 10 project with Gherkin support](https://github.com/Romfos/Bdd
 
 Comparing with Reqnroll (or Specflow, other popular framework in .NET Ecosystem) this framework has following difference:
 - Microsoft.Extensions.* based
-- Microsoft testing platform as a backend. No hell with different unit tests providers.
+Microsoft testing platform as a backend. No hell with different unit tests providers as it was before in Specflow/Reqnroll.
 - Source generator for features compilation & step registration
 - Code first approach with builder pattern
 - Extensibility via public interfaces and DI
 - Modular. Small and fast library. All extra features are provided as separate nuget packages
-- No reflection usage (or quite limited)
-- Support .NET 8+  and .NET Framework 4.7.2+  (we recommend to use .NET 10 as best option if possible)
+- No or limited reflection usage. Most of the code is totally reflection free.
+- Support .NET 8+  and .NET Framework 4.7.2+ runtimes(we recommend to use .NET 10 as best option if possible)
 - AOT & Trimming friendly. More info: [Native AOT deployment](https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot/)
 - Nullable reference types and other modern dotnet features support
 
