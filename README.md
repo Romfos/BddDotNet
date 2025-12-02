@@ -19,7 +19,7 @@ Wiki: [Setup .NET 10 project with Gherkin support](https://github.com/Romfos/Bdd
 
 Comparing with Reqnroll (or Specflow, other popular framework in .NET Ecosystem) this framework has following difference:
 - Microsoft.Extensions.* based
-Microsoft testing platform as a backend. No hell with different unit tests providers as it was before in Specflow/Reqnroll.
+- Microsoft testing platform as a backend. No hell with different unit tests providers as it was before in Specflow/Reqnroll.
 - Source generator for features compilation & step registration
 - Code first approach with builder pattern
 - Extensibility via public interfaces and DI
