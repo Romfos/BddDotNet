@@ -10,7 +10,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection CSharpExpressions<TGlobals>(this IServiceCollection services, ScriptOptions? scriptOptions = null) where TGlobals : class
     {
         services.TryAddScoped<TGlobals>();
-        services.TryAddSingleton(_ => scriptOptions ?? ScriptOptions.Default.AddReferences("Microsoft.CSharp"));
+        services.TryAddSingleton(_ => scriptOptions ?? ScriptOptions.Default);
         services.ArgumentTransformation<CSharpExpressionTransformation<TGlobals>>();
 
         return services;
