@@ -10,7 +10,7 @@
 
    <ItemGroup>
     <PackageReference Include="MSTest" Version="4.0.2" />
-    <PackageReference Include="Microsoft.Bcl.Memory" Version="10.0.0" />
+    <PackageReference Include="Microsoft.Bcl.Memory" Version="10.0.1" />
   </ItemGroup>
 
   <ItemGroup>
