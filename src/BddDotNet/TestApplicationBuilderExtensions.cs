@@ -23,7 +23,7 @@ public static class TestApplicationBuilderExtensions
 
         builder.RegisterTestFramework(
             _ => new TestFrameworkCapabilities(),
-            (_, _) => services.BuildServiceProvider().GetRequiredService<BddDotNetTestFramework>());
+            (_, _) => new BddDotNetTestFramework(services));
 
         return services;
     }

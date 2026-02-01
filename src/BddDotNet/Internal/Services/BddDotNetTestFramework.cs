@@ -7,7 +7,7 @@ using Microsoft.Testing.Platform.Requests;
 
 namespace BddDotNet.Internal.Services;
 
-internal sealed class BddDotNetTestFramework(IServiceProvider services, IEnumerable<Scenario> scenarios) : ITestFramework, IDataProducer
+internal sealed class BddDotNetTestFramework(IServiceCollection serviceCollection) : ITestFramework, IDataProducer
 {
     public string Uid { get; } = nameof(BddDotNetTestFramework);
     public string Version { get; } = "1.0.0";
@@ -38,25 +38,28 @@ internal sealed class BddDotNetTestFramework(IServiceProvider services, IEnumera
 
     public async Task ExecuteRequestAsync(ExecuteRequestContext context)
     {
-        if (context.Request is RunTestExecutionRequest runTestExecutionRequest)
+        using (var services = serviceCollection.BuildServiceProvider())
         {
-            await RunAsync(context.MessageBus, runTestExecutionRequest);
-        }
-        else if (context.Request is DiscoverTestExecutionRequest discoverTestExecutionRequest)
-        {
-            await DiscoverTestNodesAsync(context.MessageBus, discoverTestExecutionRequest);
-        }
-        else
-        {
-            throw new NotImplementedException($"Unsupported request type {context.Request.GetType().FullName}");
+            if (context.Request is RunTestExecutionRequest runTestExecutionRequest)
+            {
+                await RunAsync(services, context.MessageBus, runTestExecutionRequest);
+            }
+            else if (context.Request is DiscoverTestExecutionRequest discoverTestExecutionRequest)
+            {
+                await DiscoverTestNodesAsync(services, context.MessageBus, discoverTestExecutionRequest);
+            }
+            else
+            {
+                throw new NotImplementedException($"Unsupported request type {context.Request.GetType().FullName}");
+            }
         }
 
         context.Complete();
     }
 
-    private async Task RunAsync(IMessageBus messageBus, RunTestExecutionRequest request)
+    private async Task RunAsync(IServiceProvider serviceProvider, IMessageBus messageBus, RunTestExecutionRequest request)
     {
-        foreach (var scenario in scenarios)
+        foreach (var scenario in serviceProvider.GetServices<Scenario>())
         {
             var testNode = CreateTestNode(scenario);
 
@@ -64,7 +67,7 @@ internal sealed class BddDotNetTestFramework(IServiceProvider services, IEnumera
                 || testNodeUidListFilter.TestNodeUids.Contains(testNode.Uid))
             {
                 var startTime = DateTimeOffset.Now;
-                var testResultProperty = await RunScenarioAsync(scenario);
+                var testResultProperty = await RunScenarioAsync(serviceProvider, scenario);
                 var stopTime = DateTimeOffset.Now;
 
                 var timingProperty = new TimingProperty(new TimingInfo(startTime, stopTime, stopTime - startTime));
@@ -76,11 +79,11 @@ internal sealed class BddDotNetTestFramework(IServiceProvider services, IEnumera
         }
     }
 
-    private async Task<IProperty> RunScenarioAsync(Scenario scenario)
+    private async Task<IProperty> RunScenarioAsync(IServiceProvider serviceProvider, Scenario scenario)
     {
         try
         {
-            await using var scope = services.CreateAsyncScope();
+            await using var scope = serviceProvider.CreateAsyncScope();
 
             var testContext = scope.ServiceProvider.GetRequiredService<TestContext>();
             testContext.Feature = scenario.Feature;
@@ -97,9 +100,9 @@ internal sealed class BddDotNetTestFramework(IServiceProvider services, IEnumera
         }
     }
 
-    private async Task DiscoverTestNodesAsync(IMessageBus messageBus, DiscoverTestExecutionRequest request)
+    private async Task DiscoverTestNodesAsync(IServiceProvider serviceProvider, IMessageBus messageBus, DiscoverTestExecutionRequest request)
     {
-        foreach (var scenario in scenarios)
+        foreach (var scenario in serviceProvider.GetServices<Scenario>())
         {
             var testNode = CreateTestNode(scenario);
             testNode.Properties.Add(DiscoveredTestNodeStateProperty.CachedInstance);
