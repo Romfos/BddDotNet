@@ -24,6 +24,8 @@ Feature: Guess the word
 Program.cs content:
 ```csharp
 using BddDotNet;
+using BddDotNet.Scenarios;
+using BddDotNet.Steps;
 using Microsoft.Testing.Platform.Builder;
 
 var builder = await TestApplication.CreateBuilderAsync(args);
