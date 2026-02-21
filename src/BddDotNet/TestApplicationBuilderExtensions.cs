@@ -1,3 +1,4 @@
+using BddDotNet.Configuration;
 using BddDotNet.Internal.Services;
 using BddDotNet.Scenarios;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +16,7 @@ public static class TestApplicationBuilderExtensions
             var services = new ServiceCollection();
 
             services.AddSingleton<BddDotNetTestFramework>();
+            services.AddSingleton<BddDotNetConfiguration>();
 
             services.AddScoped<IScenarioService, ScenarioService>();
 

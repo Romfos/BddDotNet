@@ -1,3 +1,4 @@
+using BddDotNet.Configuration;
 using BddDotNet.Internal.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Testing.Platform.Extensions.Messages;
@@ -40,9 +41,18 @@ internal sealed class BddDotNetTestFramework(IServiceCollection serviceCollectio
     {
         await using (var services = serviceCollection.BuildServiceProvider())
         {
+            var configuration = services.GetRequiredService<BddDotNetConfiguration>();
+
             if (context.Request is RunTestExecutionRequest runTestExecutionRequest)
             {
-                await RunAsync(services, context.MessageBus, runTestExecutionRequest);
+                if (configuration.Parallel)
+                {
+                    await RunParallelAsync(services, context.MessageBus, runTestExecutionRequest, configuration);
+                }
+                else
+                {
+                    await RunOneByOneAsync(services, context.MessageBus, runTestExecutionRequest);
+                }
             }
             else if (context.Request is DiscoverTestExecutionRequest discoverTestExecutionRequest)
             {
@@ -57,7 +67,32 @@ internal sealed class BddDotNetTestFramework(IServiceCollection serviceCollectio
         context.Complete();
     }
 
-    private async Task RunAsync(IServiceProvider serviceProvider, IMessageBus messageBus, RunTestExecutionRequest request)
+    private async Task RunParallelAsync(IServiceProvider serviceProvider, IMessageBus messageBus, RunTestExecutionRequest request, BddDotNetConfiguration configuration)
+    {
+        var tasks = new List<Task>(configuration.MaxDegreeOfParallelism);
+
+        foreach (var (scenario, testNode) in GetTestCasesAsync(serviceProvider, request))
+        {
+            tasks.Add(RunScenarioAsync(serviceProvider, messageBus, request, testNode, scenario));
+
+            if (tasks.Count == configuration.MaxDegreeOfParallelism)
+            {
+                tasks.Remove(await Task.WhenAny(tasks));
+            }
+        }
+
+        await Task.WhenAll(tasks);
+    }
+
+    private async Task RunOneByOneAsync(IServiceProvider serviceProvider, IMessageBus messageBus, RunTestExecutionRequest request)
+    {
+        foreach (var (scenario, testNode) in GetTestCasesAsync(serviceProvider, request))
+        {
+            await RunScenarioAsync(serviceProvider, messageBus, request, testNode, scenario);
+        }
+    }
+
+    private IEnumerable<(Scenario, TestNode)> GetTestCasesAsync(IServiceProvider serviceProvider, RunTestExecutionRequest request)
     {
         foreach (var scenario in serviceProvider.GetServices<Scenario>())
         {
@@ -66,20 +101,25 @@ internal sealed class BddDotNetTestFramework(IServiceCollection serviceCollectio
             if (request.Filter is not TestNodeUidListFilter testNodeUidListFilter
                 || testNodeUidListFilter.TestNodeUids.Contains(testNode.Uid))
             {
-                var startTime = DateTimeOffset.Now;
-                var testResultProperty = await RunScenarioAsync(serviceProvider, scenario);
-                var stopTime = DateTimeOffset.Now;
-
-                var timingProperty = new TimingProperty(new TimingInfo(startTime, stopTime, stopTime - startTime));
-                testNode.Properties.Add(testResultProperty);
-                testNode.Properties.Add(timingProperty);
-
-                await messageBus.PublishAsync(this, new TestNodeUpdateMessage(request.Session.SessionUid, testNode));
+                yield return (scenario, testNode);
             }
         }
     }
 
-    private async Task<IProperty> RunScenarioAsync(IServiceProvider serviceProvider, Scenario scenario)
+    private async Task RunScenarioAsync(IServiceProvider serviceProvider, IMessageBus messageBus, RunTestExecutionRequest request, TestNode testNode, Scenario scenario)
+    {
+        var startTime = DateTimeOffset.Now;
+        var testResultProperty = await ExecuteScenarioAsync(serviceProvider, scenario);
+        var stopTime = DateTimeOffset.Now;
+
+        var timingProperty = new TimingProperty(new TimingInfo(startTime, stopTime, stopTime - startTime));
+        testNode.Properties.Add(testResultProperty);
+        testNode.Properties.Add(timingProperty);
+
+        await messageBus.PublishAsync(this, new TestNodeUpdateMessage(request.Session.SessionUid, testNode));
+    }
+
+    private async Task<IProperty> ExecuteScenarioAsync(IServiceProvider serviceProvider, Scenario scenario)
     {
         try
         {
