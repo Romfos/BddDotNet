@@ -9,9 +9,46 @@ namespace BddDotNet.Internal.Services;
 internal sealed class StepExecutionService(
     IServiceProvider serviceProvider,
     IEnumerable<Step> steps,
-    IEnumerable<IArgumentTransformation> argumentTransformations)
+    IEnumerable<IArgumentTransformation> argumentTransformations,
+    IEnumerable<IBeforeStep> beforeStepHooks,
+    IEnumerable<IAfterStep> afterStepHook)
 {
     public async Task ExecuteAsync(StepType stepType, string text, object?[] additionalStepArguments)
+    {
+        var keyword = stepType.ToString();
+
+        await BeforeStep();
+
+        try
+        {
+            await FindAndExecuteStepAsync(stepType, text, additionalStepArguments);
+        }
+        catch (Exception exception)
+        {
+            await AfterStep(exception.GetBaseException());
+            throw;
+        }
+
+        await AfterStep(null);
+    }
+
+    private async Task BeforeStep()
+    {
+        foreach (var beforeStepHook in beforeStepHooks)
+        {
+            await beforeStepHook.BeforeStep();
+        }
+    }
+
+    private async Task AfterStep(Exception? exception)
+    {
+        foreach (var afterStepHook in afterStepHook.Reverse())
+        {
+            await afterStepHook.AfterStep(exception);
+        }
+    }
+
+    private async Task FindAndExecuteStepAsync(StepType stepType, string text, object?[] additionalStepArguments)
     {
         var (step, match) = FindGherkinStep(stepType, text);
 

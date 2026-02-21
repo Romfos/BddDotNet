@@ -32,5 +32,21 @@ public static partial class ServiceCollectionExtensions
             serviceCollection.AddScoped<IArgumentTransformation>(services => services.GetRequiredService<T>());
             return serviceCollection;
         }
+
+        public IServiceCollection BeforeStep<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>()
+            where T : class, IBeforeStep
+        {
+            serviceCollection.TryAddScoped<T>();
+            serviceCollection.AddScoped<IBeforeStep>(services => services.GetRequiredService<T>());
+            return serviceCollection;
+        }
+
+        public IServiceCollection AfterStep<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>()
+            where T : class, IAfterStep
+        {
+            serviceCollection.TryAddScoped<T>();
+            serviceCollection.AddScoped<IAfterStep>(services => services.GetRequiredService<T>());
+            return serviceCollection;
+        }
     }
 }
