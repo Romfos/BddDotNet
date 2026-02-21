@@ -29,11 +29,11 @@ using Microsoft.Testing.Platform.Builder;
 var builder = await TestApplication.CreateBuilderAsync(args);
 var services = builder.AddBddDotNet();
 
-services.Scenario<Program>("feature1", "scenario1", async context =>
+services.Scenario<Program>("feature1", "scenario1", async scenario =>
 {
-    await context.Given("this is given step");
-    await context.When("this is when step");
-    await context.Then("this is then step");
+    await scenario.Given("this is given step");
+    await scenario.When("this is when step");
+    await scenario.Then("this is then step");
 });
 
 services.Given(new("this is given step"), () =>
