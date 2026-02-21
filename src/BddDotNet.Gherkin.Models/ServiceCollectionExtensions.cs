@@ -7,11 +7,14 @@ namespace BddDotNet.Gherkin.Models;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection ModelTransformation<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TModel>(
-        this IServiceCollection services) where TModel : class
+    extension(IServiceCollection services)
     {
-        services.ArgumentTransformation<ModelArgumentTransformation<TModel>>();
+        public IServiceCollection ModelTransformation<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TModel>()
+            where TModel : class
+        {
+            services.ArgumentTransformation<ModelArgumentTransformation<TModel>>();
 
-        return services;
+            return services;
+        }
     }
 }

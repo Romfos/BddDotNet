@@ -8,12 +8,15 @@ namespace BddDotNet.Gherkin.CSharpExpressions;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection CSharpExpressions<TGlobals>(this IServiceCollection services, ScriptOptions? scriptOptions = null) where TGlobals : class
+    extension(IServiceCollection services)
     {
-        services.TryAddScoped<TGlobals>();
-        services.TryAddSingleton(_ => scriptOptions ?? ScriptOptions.Default);
-        services.ArgumentTransformation<CSharpExpressionTransformation<TGlobals>>();
+        public IServiceCollection CSharpExpressions<TGlobals>(ScriptOptions? scriptOptions = null) where TGlobals : class
+        {
+            services.TryAddScoped<TGlobals>();
+            services.TryAddSingleton(_ => scriptOptions ?? ScriptOptions.Default);
+            services.ArgumentTransformation<CSharpExpressionTransformation<TGlobals>>();
 
-        return services;
+            return services;
+        }
     }
 }
