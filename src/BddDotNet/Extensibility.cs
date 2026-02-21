@@ -7,27 +7,30 @@ namespace BddDotNet;
 
 public static partial class ServiceCollectionExtensions
 {
-    public static IServiceCollection BeforeScenario<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(
-        this IServiceCollection service) where T : class, IBeforeScenario
+    extension(IServiceCollection serviceCollection)
     {
-        service.TryAddScoped<T>();
-        service.AddScoped<IBeforeScenario>(services => services.GetRequiredService<T>());
-        return service;
-    }
+        public IServiceCollection BeforeScenario<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>()
+            where T : class, IBeforeScenario
+        {
+            serviceCollection.TryAddScoped<T>();
+            serviceCollection.AddScoped<IBeforeScenario>(services => services.GetRequiredService<T>());
+            return serviceCollection;
+        }
 
-    public static IServiceCollection AfterScenario<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(
-        this IServiceCollection service) where T : class, IAfterScenario
-    {
-        service.TryAddScoped<T>();
-        service.AddScoped<IAfterScenario>(services => services.GetRequiredService<T>());
-        return service;
-    }
+        public IServiceCollection AfterScenario<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>()
+            where T : class, IAfterScenario
+        {
+            serviceCollection.TryAddScoped<T>();
+            serviceCollection.AddScoped<IAfterScenario>(services => services.GetRequiredService<T>());
+            return serviceCollection;
+        }
 
-    public static IServiceCollection ArgumentTransformation<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(
-        this IServiceCollection service) where T : class, IArgumentTransformation
-    {
-        service.TryAddScoped<T>();
-        service.AddScoped<IArgumentTransformation>(services => services.GetRequiredService<T>());
-        return service;
+        public IServiceCollection ArgumentTransformation<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>()
+            where T : class, IArgumentTransformation
+        {
+            serviceCollection.TryAddScoped<T>();
+            serviceCollection.AddScoped<IArgumentTransformation>(services => services.GetRequiredService<T>());
+            return serviceCollection;
+        }
     }
 }

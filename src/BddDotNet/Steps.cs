@@ -6,45 +6,48 @@ namespace BddDotNet;
 
 public static partial class ServiceCollectionExtensions
 {
-    public static IServiceCollection Given(this IServiceCollection services, Regex pattern, Delegate method)
+    extension(IServiceCollection serviceCollection)
     {
-        services.AddScoped(_ => new Step(StepType.Given, pattern, _ => method));
+        public IServiceCollection Given(Regex pattern, Delegate method)
+        {
+            serviceCollection.AddScoped(_ => new Step(StepType.Given, pattern, _ => method));
 
-        return services;
-    }
+            return serviceCollection;
+        }
 
-    public static IServiceCollection Given(this IServiceCollection services, Regex pattern, Func<IServiceProvider, Delegate> factory)
-    {
-        services.AddScoped(_ => new Step(StepType.Given, pattern, factory));
+        public IServiceCollection Given(Regex pattern, Func<IServiceProvider, Delegate> factory)
+        {
+            serviceCollection.AddScoped(_ => new Step(StepType.Given, pattern, factory));
 
-        return services;
-    }
+            return serviceCollection;
+        }
 
-    public static IServiceCollection When(this IServiceCollection services, Regex pattern, Delegate method)
-    {
-        services.AddScoped(_ => new Step(StepType.When, pattern, _ => method));
+        public IServiceCollection When(Regex pattern, Delegate method)
+        {
+            serviceCollection.AddScoped(_ => new Step(StepType.When, pattern, _ => method));
 
-        return services;
-    }
+            return serviceCollection;
+        }
 
-    public static IServiceCollection When(this IServiceCollection services, Regex pattern, Func<IServiceProvider, Delegate> factory)
-    {
-        services.AddScoped(_ => new Step(StepType.When, pattern, factory));
+        public IServiceCollection When(Regex pattern, Func<IServiceProvider, Delegate> factory)
+        {
+            serviceCollection.AddScoped(_ => new Step(StepType.When, pattern, factory));
 
-        return services;
-    }
+            return serviceCollection;
+        }
 
-    public static IServiceCollection Then(this IServiceCollection services, Regex pattern, Delegate method)
-    {
-        services.AddScoped(_ => new Step(StepType.Then, pattern, _ => method));
+        public IServiceCollection Then(Regex pattern, Delegate method)
+        {
+            serviceCollection.AddScoped(_ => new Step(StepType.Then, pattern, _ => method));
 
-        return services;
-    }
+            return serviceCollection;
+        }
 
-    public static IServiceCollection Then(this IServiceCollection services, Regex pattern, Func<IServiceProvider, Delegate> factory)
-    {
-        services.AddScoped(_ => new Step(StepType.Then, pattern, factory));
+        public IServiceCollection Then(Regex pattern, Func<IServiceProvider, Delegate> factory)
+        {
+            serviceCollection.AddScoped(_ => new Step(StepType.Then, pattern, factory));
 
-        return services;
+            return serviceCollection;
+        }
     }
 }

@@ -8,23 +8,26 @@ namespace BddDotNet;
 
 public static class TestApplicationBuilderExtensions
 {
-    public static IServiceCollection AddBddDotNet(this ITestApplicationBuilder builder)
+    extension(ITestApplicationBuilder builder)
     {
-        var services = new ServiceCollection();
+        public IServiceCollection AddBddDotNet()
+        {
+            var services = new ServiceCollection();
 
-        services.AddSingleton<BddDotNetTestFramework>();
+            services.AddSingleton<BddDotNetTestFramework>();
 
-        services.AddScoped<TestContext>();
-        services.AddScoped<ITestContext>(services => services.GetRequiredService<TestContext>());
-        services.AddScoped<IScenarioContext, ScenarioContext>();
+            services.AddScoped<TestContext>();
+            services.AddScoped<ITestContext>(services => services.GetRequiredService<TestContext>());
+            services.AddScoped<IScenarioContext, ScenarioContext>();
 
-        services.AddScoped<ScenarioExecutionService>();
-        services.AddScoped<StepExecutionService>();
+            services.AddScoped<ScenarioExecutionService>();
+            services.AddScoped<StepExecutionService>();
 
-        builder.RegisterTestFramework(
-            _ => new TestFrameworkCapabilities(),
-            (_, _) => new BddDotNetTestFramework(services));
+            builder.RegisterTestFramework(
+                _ => new TestFrameworkCapabilities(),
+                (_, _) => new BddDotNetTestFramework(services));
 
-        return services;
+            return services;
+        }
     }
 }

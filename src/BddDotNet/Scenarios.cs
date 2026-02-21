@@ -7,43 +7,44 @@ namespace BddDotNet;
 
 public static partial class ServiceCollectionExtensions
 {
-    public static IServiceCollection Scenario<TFeature>(
-        this IServiceCollection services,
-        string feature,
-        string scenario,
-        Func<IScenarioContext, Task> method,
-        [CallerFilePath] string? filePath = null,
-        [CallerLineNumber] int? lineNumber = null)
+    extension(IServiceCollection serviceCollection)
     {
-        if (filePath == null)
+        public IServiceCollection Scenario<TFeature>(
+            string feature,
+            string scenario,
+            Func<IScenarioContext, Task> method,
+            [CallerFilePath] string? filePath = null,
+            [CallerLineNumber] int? lineNumber = null)
         {
-            throw new ArgumentNullException(nameof(filePath), "File path cannot be null.");
+            if (filePath == null)
+            {
+                throw new ArgumentNullException(nameof(filePath), "File path cannot be null.");
+            }
+            if (lineNumber == null)
+            {
+                throw new ArgumentNullException(nameof(lineNumber), "Line number cannot be null.");
+            }
+
+            var type = typeof(TFeature);
+            var assemblyName = type.Assembly.GetName().Name!;
+
+            serviceCollection.Scenario(assemblyName, type.Namespace ?? assemblyName, feature, scenario, filePath, lineNumber.Value, method);
+
+            return serviceCollection;
         }
-        if (lineNumber == null)
+
+        public IServiceCollection Scenario(
+            string assemblyName,
+            string @namespace,
+            string feature,
+            string scenario,
+            string filePath,
+            int lineNumber,
+            Func<IScenarioContext, Task> method)
         {
-            throw new ArgumentNullException(nameof(lineNumber), "Line number cannot be null.");
+            serviceCollection.AddSingleton(new Scenario(assemblyName, @namespace, feature, scenario, method, filePath, lineNumber));
+
+            return serviceCollection;
         }
-
-        var type = typeof(TFeature);
-        var assemblyName = type.Assembly.GetName().Name!;
-
-        services.Scenario(assemblyName, type.Namespace ?? assemblyName, feature, scenario, filePath, lineNumber.Value, method);
-
-        return services;
-    }
-
-    public static IServiceCollection Scenario(
-        this IServiceCollection services,
-        string assemblyName,
-        string @namespace,
-        string feature,
-        string scenario,
-        string filePath,
-        int lineNumber,
-        Func<IScenarioContext, Task> method)
-    {
-        services.AddSingleton(new Scenario(assemblyName, @namespace, feature, scenario, method, filePath, lineNumber));
-
-        return services;
     }
 }
