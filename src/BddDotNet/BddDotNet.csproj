@@ -4,20 +4,13 @@
   <Import Project="../AOT.props" />
 
   <PropertyGroup>
-    <TargetFrameworks>net10.0;net8.0;net472</TargetFrameworks>
+    <TargetFrameworks>net10.0;net48</TargetFrameworks>
     <IsTestingPlatformApplication>false</IsTestingPlatformApplication>
   </PropertyGroup>
   
   <ItemGroup>
     <PackageReference Include="Microsoft.Testing.Platform" Version="2.1.0" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net10.0' ">
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.3" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' != 'net10.0' ">
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
   </ItemGroup>
   
 </Project>

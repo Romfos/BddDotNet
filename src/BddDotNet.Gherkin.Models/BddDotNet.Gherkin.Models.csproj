@@ -4,7 +4,7 @@
   <Import Project="../AOT.props" />
 
   <PropertyGroup>
-    <TargetFrameworks>net10.0;net8.0;net472</TargetFrameworks>
+    <TargetFrameworks>net10.0;net48</TargetFrameworks>
     <IsTestingPlatformApplication>false</IsTestingPlatformApplication>
   </PropertyGroup>
 

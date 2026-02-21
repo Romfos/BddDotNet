@@ -1,6 +1,6 @@
 <Project>
   
-  <PropertyGroup Condition=" '$(TargetFramework)' != 'net472' ">
+  <PropertyGroup Condition=" '$(TargetFramework)' != 'net48' ">
     <IsAotCompatible>true</IsAotCompatible>
   </PropertyGroup>
 
