@@ -38,7 +38,7 @@ internal sealed class BddDotNetTestFramework(IServiceCollection serviceCollectio
 
     public async Task ExecuteRequestAsync(ExecuteRequestContext context)
     {
-        using (var services = serviceCollection.BuildServiceProvider())
+        await using (var services = serviceCollection.BuildServiceProvider())
         {
             if (context.Request is RunTestExecutionRequest runTestExecutionRequest)
             {
