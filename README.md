@@ -25,7 +25,7 @@ Comparing with Reqnroll (or Specflow, other popular framework in .NET Ecosystem)
 - Extensibility via public interfaces and DI
 - Modular. Small and fast library. All extra features are provided as separate nuget packages
 - No or limited reflection usage. Most of the code is totally reflection free.
-- Support .NET 8+  and .NET Framework 4.7.2+ runtimes(we recommend to use .NET 10 as best option if possible)
+- Support .NET 10+  and .NET Framework 4.8+ runtimes(we recommend to use .NET 10 as best option if possible)
 - AOT & Trimming friendly. More info: [Native AOT deployment](https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot/)
 - Nullable reference types and other modern dotnet features support
 
@@ -76,11 +76,11 @@ using Microsoft.Testing.Platform.Builder;
 var builder = await TestApplication.CreateBuilderAsync(args);
 var services = builder.AddBddDotNet();
 
-services.Scenario<Program>("feature1", "scenario1", async context =>
+services.Scenario<Program>("feature1", "scenario1", async scenario =>
 {
-    await context.Given("this is given step");
-    await context.When("this is when step");
-    await context.Then("this is then step");
+    await scenario.Given("this is given step");
+    await scenario.When("this is when step");
+    await scenario.Then("this is then step");
 });
 
 services.Given(new("this is given step"), () =>
