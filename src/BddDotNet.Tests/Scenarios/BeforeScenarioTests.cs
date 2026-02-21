@@ -1,7 +1,7 @@
-using BddDotNet.Extensibility;
+using BddDotNet.Scenarios;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace BddDotNet.Tests.Core;
+namespace BddDotNet.Tests.Scenarios;
 
 [TestClass]
 public sealed class BeforeScenarioTests
@@ -14,11 +14,10 @@ public sealed class BeforeScenarioTests
         await TestPlatform.RunTestAsync(services =>
         {
             services.AddSingleton(traces);
-
-            services.Scenario<ScenarioAndStepTests>("feature1", "scenario1", context => Task.CompletedTask);
-
             services.BeforeScenario<BeforeScenario1>();
             services.BeforeScenario<BeforeScenario2>();
+
+            services.Scenario<ScenarioTests>("feature1", "scenario1", scenario => Task.CompletedTask);
         });
 
         Assert.IsTrue(traces is [1, 2]);
@@ -27,7 +26,7 @@ public sealed class BeforeScenarioTests
 
 file sealed class BeforeScenario1(List<object?> traces) : IBeforeScenario
 {
-    public Task BeforeScenario()
+    public Task BeforeScenarioAsync(ScenarioContext context)
     {
         traces.Add(1);
         return Task.CompletedTask;
@@ -36,7 +35,7 @@ file sealed class BeforeScenario1(List<object?> traces) : IBeforeScenario
 
 file sealed class BeforeScenario2(List<object?> traces) : IBeforeScenario
 {
-    public Task BeforeScenario()
+    public Task BeforeScenarioAsync(ScenarioContext context)
     {
         traces.Add(2);
         return Task.CompletedTask;

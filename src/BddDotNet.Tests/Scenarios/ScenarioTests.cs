@@ -1,7 +1,10 @@
-namespace BddDotNet.Tests.Core;
+using BddDotNet.Scenarios;
+using BddDotNet.Steps;
+
+namespace BddDotNet.Tests.Scenarios;
 
 [TestClass]
-public sealed class ScenarioAndStepTests
+public sealed class ScenarioTests
 {
     [TestMethod]
     public async Task GivenStepTest()
@@ -10,10 +13,10 @@ public sealed class ScenarioAndStepTests
 
         await TestPlatform.RunTestAsync(services =>
         {
-            services.Scenario<ScenarioAndStepTests>("feature1", "scenario1", async context =>
+            services.Scenario<ScenarioTests>("feature1", "scenario1", async scenario =>
             {
                 traces.Add(1);
-                await context.Given("given1");
+                await scenario.Given("given1");
                 traces.Add(3);
             });
 
@@ -33,10 +36,10 @@ public sealed class ScenarioAndStepTests
 
         await TestPlatform.RunTestAsync(services =>
         {
-            services.Scenario<ScenarioAndStepTests>("feature1", "scenario1", async context =>
+            services.Scenario<ScenarioTests>("feature1", "scenario1", async scenario =>
             {
                 traces.Add(1);
-                await context.When("when1");
+                await scenario.When("when1");
                 traces.Add(3);
             });
 
@@ -56,10 +59,10 @@ public sealed class ScenarioAndStepTests
 
         await TestPlatform.RunTestAsync(services =>
         {
-            services.Scenario<ScenarioAndStepTests>("feature1", "scenario1", async context =>
+            services.Scenario<ScenarioTests>("feature1", "scenario1", async scenario =>
             {
                 traces.Add(1);
-                await context.Then("then1");
+                await scenario.Then("then1");
                 traces.Add(3);
             });
 

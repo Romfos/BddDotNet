@@ -1,3 +1,4 @@
+using BddDotNet.Scenarios;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BddDotNet.Tests.Gherkin;
@@ -13,6 +14,9 @@ public sealed class GherkinSourceGeneratorTests
         await TestPlatform.RunTestAsync(services =>
         {
             services.AddSingleton(traces);
+
+            services.BeforeScenario<GherkinTraceService>();
+            services.AfterScenario<GherkinTraceService>();
             services.AddScoped<GherkinTraceService>();
 
             services.SourceGeneratedGherkinScenarios();

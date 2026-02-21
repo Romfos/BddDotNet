@@ -1,44 +1,46 @@
-using BddDotNet.Extensibility;
 using BddDotNet.Internal.Models;
+using BddDotNet.Scenarios;
 
 namespace BddDotNet.Internal.Services;
 
 internal sealed class ScenarioExecutionService(
-    IScenarioContext scenarioContext,
+    IScenarioService scenarioService,
     IEnumerable<IBeforeScenario> beforeScenarioHooks,
     IEnumerable<IAfterScenario> afterScenarioHooks)
 {
     public async Task ExecuteAsync(Scenario scenario)
     {
-        await RunBeforeScenarioHooksAsync();
+        var scenarioContext = new ScenarioContext(scenario.Feature, scenario.Name);
+
+        await RunBeforeScenarioHooksAsync(scenarioContext);
 
         try
         {
-            await scenario.Method(scenarioContext);
+            await scenario.Method(scenarioService);
         }
         catch (Exception exception)
         {
-            await RunAfterScenarioHooksAsync(exception.GetBaseException());
+            await RunAfterScenarioHooksAsync(scenarioContext, exception.GetBaseException());
 
             throw;
         }
 
-        await RunAfterScenarioHooksAsync(null);
+        await RunAfterScenarioHooksAsync(scenarioContext, null);
     }
 
-    private async Task RunBeforeScenarioHooksAsync()
+    private async Task RunBeforeScenarioHooksAsync(ScenarioContext scenarioContext)
     {
         foreach (var beforeScenarioHook in beforeScenarioHooks)
         {
-            await beforeScenarioHook.BeforeScenario();
+            await beforeScenarioHook.BeforeScenarioAsync(scenarioContext);
         }
     }
 
-    private async Task RunAfterScenarioHooksAsync(Exception? exception)
+    private async Task RunAfterScenarioHooksAsync(ScenarioContext scenarioContext, Exception? exception)
     {
         foreach (var afterScenarioHook in afterScenarioHooks.Reverse())
         {
-            await afterScenarioHook.AfterScenario(exception);
+            await afterScenarioHook.AfterScenarioAsync(scenarioContext, exception);
         }
     }
 }

@@ -1,6 +1,6 @@
-namespace BddDotNet.Extensibility;
+namespace BddDotNet.Scenarios;
 
-public interface IScenarioContext
+public interface IScenarioService
 {
     Task Given(string text, params object?[] additionalStepArguments);
     Task When(string text, params object?[] additionalStepArguments);

@@ -1,4 +1,4 @@
-using BddDotNet.Extensibility;
+using BddDotNet.Arguments;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 

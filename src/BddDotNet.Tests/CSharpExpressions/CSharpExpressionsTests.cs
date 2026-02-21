@@ -1,5 +1,7 @@
 using BddDotNet.Gherkin.CSharpExpressions;
-using BddDotNet.Tests.Core;
+using BddDotNet.Scenarios;
+using BddDotNet.Steps;
+using BddDotNet.Tests.Scenarios;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BddDotNet.Tests.CSharpExpressions;
@@ -8,23 +10,23 @@ namespace BddDotNet.Tests.CSharpExpressions;
 public sealed class CSharpExpressionsTests
 {
     [TestMethod]
-    public async Task ExpressionsInStepArgumentTest()
+    public async Task StepArgumentWithExpressionsTest()
     {
         var traces = new List<object?>();
 
         await TestPlatform.RunTestAsync(services =>
         {
             services.AddSingleton(traces);
-
             services.CSharpExpressions<CSharpExpressionsGlobals1>();
 
-            services.Scenario<ScenarioAndStepTests>("feature1", "scenario1", async context =>
-            {
-                await context.Then("then1 @Value");
-            });
             services.Then(new("then1 (.*)"), (string value) =>
             {
                 traces.Add(value);
+            });
+
+            services.Scenario<ScenarioTests>("feature1", "scenario1", async scenario =>
+            {
+                await scenario.Then("then1 @Value");
             });
         });
 
@@ -32,23 +34,23 @@ public sealed class CSharpExpressionsTests
     }
 
     [TestMethod]
-    public async Task ExpressionsInDataTableTest()
+    public async Task DataTableWithExpressionsTest()
     {
         var traces = new List<object?>();
 
         await TestPlatform.RunTestAsync(services =>
         {
             services.AddSingleton(traces);
-
             services.CSharpExpressions<CSharpExpressionsGlobals1>();
 
-            services.Scenario<ScenarioAndStepTests>("feature1", "scenario1", async context =>
-            {
-                await context.Then("given", (object?)new string[][] { ["test", "@Value"] });
-            });
             services.Then(new("given"), (string[][] value) =>
             {
                 traces.Add(value);
+            });
+
+            services.Scenario<ScenarioTests>("feature1", "scenario1", async scenario =>
+            {
+                await scenario.Then("given", (object?)new string[][] { ["test", "@Value"] });
             });
         });
 

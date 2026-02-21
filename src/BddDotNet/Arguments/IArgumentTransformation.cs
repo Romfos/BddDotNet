@@ -1,4 +1,4 @@
-namespace BddDotNet.Extensibility;
+namespace BddDotNet.Arguments;
 
 public interface IArgumentTransformation
 {

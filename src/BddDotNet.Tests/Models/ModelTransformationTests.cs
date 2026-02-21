@@ -1,6 +1,7 @@
-using BddDotNet.Extensibility;
 using BddDotNet.Gherkin.Models;
-using BddDotNet.Tests.Core;
+using BddDotNet.Scenarios;
+using BddDotNet.Steps;
+using BddDotNet.Tests.Scenarios;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BddDotNet.Tests.Models;
@@ -16,16 +17,16 @@ public sealed class ModelTransformationTests
         await TestPlatform.RunTestAsync(services =>
         {
             services.AddSingleton(traces);
-
             services.ModelTransformation<Model1>();
 
-            services.Scenario<ScenarioAndStepTests>("feature1", "scenario1", async context =>
-            {
-                await context.When("step1", (object?)new string[][] { ["Name", "Value"], ["first", "1"], ["Second", "abcd"], ["third", "3"] });
-            });
             services.When(new("step1"), (Model1 model) =>
             {
                 traces.Add(model);
+            });
+
+            services.Scenario<ScenarioTests>("feature1", "scenario1", async scenario =>
+            {
+                await scenario.When("step1", (object?)new string[][] { ["Name", "Value"], ["first", "1"], ["Second", "abcd"], ["third", "3"] });
             });
         });
 
@@ -40,17 +41,17 @@ public sealed class ModelTransformationTests
         await TestPlatform.RunTestAsync(services =>
         {
             services.AddSingleton(traces);
-
             services.ModelTransformation<Model1>();
             services.AfterScenario<AfterScenario1>();
 
-            services.Scenario<ScenarioAndStepTests>("feature1", "scenario1", async context =>
-            {
-                await context.When("step1", (object?)new string[][] { ["Name", "Value1"], ["first", "1"], ["Second", "abcd"], ["third", "3"] });
-            });
             services.When(new("step1"), (Model1 model) =>
             {
                 traces.Add(model);
+            });
+
+            services.Scenario<ScenarioTests>("feature1", "scenario1", async scenario =>
+            {
+                await scenario.When("step1", (object?)new string[][] { ["Name", "Value1"], ["first", "1"], ["Second", "abcd"], ["third", "3"] });
             });
         });
 
@@ -69,7 +70,7 @@ file class Model1(int first)
 
 file sealed class AfterScenario1(List<object?> traces) : IAfterScenario
 {
-    public Task AfterScenario(Exception? exception)
+    public Task AfterScenarioAsync(ScenarioContext context, Exception? exception)
     {
         traces.Add(exception?.Message);
         return Task.CompletedTask;

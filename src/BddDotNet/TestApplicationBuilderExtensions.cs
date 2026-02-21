@@ -1,5 +1,5 @@
-using BddDotNet.Extensibility;
 using BddDotNet.Internal.Services;
+using BddDotNet.Scenarios;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Testing.Platform.Builder;
 using Microsoft.Testing.Platform.Capabilities.TestFramework;
@@ -16,9 +16,7 @@ public static class TestApplicationBuilderExtensions
 
             services.AddSingleton<BddDotNetTestFramework>();
 
-            services.AddScoped<TestContext>();
-            services.AddScoped<ITestContext>(services => services.GetRequiredService<TestContext>());
-            services.AddScoped<IScenarioContext, ScenarioContext>();
+            services.AddScoped<IScenarioService, ScenarioService>();
 
             services.AddScoped<ScenarioExecutionService>();
             services.AddScoped<StepExecutionService>();

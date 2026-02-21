@@ -1,9 +1,9 @@
-using BddDotNet.Extensibility;
-using BddDotNet.Internal.Models;
+using BddDotNet.Scenarios;
+using BddDotNet.Steps;
 
 namespace BddDotNet.Internal.Services;
 
-internal sealed class ScenarioContext(StepExecutionService stepExecutionService) : IScenarioContext
+internal sealed class ScenarioService(StepExecutionService stepExecutionService) : IScenarioService
 {
     public async Task Given(string text, params object?[] additionalStepArguments)
     {

@@ -69,6 +69,7 @@ internal sealed class ScenariosExtensionsGenerator : IIncrementalGenerator
             #nullable disable warnings
 
             using BddDotNet;
+            using BddDotNet.Scenarios;
             using Microsoft.Extensions.DependencyInjection;
 
             namespace BddDotNet.Gherkin;
@@ -124,7 +125,7 @@ internal sealed class ScenariosExtensionsGenerator : IIncrementalGenerator
     {
         var declaration =
             $$""""
-            var background{{background.Index}} = async (BddDotNet.Extensibility.IScenarioContext context) =>
+            var background{{background.Index}} = async (BddDotNet.Scenarios.IScenarioService scenario) =>
             {
                 {{GetTestStepsContent(background.Steps)}}
             };
@@ -144,7 +145,7 @@ internal sealed class ScenariosExtensionsGenerator : IIncrementalGenerator
                 "{{testCase.Scenario}}",
                 """{{testCase.FeaturePath}}""",
                 {{testCase.Line}},
-                async context =>
+                async scenario =>
                 {
                     {{GetTestStepBackgroundContent(testCase)}}
                     {{GetTestStepsContent(testCase.Steps)}}
@@ -163,7 +164,7 @@ internal sealed class ScenariosExtensionsGenerator : IIncrementalGenerator
 
         var content =
             $"""
-            await background{testCase.Background.Index}(context);
+            await background{testCase.Background.Index}(scenario);
             """;
 
         return content;
@@ -184,7 +185,7 @@ internal sealed class ScenariosExtensionsGenerator : IIncrementalGenerator
             {
                 stepDeclarations.AppendLine(
                     $$""""
-                    await context.{{step.Keyword}}("""{{step.Text}}""", (object)new string[][]
+                    await scenario.{{step.Keyword}}("""{{step.Text}}""", (object)new string[][]
                     {
                         {{GetDataTableContent(dataTable)}}
                     });
@@ -194,7 +195,7 @@ internal sealed class ScenariosExtensionsGenerator : IIncrementalGenerator
             {
                 stepDeclarations.AppendLine(
                     $$""""
-                    await context.{{step.Keyword}}("""{{step.Text}}""",
+                    await scenario.{{step.Keyword}}("""{{step.Text}}""",
                     """
                     {{docString}}
                     """);
@@ -204,7 +205,7 @@ internal sealed class ScenariosExtensionsGenerator : IIncrementalGenerator
             {
                 stepDeclarations.AppendLine(
                     $""""
-                    await context.{step.Keyword}("""{step.Text}""");
+                    await scenario.{step.Keyword}("""{step.Text}""");
                     """");
             }
         }

@@ -1,4 +1,4 @@
-using BddDotNet.Extensibility;
+using BddDotNet.Arguments;
 
 namespace BddDotNetAot.Transformations;
 

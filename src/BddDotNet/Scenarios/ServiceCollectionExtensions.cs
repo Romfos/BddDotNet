@@ -1,18 +1,19 @@
-using BddDotNet.Extensibility;
 using BddDotNet.Internal.Models;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
-namespace BddDotNet;
+namespace BddDotNet.Scenarios;
 
-public static partial class ServiceCollectionExtensions
+public static class ServiceCollectionExtensions
 {
     extension(IServiceCollection serviceCollection)
     {
         public IServiceCollection Scenario<TFeature>(
             string feature,
             string scenario,
-            Func<IScenarioContext, Task> method,
+            Func<IScenarioService, Task> method,
             [CallerFilePath] string? filePath = null,
             [CallerLineNumber] int? lineNumber = null)
         {
@@ -40,10 +41,26 @@ public static partial class ServiceCollectionExtensions
             string scenario,
             string filePath,
             int lineNumber,
-            Func<IScenarioContext, Task> method)
+            Func<IScenarioService, Task> method)
         {
             serviceCollection.AddSingleton(new Scenario(assemblyName, @namespace, feature, scenario, method, filePath, lineNumber));
 
+            return serviceCollection;
+        }
+
+        public IServiceCollection BeforeScenario<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>()
+            where T : class, IBeforeScenario
+        {
+            serviceCollection.TryAddScoped<T>();
+            serviceCollection.AddScoped<IBeforeScenario>(services => services.GetRequiredService<T>());
+            return serviceCollection;
+        }
+
+        public IServiceCollection AfterScenario<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>()
+            where T : class, IAfterScenario
+        {
+            serviceCollection.TryAddScoped<T>();
+            serviceCollection.AddScoped<IAfterScenario>(services => services.GetRequiredService<T>());
             return serviceCollection;
         }
     }

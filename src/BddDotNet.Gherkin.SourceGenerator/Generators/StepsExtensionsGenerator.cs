@@ -68,6 +68,7 @@ internal sealed class StepsExtensionsGenerator : IIncrementalGenerator
             #nullable disable warnings
 
             using BddDotNet;
+            using BddDotNet.Steps;
             using Microsoft.Extensions.DependencyInjection;
             using Microsoft.Extensions.DependencyInjection.Extensions;
 

@@ -1,10 +1,12 @@
 using BddDotNet.Internal.Models;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 
-namespace BddDotNet;
+namespace BddDotNet.Steps;
 
-public static partial class ServiceCollectionExtensions
+public static class ServiceCollectionExtensions
 {
     extension(IServiceCollection serviceCollection)
     {
@@ -47,6 +49,22 @@ public static partial class ServiceCollectionExtensions
         {
             serviceCollection.AddScoped(_ => new Step(StepType.Then, pattern, factory));
 
+            return serviceCollection;
+        }
+
+        public IServiceCollection BeforeStep<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>()
+            where T : class, IBeforeStep
+        {
+            serviceCollection.TryAddScoped<T>();
+            serviceCollection.AddScoped<IBeforeStep>(services => services.GetRequiredService<T>());
+            return serviceCollection;
+        }
+
+        public IServiceCollection AfterStep<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>()
+            where T : class, IAfterStep
+        {
+            serviceCollection.TryAddScoped<T>();
+            serviceCollection.AddScoped<IAfterStep>(services => services.GetRequiredService<T>());
             return serviceCollection;
         }
     }

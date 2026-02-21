@@ -1,4 +1,4 @@
-using BddDotNet.Internal.Models;
+using BddDotNet.Steps;
 
 namespace BddDotNet.Internal.Exceptions;
 

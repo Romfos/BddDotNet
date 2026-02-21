@@ -1,7 +1,10 @@
-using BddDotNet.Extensibility;
+using BddDotNet.Arguments;
+using BddDotNet.Scenarios;
+using BddDotNet.Steps;
+using BddDotNet.Tests.Scenarios;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace BddDotNet.Tests.Core;
+namespace BddDotNet.Tests.Arguments;
 
 [TestClass]
 public sealed class ArgumentTransformationTests
@@ -14,18 +17,18 @@ public sealed class ArgumentTransformationTests
         await TestPlatform.RunTestAsync(services =>
         {
             services.AddSingleton(traces);
+            services.ArgumentTransformation<ArgumentTransformation1>();
 
-            services.Scenario<ScenarioAndStepTests>("feature1", "scenario1", async context =>
-            {
-                await context.Then("then1 abcd");
-            });
             services.Then(new("then1 (.*)"), (string value) =>
             {
                 traces.Add(2);
                 traces.Add(value);
             });
 
-            services.ArgumentTransformation<ArgumentTransformation1>();
+            services.Scenario<ScenarioTests>("feature1", "scenario1", async scenario =>
+            {
+                await scenario.Then("then1 abcd");
+            });
         });
 
         Assert.IsTrue(traces is [1, "abcd", 2, "System.String"]);

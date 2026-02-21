@@ -1,6 +1,7 @@
-using BddDotNet.Extensibility;
+using BddDotNet.Arguments;
 using BddDotNet.Internal.Exceptions;
 using BddDotNet.Internal.Models;
+using BddDotNet.Steps;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
@@ -15,45 +16,44 @@ internal sealed class StepExecutionService(
 {
     public async Task ExecuteAsync(StepType stepType, string text, object?[] additionalStepArguments)
     {
-        var keyword = stepType.ToString();
+        var (step, match) = FindGherkinStep(stepType, text);
+        var handler = step.Factory(serviceProvider);
+        var arguments = await GetStepArgumentsAsync(handler, match, additionalStepArguments);
+        var stepContext = new StepContext(stepType, text, step.Pattern, arguments);
 
-        await BeforeStep();
+        await BeforeStep(stepContext);
 
         try
         {
-            await FindAndExecuteStepAsync(stepType, text, additionalStepArguments);
+            await ExecuteStepAsync(handler, arguments);
         }
         catch (Exception exception)
         {
-            await AfterStep(exception.GetBaseException());
+            await AfterStep(stepContext, exception.GetBaseException());
             throw;
         }
 
-        await AfterStep(null);
+        await AfterStep(stepContext, null);
     }
 
-    private async Task BeforeStep()
+    private async Task BeforeStep(StepContext stepContext)
     {
         foreach (var beforeStepHook in beforeStepHooks)
         {
-            await beforeStepHook.BeforeStep();
+            await beforeStepHook.BeforeStepAsync(stepContext);
         }
     }
 
-    private async Task AfterStep(Exception? exception)
+    private async Task AfterStep(StepContext stepContext, Exception? exception)
     {
         foreach (var afterStepHook in afterStepHook.Reverse())
         {
-            await afterStepHook.AfterStep(exception);
+            await afterStepHook.AfterStepAsync(stepContext, exception);
         }
     }
 
-    private async Task FindAndExecuteStepAsync(StepType stepType, string text, object?[] additionalStepArguments)
+    private async Task ExecuteStepAsync(Delegate handler, object?[] arguments)
     {
-        var (step, match) = FindGherkinStep(stepType, text);
-
-        var handler = step.Factory(serviceProvider);
-        var arguments = await GetStepArgumentsAsync(handler, match, additionalStepArguments);
         var result = handler.DynamicInvoke(arguments);
 
         if (result is Task task)

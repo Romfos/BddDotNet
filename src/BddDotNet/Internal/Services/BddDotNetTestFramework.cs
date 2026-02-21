@@ -84,11 +84,6 @@ internal sealed class BddDotNetTestFramework(IServiceCollection serviceCollectio
         try
         {
             await using var scope = serviceProvider.CreateAsyncScope();
-
-            var testContext = scope.ServiceProvider.GetRequiredService<TestContext>();
-            testContext.Feature = scenario.Feature;
-            testContext.Scenario = scenario.Name;
-
             var scenarioExecutionService = scope.ServiceProvider.GetRequiredService<ScenarioExecutionService>();
             await scenarioExecutionService.ExecuteAsync(scenario);
 
