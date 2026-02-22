@@ -71,6 +71,8 @@ Alllow you to use builder syntax for building steps & scenarios
 Program.cs content:
 ```csharp
 using BddDotNet;
+using BddDotNet.Scenarios;
+using BddDotNet.Steps;
 using Microsoft.Testing.Platform.Builder;
 
 var builder = await TestApplication.CreateBuilderAsync(args);
@@ -100,6 +102,7 @@ services.Then(new("this is then step"), () =>
 
 using var testApp = await builder.BuildAsync();
 return await testApp.RunAsync();
+
 
 ```
 
