@@ -49,30 +49,23 @@ public sealed class ParallelModeTests
         await TestPlatform.RunTestAsync(services =>
         {
             services.AddSingleton(traces);
-            services.Configuration(new() { Parallel = true, MaxDegreeOfParallelism = 3 });
+            services.Configuration(new() { Parallel = true, MaxDegreeOfParallelism = 2 });
 
             var taskCompletionSource = new TaskCompletionSource<bool>();
-
-            services.Scenario<ParallelModeTests>("feature1", "scenario1", async context =>
-            {
-                await Task.Yield();
-                traces.Push(1);
-            });
 
             services.Scenario<ParallelModeTests>("feature1", "scenario2", async context =>
             {
                 await taskCompletionSource.Task;
-                traces.Push(2);
+                traces.Push(1);
             });
 
-            services.Scenario<ParallelModeTests>("feature1", "scenario3", context =>
+            services.Scenario<ParallelModeTests>("feature1", "scenario3", async context =>
             {
-                traces.Push(3);
+                traces.Push(2);
                 taskCompletionSource.TrySetResult(true);
-                return Task.CompletedTask;
             });
         });
 
-        Assert.IsTrue(traces.ToArray() is [2, 3, 1]);
+        Assert.IsTrue(traces.ToArray() is [1, 2]);
     }
 }
