@@ -1,7 +1,7 @@
 
 # Overview
 
-Modern BDD framework for c# and .NET with gherkin support
+Modern BDD framework for C# and .NET with Gherkin support
 
 # Gherkin syntax example
 ```gherkin
@@ -19,7 +19,7 @@ Feature: Guess the word
     Then the Breaker must guess a word with 5 characters
 ```
 
-# CSharp syntax scenario example
+# C# syntax scenario example
 
 Program.cs content:
 ```csharp

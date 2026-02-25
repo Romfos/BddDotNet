@@ -110,7 +110,7 @@ internal sealed class GherkinParserService
 
         if (unsupportedFeatureElementTypes.Any())
         {
-            throw new Exception($"Unsupported feature items: {string.Join(",", unsupportedFeatureElementTypes)}");
+            throw new Exception($"Unsupported feature items: {string.Join(", ", unsupportedFeatureElementTypes)}");
         }
     }
 
