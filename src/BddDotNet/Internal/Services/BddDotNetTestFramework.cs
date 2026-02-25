@@ -39,75 +39,91 @@ internal sealed class BddDotNetTestFramework(IServiceCollection serviceCollectio
 
     public async Task ExecuteRequestAsync(ExecuteRequestContext context)
     {
-        await using (var services = serviceCollection.BuildServiceProvider())
+        if (context.Request is RunTestExecutionRequest runTestExecutionRequest)
         {
-            var configuration = services.GetRequiredService<BddDotNetConfiguration>();
-
-            if (context.Request is RunTestExecutionRequest runTestExecutionRequest)
-            {
-                if (configuration.Parallel)
-                {
-                    await RunParallelAsync(services, context.MessageBus, runTestExecutionRequest, configuration);
-                }
-                else
-                {
-                    await RunOneByOneAsync(services, context.MessageBus, runTestExecutionRequest);
-                }
-            }
-            else if (context.Request is DiscoverTestExecutionRequest discoverTestExecutionRequest)
-            {
-                await DiscoverTestNodesAsync(services, context.MessageBus, discoverTestExecutionRequest);
-            }
-            else
-            {
-                throw new NotImplementedException($"Unsupported request type {context.Request.GetType().FullName}");
-            }
+            await RunTestExecutionAsync(context.MessageBus, runTestExecutionRequest);
+        }
+        else if (context.Request is DiscoverTestExecutionRequest discoverTestExecutionRequest)
+        {
+            await DiscoverTestExecutionAsync(context.MessageBus, discoverTestExecutionRequest);
+        }
+        else
+        {
+            throw new NotImplementedException($"Unsupported request type {context.Request.GetType().FullName}");
         }
 
         context.Complete();
     }
 
-    private async Task RunParallelAsync(IServiceProvider serviceProvider, IMessageBus messageBus, RunTestExecutionRequest request, BddDotNetConfiguration configuration)
+    private async Task RunTestExecutionAsync(IMessageBus messageBus, RunTestExecutionRequest request)
     {
-        var tasks = new List<Task>(configuration.MaxDegreeOfParallelism);
+        await using var services = serviceCollection.BuildServiceProvider();
+        var configuration = services.GetRequiredService<BddDotNetConfiguration>();
 
-        foreach (var (scenario, testNode) in GetTestCasesAsync(serviceProvider, request))
+        await foreach (var testNode in RunScenariosAsync(services, request, configuration))
         {
-            tasks.Add(RunScenarioAsync(serviceProvider, messageBus, request, testNode, scenario));
-
-            if (tasks.Count == configuration.MaxDegreeOfParallelism)
-            {
-                tasks.Remove(await Task.WhenAny(tasks));
-            }
-        }
-
-        await Task.WhenAll(tasks);
-    }
-
-    private async Task RunOneByOneAsync(IServiceProvider serviceProvider, IMessageBus messageBus, RunTestExecutionRequest request)
-    {
-        foreach (var (scenario, testNode) in GetTestCasesAsync(serviceProvider, request))
-        {
-            await RunScenarioAsync(serviceProvider, messageBus, request, testNode, scenario);
+            await messageBus.PublishAsync(this, new TestNodeUpdateMessage(request.Session.SessionUid, testNode));
         }
     }
 
-    private IEnumerable<(Scenario, TestNode)> GetTestCasesAsync(IServiceProvider serviceProvider, RunTestExecutionRequest request)
+    private async Task DiscoverTestExecutionAsync(IMessageBus messageBus, DiscoverTestExecutionRequest request)
     {
-        foreach (var scenario in serviceProvider.GetServices<Scenario>())
+        await using var services = serviceCollection.BuildServiceProvider();
+
+        foreach (var scenario in services.GetServices<Scenario>())
         {
             var testNode = CreateTestNode(scenario);
-
-            if (request.Filter is not TestNodeUidListFilter testNodeUidListFilter
-                || testNodeUidListFilter.TestNodeUids.Contains(testNode.Uid))
-            {
-                yield return (scenario, testNode);
-            }
+            testNode.Properties.Add(DiscoveredTestNodeStateProperty.CachedInstance);
+            await messageBus.PublishAsync(this, new TestNodeUpdateMessage(request.Session.SessionUid, testNode));
         }
     }
 
-    private async Task RunScenarioAsync(IServiceProvider serviceProvider, IMessageBus messageBus, RunTestExecutionRequest request, TestNode testNode, Scenario scenario)
+    private IAsyncEnumerable<TestNode> RunScenariosAsync(IServiceProvider serviceProvider, RunTestExecutionRequest request, BddDotNetConfiguration configuration)
     {
+        if (configuration.MaxConcurrentTasks > 1)
+        {
+            return RunConcurrentAsync(serviceProvider, request, configuration);
+        }
+        else
+        {
+            return RunOneByOneAsync(serviceProvider, request);
+        }
+    }
+
+    private async IAsyncEnumerable<TestNode> RunConcurrentAsync(IServiceProvider serviceProvider, RunTestExecutionRequest request, BddDotNetConfiguration configuration)
+    {
+        var tasks = new List<Task<TestNode>>(configuration.MaxConcurrentTasks);
+
+        foreach (var scenario in GetRelevantScenarios(serviceProvider, request))
+        {
+            tasks.Add(RunScenarioAsync(serviceProvider, scenario));
+
+            if (tasks.Count == configuration.MaxConcurrentTasks)
+            {
+                var task = await Task.WhenAny(tasks);
+                tasks.Remove(task);
+                yield return await task;
+            }
+        }
+
+        foreach (var testNode in await Task.WhenAll(tasks))
+        {
+            yield return testNode;
+        }
+    }
+
+    private async IAsyncEnumerable<TestNode> RunOneByOneAsync(IServiceProvider serviceProvider, RunTestExecutionRequest request)
+    {
+        foreach (var scenario in GetRelevantScenarios(serviceProvider, request))
+        {
+            yield return await RunScenarioAsync(serviceProvider, scenario);
+        }
+    }
+
+    private async Task<TestNode> RunScenarioAsync(IServiceProvider serviceProvider, Scenario scenario)
+    {
+        var testNode = CreateTestNode(scenario);
+
         var startTime = DateTimeOffset.Now;
         var testResultProperty = await ExecuteScenarioAsync(serviceProvider, scenario);
         var stopTime = DateTimeOffset.Now;
@@ -116,7 +132,7 @@ internal sealed class BddDotNetTestFramework(IServiceCollection serviceCollectio
         testNode.Properties.Add(testResultProperty);
         testNode.Properties.Add(timingProperty);
 
-        await messageBus.PublishAsync(this, new TestNodeUpdateMessage(request.Session.SessionUid, testNode));
+        return testNode;
     }
 
     private async Task<IProperty> ExecuteScenarioAsync(IServiceProvider serviceProvider, Scenario scenario)
@@ -135,13 +151,17 @@ internal sealed class BddDotNetTestFramework(IServiceCollection serviceCollectio
         }
     }
 
-    private async Task DiscoverTestNodesAsync(IServiceProvider serviceProvider, IMessageBus messageBus, DiscoverTestExecutionRequest request)
+    private IEnumerable<Scenario> GetRelevantScenarios(IServiceProvider serviceProvider, RunTestExecutionRequest request)
     {
         foreach (var scenario in serviceProvider.GetServices<Scenario>())
         {
-            var testNode = CreateTestNode(scenario);
-            testNode.Properties.Add(DiscoveredTestNodeStateProperty.CachedInstance);
-            await messageBus.PublishAsync(this, new TestNodeUpdateMessage(request.Session.SessionUid, testNode));
+            var testNodeUid = GetTestNodeUid(scenario);
+
+            if (request.Filter is not TestNodeUidListFilter testNodeUidListFilter
+                || testNodeUidListFilter.TestNodeUids.Contains(testNodeUid))
+            {
+                yield return scenario;
+            }
         }
     }
 
@@ -162,11 +182,16 @@ internal sealed class BddDotNetTestFramework(IServiceCollection serviceCollectio
 
         var testNode = new TestNode()
         {
-            Uid = $"{scenario.Feature} -> {scenario.Name}",
+            Uid = GetTestNodeUid(scenario),
             DisplayName = scenario.Name,
             Properties = new PropertyBag(testMethodIdentifierProperty, testFileLocationProperty),
         };
 
         return testNode;
+    }
+
+    private TestNodeUid GetTestNodeUid(Scenario scenario)
+    {
+        return new($"{scenario.Feature} -> {scenario.Name}");
     }
 }

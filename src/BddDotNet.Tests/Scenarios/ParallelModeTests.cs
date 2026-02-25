@@ -49,7 +49,7 @@ public sealed class ParallelModeTests
         await TestPlatform.RunTestAsync(services =>
         {
             services.AddSingleton(traces);
-            services.Configuration(new() { Parallel = true, MaxDegreeOfParallelism = 2 });
+            services.Configuration(new() { MaxConcurrentTasks = 2 });
 
             var taskCompletionSource = new TaskCompletionSource<bool>();
 

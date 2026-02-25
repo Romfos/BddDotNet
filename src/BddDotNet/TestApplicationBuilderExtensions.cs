@@ -19,7 +19,6 @@ public static class TestApplicationBuilderExtensions
             services.AddSingleton<BddDotNetConfiguration>();
 
             services.AddScoped<IScenarioService, ScenarioService>();
-
             services.AddScoped<ScenarioExecutionService>();
             services.AddScoped<StepExecutionService>();
 
