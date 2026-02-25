@@ -1,5 +1,5 @@
-using BddDotNet.Configuration;
 using BddDotNet.Internal.Models;
+using BddDotNet.Options;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Testing.Platform.Extensions.Messages;
 using Microsoft.Testing.Platform.Extensions.TestFramework;
@@ -58,9 +58,9 @@ internal sealed class BddDotNetTestFramework(IServiceCollection serviceCollectio
     private async Task RunTestExecutionAsync(IMessageBus messageBus, RunTestExecutionRequest request)
     {
         await using var services = serviceCollection.BuildServiceProvider();
-        var configuration = services.GetRequiredService<BddDotNetConfiguration>();
+        var options = services.GetRequiredService<BddDotNetOptions>();
 
-        await foreach (var testNode in RunScenariosAsync(services, request, configuration))
+        await foreach (var testNode in RunScenariosAsync(services, request, options))
         {
             await messageBus.PublishAsync(this, new TestNodeUpdateMessage(request.Session.SessionUid, testNode));
         }
@@ -78,11 +78,11 @@ internal sealed class BddDotNetTestFramework(IServiceCollection serviceCollectio
         }
     }
 
-    private IAsyncEnumerable<TestNode> RunScenariosAsync(IServiceProvider serviceProvider, RunTestExecutionRequest request, BddDotNetConfiguration configuration)
+    private IAsyncEnumerable<TestNode> RunScenariosAsync(IServiceProvider serviceProvider, RunTestExecutionRequest request, BddDotNetOptions options)
     {
-        if (configuration.MaxConcurrentTasks > 1)
+        if (options.MaxConcurrentTasks > 1)
         {
-            return RunConcurrentAsync(serviceProvider, request, configuration);
+            return RunConcurrentAsync(serviceProvider, request, options);
         }
         else
         {
@@ -90,15 +90,15 @@ internal sealed class BddDotNetTestFramework(IServiceCollection serviceCollectio
         }
     }
 
-    private async IAsyncEnumerable<TestNode> RunConcurrentAsync(IServiceProvider serviceProvider, RunTestExecutionRequest request, BddDotNetConfiguration configuration)
+    private async IAsyncEnumerable<TestNode> RunConcurrentAsync(IServiceProvider serviceProvider, RunTestExecutionRequest request, BddDotNetOptions options)
     {
-        var tasks = new List<Task<TestNode>>(configuration.MaxConcurrentTasks);
+        var tasks = new List<Task<TestNode>>(options.MaxConcurrentTasks);
 
         foreach (var scenario in GetRelevantScenarios(serviceProvider, request))
         {
             tasks.Add(RunScenarioAsync(serviceProvider, scenario));
 
-            if (tasks.Count == configuration.MaxConcurrentTasks)
+            if (tasks.Count == options.MaxConcurrentTasks)
             {
                 var task = await Task.WhenAny(tasks);
                 tasks.Remove(task);

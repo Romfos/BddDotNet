@@ -1,4 +1,4 @@
-using BddDotNet.Configuration;
+using BddDotNet.Options;
 using BddDotNet.Scenarios;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Concurrent;
@@ -49,7 +49,7 @@ public sealed class ParallelModeTests
         await TestPlatform.RunTestAsync(services =>
         {
             services.AddSingleton(traces);
-            services.Configuration(new() { MaxConcurrentTasks = 2 });
+            services.Configure(new() { MaxConcurrentTasks = 2 });
 
             var taskCompletionSource = new TaskCompletionSource<bool>();
 

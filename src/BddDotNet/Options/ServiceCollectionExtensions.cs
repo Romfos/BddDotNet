@@ -1,14 +1,14 @@
 using Microsoft.Extensions.DependencyInjection;
 
-namespace BddDotNet.Configuration;
+namespace BddDotNet.Options;
 
 public static class ServiceCollectionExtensions
 {
     extension(IServiceCollection serviceCollection)
     {
-        public IServiceCollection Configuration(BddDotNetConfiguration configuration)
+        public IServiceCollection Configure(BddDotNetOptions options)
         {
-            serviceCollection.AddSingleton(configuration);
+            serviceCollection.AddSingleton(options);
             return serviceCollection;
         }
     }
