@@ -8,14 +8,19 @@ namespace BddDotNet.Tests.Steps;
 public sealed class StepFallbackTests
 {
     [TestMethod]
-    public async Task StepFallbackTest()
+    public async Task StepFallbackForDelegateTest()
     {
         var traces = new List<string>();
 
         await TestPlatform.RunTestAsync(services =>
         {
             services.AddSingleton(traces);
-            services.Fallback<StepFallback1>();
+
+            services.Fallback(async (context, services) =>
+            {
+                var traces = services.GetRequiredService<List<string>>();
+                traces.Add($"Fallback {context.Type} {context.Text}");
+            });
 
             services.Scenario("feature1", "scenario1", async scenario =>
             {
@@ -23,15 +28,6 @@ public sealed class StepFallbackTests
             });
         });
 
-        Assert.IsTrue(traces is ["StepFallback Then then1"]);
-    }
-}
-
-file sealed class StepFallback1(List<string> traces) : IStepFallback
-{
-    public Task StepFallbackAsync(StepFallbackContext context)
-    {
-        traces.Add($"StepFallback {context.Type} {context.Text}");
-        return Task.CompletedTask;
+        Assert.IsTrue(traces is ["Fallback Then then1"]);
     }
 }

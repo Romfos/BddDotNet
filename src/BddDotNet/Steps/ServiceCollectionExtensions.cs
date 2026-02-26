@@ -10,9 +10,9 @@ public static class ServiceCollectionExtensions
 {
     extension(IServiceCollection serviceCollection)
     {
-        public IServiceCollection Given(Regex pattern, Delegate method)
+        public IServiceCollection Given(Regex pattern, Delegate body)
         {
-            serviceCollection.AddScoped(_ => new Step(StepType.Given, pattern, _ => method));
+            serviceCollection.AddScoped(_ => new Step(StepType.Given, pattern, _ => body));
 
             return serviceCollection;
         }
@@ -24,9 +24,9 @@ public static class ServiceCollectionExtensions
             return serviceCollection;
         }
 
-        public IServiceCollection When(Regex pattern, Delegate method)
+        public IServiceCollection When(Regex pattern, Delegate body)
         {
-            serviceCollection.AddScoped(_ => new Step(StepType.When, pattern, _ => method));
+            serviceCollection.AddScoped(_ => new Step(StepType.When, pattern, _ => body));
 
             return serviceCollection;
         }
@@ -38,17 +38,23 @@ public static class ServiceCollectionExtensions
             return serviceCollection;
         }
 
-        public IServiceCollection Then(Regex pattern, Delegate method)
+        public IServiceCollection Then(Regex pattern, Delegate body)
         {
-            serviceCollection.AddScoped(_ => new Step(StepType.Then, pattern, _ => method));
+            serviceCollection.AddScoped(_ => new Step(StepType.Then, pattern, _ => body));
 
             return serviceCollection;
         }
 
-        public IServiceCollection Then(Regex pattern, Func<IServiceProvider, Delegate> factory)
+        public IServiceCollection Then(Regex pattern, Func<IServiceProvider, Delegate> method)
         {
-            serviceCollection.AddScoped(_ => new Step(StepType.Then, pattern, factory));
+            serviceCollection.AddScoped(_ => new Step(StepType.Then, pattern, method));
 
+            return serviceCollection;
+        }
+
+        public IServiceCollection Fallback(Func<StepFallbackContext, IServiceProvider, Task> body)
+        {
+            serviceCollection.AddScoped(_ => new StepFallback(body));
             return serviceCollection;
         }
 
@@ -65,14 +71,6 @@ public static class ServiceCollectionExtensions
         {
             serviceCollection.TryAddScoped<T>();
             serviceCollection.AddScoped<IAfterStep>(services => services.GetRequiredService<T>());
-            return serviceCollection;
-        }
-
-        public IServiceCollection Fallback<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>()
-            where T : class, IStepFallback
-        {
-            serviceCollection.TryAddScoped<T>();
-            serviceCollection.AddScoped<IStepFallback>(services => services.GetRequiredService<T>());
             return serviceCollection;
         }
     }
