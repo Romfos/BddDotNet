@@ -91,4 +91,22 @@ internal sealed class DynamicallyAccessedMembersAttribute(DynamicallyAccessedMem
     public DynamicallyAccessedMemberTypes MemberTypes { get; } = memberTypes;
 }
 
+//
+// Summary:
+//     Specifies that when a method returns System.Diagnostics.CodeAnalysis.NotNullWhenAttribute.ReturnValue,
+//     the parameter will not be null even if the corresponding type allows it.
+[AttributeUsage(AttributeTargets.Parameter, Inherited = false)]
+public sealed class NotNullWhenAttribute(bool returnValue) : Attribute
+{
+    //
+    // Summary:
+    //     Gets the return value condition.
+    //
+    // Returns:
+    //     The return value condition. If the method returns this value, the associated
+    //     parameter will not be null.
+    public bool ReturnValue { get; } = returnValue;
+}
+
+
 #endif

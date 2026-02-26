@@ -2,6 +2,8 @@ using BddDotNet.Arguments;
 using BddDotNet.Internal.Exceptions;
 using BddDotNet.Internal.Models;
 using BddDotNet.Steps;
+using Microsoft.Extensions.DependencyInjection;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
@@ -16,7 +18,18 @@ internal sealed class StepExecutionService(
 {
     public async Task ExecuteAsync(StepType stepType, string text, object?[] additionalStepArguments)
     {
-        var (step, match) = FindGherkinStep(stepType, text);
+        if (!FindGherkinStep(stepType, text, out var step, out var match))
+        {
+            if (serviceProvider.GetService<IStepFallback>() is not IStepFallback stepsFallback)
+            {
+                throw new UnableToFindStepException(stepType, text);
+            }
+
+            await stepsFallback.StepFallbackAsync(new(stepType, text, additionalStepArguments));
+
+            return;
+        }
+
         var handler = step.Factory(serviceProvider);
         var arguments = await GetStepArgumentsAsync(handler, match, additionalStepArguments);
         var stepContext = new StepContext(stepType, text, step.Pattern, arguments);
@@ -116,7 +129,7 @@ internal sealed class StepExecutionService(
         }
     }
 
-    private (Step, Match) FindGherkinStep(StepType stepType, string text)
+    private bool FindGherkinStep(StepType stepType, string text, [NotNullWhen(true)] out Step? step, [NotNullWhen(true)] out Match? match)
     {
         var matchedSteps = steps
             .Where(step => step.StepType == stepType)
@@ -127,12 +140,16 @@ internal sealed class StepExecutionService(
 
         if (matchedSteps.Length == 1)
         {
-            return matchedSteps[0];
+            step = matchedSteps[0].step;
+            match = matchedSteps[0].match;
+            return true;
         }
 
         if (matchedSteps.Length == 0)
         {
-            throw new UnableToFindStepException(stepType, text);
+            step = null;
+            match = null;
+            return false;
         }
 
         throw new MultipleMatchedStepsFoundException(stepType, text);

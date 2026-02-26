@@ -67,5 +67,13 @@ public static class ServiceCollectionExtensions
             serviceCollection.AddScoped<IAfterStep>(services => services.GetRequiredService<T>());
             return serviceCollection;
         }
+
+        public IServiceCollection Fallback<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>()
+            where T : class, IStepFallback
+        {
+            serviceCollection.TryAddScoped<T>();
+            serviceCollection.AddScoped<IStepFallback>(services => services.GetRequiredService<T>());
+            return serviceCollection;
+        }
     }
 }
