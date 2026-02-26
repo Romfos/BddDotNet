@@ -1,7 +1,6 @@
 using BddDotNet.Arguments;
 using BddDotNet.Scenarios;
 using BddDotNet.Steps;
-using BddDotNet.Tests.Scenarios;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BddDotNet.Tests.Arguments;
@@ -25,7 +24,7 @@ public sealed class ArgumentTransformationTests
                 traces.Add(value);
             });
 
-            services.Scenario<ScenarioTests>("feature1", "scenario1", async scenario =>
+            services.Scenario("feature1", "scenario1", async scenario =>
             {
                 await scenario.Then("then1 abcd");
             });

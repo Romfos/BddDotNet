@@ -13,7 +13,7 @@ public sealed class ScenarioTests
 
         await TestPlatform.RunTestAsync(services =>
         {
-            services.Scenario<ScenarioTests>("feature1", "scenario1", async scenario =>
+            services.Scenario("feature1", "scenario1", async scenario =>
             {
                 traces.Add(1);
                 await scenario.Given("given1");
@@ -36,7 +36,7 @@ public sealed class ScenarioTests
 
         await TestPlatform.RunTestAsync(services =>
         {
-            services.Scenario<ScenarioTests>("feature1", "scenario1", async scenario =>
+            services.Scenario("feature1", "scenario1", async scenario =>
             {
                 traces.Add(1);
                 await scenario.When("when1");
@@ -59,7 +59,7 @@ public sealed class ScenarioTests
 
         await TestPlatform.RunTestAsync(services =>
         {
-            services.Scenario<ScenarioTests>("feature1", "scenario1", async scenario =>
+            services.Scenario("feature1", "scenario1", async scenario =>
             {
                 traces.Add(1);
                 await scenario.Then("then1");

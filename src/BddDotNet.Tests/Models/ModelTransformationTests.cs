@@ -1,7 +1,6 @@
 using BddDotNet.Gherkin.Models;
 using BddDotNet.Scenarios;
 using BddDotNet.Steps;
-using BddDotNet.Tests.Scenarios;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BddDotNet.Tests.Models;
@@ -24,7 +23,7 @@ public sealed class ModelTransformationTests
                 traces.Add(model);
             });
 
-            services.Scenario<ScenarioTests>("feature1", "scenario1", async scenario =>
+            services.Scenario("feature1", "scenario1", async scenario =>
             {
                 await scenario.When("step1", (object?)new string[][] { ["Name", "Value"], ["first", "1"], ["Second", "abcd"], ["third", "3"] });
             });
@@ -49,7 +48,7 @@ public sealed class ModelTransformationTests
                 traces.Add(model);
             });
 
-            services.Scenario<ScenarioTests>("feature1", "scenario1", async scenario =>
+            services.Scenario("feature1", "scenario1", async scenario =>
             {
                 await scenario.When("step1", (object?)new string[][] { ["Name", "Value1"], ["first", "1"], ["Second", "abcd"], ["third", "3"] });
             });

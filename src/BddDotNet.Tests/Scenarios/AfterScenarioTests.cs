@@ -18,7 +18,7 @@ public sealed class AfterScenarioTests
             services.AfterScenario<AfterScenario2>();
             services.AfterScenario<AfterScenario1>();
 
-            services.Scenario<ScenarioTests>("feature1", "scenario1", scenario => Task.CompletedTask);
+            services.Scenario("feature1", "scenario1", scenario => Task.CompletedTask);
         });
 
         Assert.IsTrue(traces is [1, null, 2, null]);
@@ -36,7 +36,7 @@ public sealed class AfterScenarioTests
             services.AfterScenario<AfterScenario1>();
             services.AfterScenario<AfterScenario2>();
 
-            services.Scenario<ScenarioTests>("feature1", "scenario1", async scenario =>
+            services.Scenario("feature1", "scenario1", async scenario =>
             {
                 throw new Exception("exception1");
             });

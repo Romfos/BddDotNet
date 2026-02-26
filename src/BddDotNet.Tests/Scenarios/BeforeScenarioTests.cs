@@ -17,7 +17,7 @@ public sealed class BeforeScenarioTests
             services.BeforeScenario<BeforeScenario1>();
             services.BeforeScenario<BeforeScenario2>();
 
-            services.Scenario<ScenarioTests>("feature1", "scenario1", scenario => Task.CompletedTask);
+            services.Scenario("feature1", "scenario1", scenario => Task.CompletedTask);
         });
 
         Assert.IsTrue(traces is [1, 2]);

@@ -19,19 +19,19 @@ public sealed class ParallelModeTests
 
             var taskCompletionSource = new TaskCompletionSource<bool>();
 
-            services.Scenario<ParallelModeTests>("feature1", "scenario1", context =>
+            services.Scenario("feature1", "scenario1", context =>
             {
                 traces.Push(1);
                 return Task.CompletedTask;
             });
 
-            services.Scenario<ParallelModeTests>("feature1", "scenario2", context =>
+            services.Scenario("feature1", "scenario2", context =>
             {
                 traces.Push(2);
                 return Task.CompletedTask;
             });
 
-            services.Scenario<ParallelModeTests>("feature1", "scenario3", context =>
+            services.Scenario("feature1", "scenario3", context =>
             {
                 traces.Push(3);
                 return Task.CompletedTask;
@@ -53,13 +53,13 @@ public sealed class ParallelModeTests
 
             var taskCompletionSource = new TaskCompletionSource<bool>();
 
-            services.Scenario<ParallelModeTests>("feature1", "scenario2", async context =>
+            services.Scenario("feature1", "scenario2", async context =>
             {
                 await taskCompletionSource.Task;
                 traces.Push(1);
             });
 
-            services.Scenario<ParallelModeTests>("feature1", "scenario3", async context =>
+            services.Scenario("feature1", "scenario3", async context =>
             {
                 traces.Push(2);
                 taskCompletionSource.TrySetResult(true);
