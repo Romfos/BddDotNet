@@ -10,9 +10,9 @@ public static class ServiceCollectionExtensions
 {
     extension(IServiceCollection serviceCollection)
     {
-        public IServiceCollection Given(Regex pattern, Delegate body)
+        public IServiceCollection Given(Regex pattern, Delegate handler)
         {
-            serviceCollection.AddScoped(_ => new Step(StepType.Given, pattern, _ => body));
+            serviceCollection.AddScoped(_ => new Step(StepType.Given, pattern, _ => handler));
 
             return serviceCollection;
         }
@@ -24,9 +24,9 @@ public static class ServiceCollectionExtensions
             return serviceCollection;
         }
 
-        public IServiceCollection When(Regex pattern, Delegate body)
+        public IServiceCollection When(Regex pattern, Delegate handler)
         {
-            serviceCollection.AddScoped(_ => new Step(StepType.When, pattern, _ => body));
+            serviceCollection.AddScoped(_ => new Step(StepType.When, pattern, _ => handler));
 
             return serviceCollection;
         }
@@ -38,9 +38,9 @@ public static class ServiceCollectionExtensions
             return serviceCollection;
         }
 
-        public IServiceCollection Then(Regex pattern, Delegate body)
+        public IServiceCollection Then(Regex pattern, Delegate handler)
         {
-            serviceCollection.AddScoped(_ => new Step(StepType.Then, pattern, _ => body));
+            serviceCollection.AddScoped(_ => new Step(StepType.Then, pattern, _ => handler));
 
             return serviceCollection;
         }
@@ -52,9 +52,15 @@ public static class ServiceCollectionExtensions
             return serviceCollection;
         }
 
-        public IServiceCollection Fallback(Func<StepFallbackContext, IServiceProvider, Task> body)
+        public IServiceCollection Fallback(Func<StepFallbackContext, Task> handler)
         {
-            serviceCollection.AddScoped(_ => new StepFallback(body));
+            serviceCollection.AddScoped(_ => new StepFallback((context, _) => handler(context)));
+            return serviceCollection;
+        }
+
+        public IServiceCollection Fallback(Func<StepFallbackContext, IServiceProvider, Task> handler)
+        {
+            serviceCollection.AddScoped(_ => new StepFallback(handler));
             return serviceCollection;
         }
 
