@@ -20,12 +20,12 @@ internal sealed class StepExecutionService(
     {
         if (!FindGherkinStep(stepType, text, out var step, out var match))
         {
-            if (serviceProvider.GetService<StepFallback>() is not StepFallback stepsFallback)
+            if (serviceProvider.GetService<StepFallback>() is not StepFallback stepFallback)
             {
                 throw new UnableToFindStepException(stepType, text);
             }
 
-            await stepsFallback.Body(new(stepType, text, additionalStepArguments), serviceProvider);
+            await stepFallback.Body(new(stepType, text, additionalStepArguments), serviceProvider);
 
             return;
         }

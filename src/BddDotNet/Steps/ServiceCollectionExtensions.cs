@@ -12,55 +12,55 @@ public static class ServiceCollectionExtensions
     {
         public IServiceCollection Given(Regex pattern, Delegate handler)
         {
-            serviceCollection.AddScoped(_ => new Step(StepType.Given, pattern, _ => handler));
+            serviceCollection.AddSingleton(new Step(StepType.Given, pattern, _ => handler));
 
             return serviceCollection;
         }
 
         public IServiceCollection Given(Regex pattern, Func<IServiceProvider, Delegate> factory)
         {
-            serviceCollection.AddScoped(_ => new Step(StepType.Given, pattern, factory));
+            serviceCollection.AddSingleton(new Step(StepType.Given, pattern, factory));
 
             return serviceCollection;
         }
 
         public IServiceCollection When(Regex pattern, Delegate handler)
         {
-            serviceCollection.AddScoped(_ => new Step(StepType.When, pattern, _ => handler));
+            serviceCollection.AddSingleton(new Step(StepType.When, pattern, _ => handler));
 
             return serviceCollection;
         }
 
         public IServiceCollection When(Regex pattern, Func<IServiceProvider, Delegate> factory)
         {
-            serviceCollection.AddScoped(_ => new Step(StepType.When, pattern, factory));
+            serviceCollection.AddSingleton(new Step(StepType.When, pattern, factory));
 
             return serviceCollection;
         }
 
         public IServiceCollection Then(Regex pattern, Delegate handler)
         {
-            serviceCollection.AddScoped(_ => new Step(StepType.Then, pattern, _ => handler));
+            serviceCollection.AddSingleton(new Step(StepType.Then, pattern, _ => handler));
 
             return serviceCollection;
         }
 
         public IServiceCollection Then(Regex pattern, Func<IServiceProvider, Delegate> method)
         {
-            serviceCollection.AddScoped(_ => new Step(StepType.Then, pattern, method));
+            serviceCollection.AddSingleton(new Step(StepType.Then, pattern, method));
 
             return serviceCollection;
         }
 
         public IServiceCollection Fallback(Func<StepFallbackContext, Task> handler)
         {
-            serviceCollection.AddScoped(_ => new StepFallback((context, _) => handler(context)));
+            serviceCollection.AddSingleton(new StepFallback((context, _) => handler(context)));
             return serviceCollection;
         }
 
         public IServiceCollection Fallback(Func<StepFallbackContext, IServiceProvider, Task> handler)
         {
-            serviceCollection.AddScoped(_ => new StepFallback(handler));
+            serviceCollection.AddSingleton(new StepFallback(handler));
             return serviceCollection;
         }
 
