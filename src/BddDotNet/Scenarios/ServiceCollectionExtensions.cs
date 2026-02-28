@@ -41,6 +41,7 @@ public static class ServiceCollectionExtensions
         }
 
         [EditorBrowsable(EditorBrowsableState.Never)]
+        [Obsolete("Use Scenario(...) instead. This method will be removed in a future version.")]
         public IServiceCollection Scenario<TFeature>(
             string feature,
             string scenario,
