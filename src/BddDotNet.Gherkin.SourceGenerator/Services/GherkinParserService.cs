@@ -218,12 +218,8 @@ internal sealed class GherkinParserService
             var gherkinStep = new GherkinStep(
                 keyword,
                 step.Text,
-                step.Argument is DataTable dataTable
-                    ? dataTable.Rows.Select(x => x.Cells.Select(x => x.Value).ToArray()).ToArray()
-                    : null,
-                step.Argument is DocString docString
-                    ? docString.Content
-                    : null,
+                step.DataTable?.Rows.Select(x => x.Cells.Select(x => x.Value).ToArray()).ToArray(),
+                step.DocString?.Content,
                 featureFilePath,
                 step.Location.Line,
                 step.Location.Column);

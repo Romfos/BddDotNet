@@ -181,33 +181,34 @@ internal sealed class ScenariosExtensionsGenerator : IIncrementalGenerator
                 #line ({step.Line}, {step.Column})-({step.Line + 1}, 1) 12 "{step.FeaturePath}"
                 """");
 
+            stepDeclarations.Append(
+                $""""
+                await scenario.{step.Keyword}("""{step.Text}"""
+                """");
+
             if (step.DataTable is { } dataTable)
             {
-                stepDeclarations.AppendLine(
+                stepDeclarations.Append(
                     $$""""
-                    await scenario.{{step.Keyword}}("""{{step.Text}}""", (object)new string[][]
+                    ,
+                    (object)new string[][]
                     {
                         {{GetDataTableContent(dataTable)}}
-                    });
+                    }
                     """");
             }
-            else if (step.DocString is string docString)
+            if (step.DocString is string docString)
             {
-                stepDeclarations.AppendLine(
+                stepDeclarations.Append(
                     $$""""
-                    await scenario.{{step.Keyword}}("""{{step.Text}}""",
+                    ,
                     """
                     {{docString}}
-                    """);
+                    """
                     """");
             }
-            else
-            {
-                stepDeclarations.AppendLine(
-                    $""""
-                    await scenario.{step.Keyword}("""{step.Text}""");
-                    """");
-            }
+
+            stepDeclarations.AppendLine(");");
         }
 
         stepDeclarations.AppendLine("#line default");

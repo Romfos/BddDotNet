@@ -51,4 +51,11 @@ internal sealed class GherkinSteps(GherkinTraceService gherkinTraceService)
     {
         gherkinTraceService.Trace(docString);
     }
+
+    [Then("this is then step with table and doc string:")]
+    public void Step9(string[][] table, string docString)
+    {
+        gherkinTraceService.Trace(table);
+        gherkinTraceService.Trace(docString);
+    }
 }

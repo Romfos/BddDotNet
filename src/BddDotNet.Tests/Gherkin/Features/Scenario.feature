@@ -22,6 +22,13 @@ Scenario: steps with arguments
     this is DocString text
     with multiple lines
     """
+    Then this is then step with table and doc string:
+    | book  | price |
+    | line1 |     4 |
+    """
+    this is DocString text with table in 1 step
+    """
+    
 
 Scenario: And keyword steps
     And this is simple given step

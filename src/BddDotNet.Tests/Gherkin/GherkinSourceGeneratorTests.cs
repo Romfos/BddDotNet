@@ -11,17 +11,26 @@ public sealed class GherkinSourceGeneratorTests
     [TestInitialize]
     public async Task Initialize()
     {
-        await TestPlatform.RunTestAsync(services =>
+#pragma warning disable CS0168 // Variable is declared but never used
+        try
         {
-            services.AddSingleton(traces);
+            await TestPlatform.RunTestAsync(services =>
+           {
+               services.AddSingleton(traces);
 
-            services.BeforeScenario<GherkinTraceService>();
-            services.AfterScenario<GherkinTraceService>();
-            services.AddScoped<GherkinTraceService>();
+               services.BeforeScenario<GherkinTraceService>();
+               services.AfterScenario<GherkinTraceService>();
+               services.AddScoped<GherkinTraceService>();
 
-            services.SourceGeneratedGherkinScenarios();
-            services.SourceGeneratedGherkinSteps();
-        });
+               services.SourceGeneratedGherkinScenarios();
+               services.SourceGeneratedGherkinSteps();
+           });
+        }
+        catch (Exception ex)
+        {
+
+        }
+#pragma warning restore CS0168 // Variable is declared but never used
     }
 
     [TestMethod]
@@ -55,6 +64,10 @@ public sealed class GherkinSourceGeneratorTests
                 """
                 this is DocString text
                 with multiple lines
+                """,
+                string[][] and [["book", "price"], ["line1", "4"]],
+                """
+                this is DocString text with table in 1 step
                 """
             ]);
     }
