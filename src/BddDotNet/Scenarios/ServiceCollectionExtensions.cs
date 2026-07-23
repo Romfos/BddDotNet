@@ -1,7 +1,6 @@
 using BddDotNet.Internal.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
@@ -33,32 +32,6 @@ public static class ServiceCollectionExtensions
                 throw new InvalidOperationException("The scenario method must be declared within a type.");
             }
 
-            var assemblyName = type.Assembly.GetName().Name!;
-
-            serviceCollection.Scenario(assemblyName, type.Namespace ?? assemblyName, feature, scenario, filePath, lineNumber.Value, method);
-
-            return serviceCollection;
-        }
-
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        [Obsolete("Use non-generic Scenario(...) instead. This method will be removed in a future version.")]
-        public IServiceCollection Scenario<TFeature>(
-            string feature,
-            string scenario,
-            Func<IScenarioService, Task> method,
-            [CallerFilePath] string? filePath = null,
-            [CallerLineNumber] int? lineNumber = null)
-        {
-            if (filePath == null)
-            {
-                throw new ArgumentNullException(nameof(filePath), "File path cannot be null.");
-            }
-            if (lineNumber == null)
-            {
-                throw new ArgumentNullException(nameof(lineNumber), "Line number cannot be null.");
-            }
-
-            var type = typeof(TFeature);
             var assemblyName = type.Assembly.GetName().Name!;
 
             serviceCollection.Scenario(assemblyName, type.Namespace ?? assemblyName, feature, scenario, filePath, lineNumber.Value, method);
