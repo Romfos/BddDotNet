@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="../Package.props" />
   <Import Project="../PackageSymbols.props" />
-  <Import Project="../AOT.props" />
 
   <PropertyGroup>
-    <TargetFrameworks>net10.0;net48</TargetFrameworks>
+    <TargetFrameworks>net10.0</TargetFrameworks>
+    <IsAotCompatible>true</IsAotCompatible>
     <IsTestingPlatformApplication>false</IsTestingPlatformApplication>
   </PropertyGroup>
   
