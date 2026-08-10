@@ -2,20 +2,11 @@ using BddDotNet.Scenarios;
 
 namespace BddDotNet.Internal.Models;
 
-internal sealed class Scenario(
-    string assemblyName,
-    string @namespace,
-    string feature,
-    string name,
-    Func<IScenarioService, Task> method,
-    string filePath,
-    int lineNumber)
-{
-    public string AssemblyName { get; } = assemblyName;
-    public string Namespace { get; } = @namespace;
-    public string Feature { get; } = feature;
-    public string Name { get; } = name;
-    public Func<IScenarioService, Task> Method { get; } = method;
-    public string FilePath { get; } = filePath;
-    public int LineNumber { get; } = lineNumber;
-}
+internal sealed record Scenario(
+    string AssemblyName,
+    string Namespace,
+    string Feature,
+    string Name,
+    Func<IScenarioService, Task> Method,
+    string FilePath,
+    int LineNumber);
