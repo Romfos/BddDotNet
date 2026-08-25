@@ -2,10 +2,14 @@
   <Import Project="../BddDotNet.Gherkin.SourceGenerator/BddDotNet.Gherkin.SourceGenerator.props" />
 
   <PropertyGroup>
-    <TargetFrameworks>net10.0</TargetFrameworks>
+    <TargetFrameworks>net11.0</TargetFrameworks>
     <OutputType>exe</OutputType>
     <PublishAot>true</PublishAot>
     <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net11.0' ">
+    <Features>$(Features);runtime-async=on</Features>
   </PropertyGroup>
 
   <ItemGroup>
