@@ -28,7 +28,7 @@ Comparing with Reqnroll (or Specflow, other popular framework in .NET Ecosystem)
 - Support .NET 10+ runtimes (.NET 11 is recommended as best option)
 - AOT & Trimming friendly. More info: [Native AOT deployment](https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot/)
 - Nullable reference types and other modern dotnet features support
-- Runtime-async is supported for .NET 11+ [runtime-async](https://learn.microsoft.com/en-us/dotnet/core/whats-new/dotnet-11/runtime#runtime-async)
+- Runtime async is supported for .NET 11+ [Runtime async](https://learn.microsoft.com/en-us/dotnet/core/whats-new/dotnet-11/runtime#runtime-async)
 
 # BddDotNet.Gherkin.SourceGenerator usage example
 Allow you to use Gherkin scenarios:
