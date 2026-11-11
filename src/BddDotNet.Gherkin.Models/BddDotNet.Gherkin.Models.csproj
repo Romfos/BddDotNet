@@ -8,10 +8,6 @@
     <IsTestingPlatformApplication>false</IsTestingPlatformApplication>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net11.0' ">
-    <Features>$(Features);runtime-async=on</Features>
-  </PropertyGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\BddDotNet\BddDotNet.csproj" />
   </ItemGroup>

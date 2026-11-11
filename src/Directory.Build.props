@@ -3,8 +3,12 @@
   <PropertyGroup>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <Nullable>enable</Nullable>
-    <LangVersion>15.0</LangVersion>
+    <LangVersion>latest</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net11.0' ">
+    <Features>$(Features);runtime-async=on</Features>
   </PropertyGroup>
 
 </Project>
